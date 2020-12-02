@@ -1,0 +1,42 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:tnt="sap.tnt"
+    controllerName = "com.asena.ui5.controller.core.Shell">
+    <tnt:ToolPage id="tpMain">
+        <tnt:header>
+            <f:ShellBar showMenuButton="true"
+                showNavButton="{mainModel>/showNavButton}"
+                navButtonPressed="onBackPressed"
+                menuButtonPressed="onMenuPressed">
+                <f:profile>
+                    <f:Avatar initials="UI"/>
+                </f:profile>
+                <f:searchManager>
+                    <f:SearchManager id="searchField"
+                        search="onSearchProjects" />
+                </f:searchManager>
+            </f:ShellBar>
+        </tnt:header>
+        <tnt:sideContent>
+            <tnt:SideNavigation
+				expanded="true">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Projects" icon="sap-icon://idea-wall" select="onSelectProjects">
+                        <tnt:NavigationListItem text="Management" select="onSelectProjectManagement" /> 
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Users" icon="sap-icon://group" select="onSelectUsers" />
+                    <tnt:NavigationListItem text="Settings" icon="sap-icon://action-settings" /> 
+                </tnt:NavigationList> 
+            </tnt:SideNavigation>    
+        </tnt:sideContent>
+        <tnt:mainContents>
+            <App id="pwApp">
+
+            </App>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<title>Asena SCIM Gateway</title>
+
+<!--  Bootstrap -->
+<script id="sap-ui-bootstrap" 
+	src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_fiori_3" 
+	data-sap-ui-libs="sap.m, sap.ui.unified, sap.f, sap.tnt" 
+	data-sap-ui-xx-bindingSyntax="complex"
+	data-sap-ui-compatVersion="edge" 
+	data-sap-ui-preload="async"
+	data-sap-ui-resourceroots='{
+            "com.asena.ui5": "./",
+	        "com.asena.ui5.view": "./view",
+            "com.asena.controller": "./controller",
+            "com.asena.libs": "./libs"
+         }'>
+
+</script>
+<script>
+	sap.ui.localResources("view");
+	sap.ui.localResources("controller");
+    sap.ui.getCore().attachInit(function () {
+        sap.ui.require([
+            "sap/m/Shell",
+            "sap/ui/core/ComponentContainer",
+            "sap/ui/model/json/JSONModel"
+            ],
+            function (Shell, ComponentContainer, JSONModel) {
+                var mainModel = new JSONModel({showNavButton:false});
+                sap.ui.getCore().setModel(mainModel, "mainModel");
+                
+            
+                var bShell = ("false" !== jQuery.sap.getUriParameters().get("useShell"));
+                new Shell({
+                    app: new ComponentContainer({
+                        name : "com.asena.ui5",
+                        height: "100%"
+                    }),
+                    appWidthLimited: false
+                }).placeAt("content");
+            }
+        );
+    });
+</script>
+</head>
+<body class="sapUiBody" id="content">
+</body>
+</html>
