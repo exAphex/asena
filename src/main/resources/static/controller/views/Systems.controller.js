@@ -21,6 +21,23 @@ sap.ui.define([
             var mainModel = sap.ui.getCore().getModel("mainModel");
             mainModel.setProperty("/showNavButton", true);
         },
+        
+        _onAddSystem: function() {
+            var mdl = new JSONModel({});
+            this.getView().setModel(mdl, "mdlSystemDialog");
+
+            this.loadTemplates();
+
+            this.isEdit = false;
+            this.loadFragment("SystemsDialog");
+        },
+
+        _onSaveDialog: function() {
+            var mdl = this.getView().getModel("mdlSystemDialog");
+            var systemObj = mdl.getProperty("/");
+
+            this.createSystem(systemObj);
+        },
 
         _onRefreshSystems: function() {
             this.loadRemoteSystems();
@@ -39,6 +56,37 @@ sap.ui.define([
                 .catch(function (oError) {
                     this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
                 }.bind(this));
-        }
+        },
+
+        loadTemplates: function() {
+            var sQuery = "/api/v1/remotesystem/templates";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlTemplates");
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+        },
+
+        createSystem: function(obj) {
+            var sQuery = "/api/v1/remotesystem";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("System created!", true);
+                    this.loadRemoteSystems();
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
     });
 });

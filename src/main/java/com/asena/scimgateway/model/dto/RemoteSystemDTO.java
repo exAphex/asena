@@ -22,6 +22,7 @@ public class RemoteSystemDTO {
         rsDTO.setName(rs.getName());
         rsDTO.setDescription(rs.getDescription());
         rsDTO.setActive(rs.isActive());
+        rsDTO.setType(rs.getType());
         
         for (Attribute a : rs.getAttributes()) {
             rsDTO.attributes.add(AttributeDTO.toDTO(a));

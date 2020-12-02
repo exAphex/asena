@@ -194,6 +194,10 @@ sap.ui.define([
             );
             this.getView().addDependent(this.genericDialog);
             this.genericDialog.open();
+        },
+
+        _onCloseDialog: function() {
+            this.genericDialog.close();
         }
     });
 });

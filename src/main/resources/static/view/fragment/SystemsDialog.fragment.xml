@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:t="sap.ui.table">
+    <Dialog draggable="true" resizable="true" title="{i18n>SystemsDialog.title}">
+        <content>
+            <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
+                <f:content>
+                    <Label text="{i18n>SystemsDialog.lblType}" />
+                    <Select forceSelection="true" selectedKey="{mdlSystemDialog>/type}" items="{
+							path: 'mdlTemplates>/',
+							sorter: { path: 'type' }
+						}">
+                        <core:Item key="{mdlTemplates>type}" text="{mdlTemplates>type}" />
+                    </Select>
+
+                    <Label text="{i18n>SystemsDialog.lblSystemName}" />
+                    <Input value="{mdlSystemDialog>/name}" />
+                    <Label text="{i18n>SystemsDialog.lblDescription}" />
+                    <Input value="{mdlSystemDialog>/description}" />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="{i18n>btnSave}" type="Emphasized" press="_onSaveDialog" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="_onCloseDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
