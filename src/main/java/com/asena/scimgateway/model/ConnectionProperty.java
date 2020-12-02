@@ -39,6 +39,8 @@ public class ConnectionProperty {
         this.type = type;
     }
 
+    public ConnectionProperty() {}
+
     public ConnectionPropertyType getType() {
         return type;
     }

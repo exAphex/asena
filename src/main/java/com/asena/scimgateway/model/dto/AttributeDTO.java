@@ -24,6 +24,18 @@ public class AttributeDTO {
         return aDTO;
     }
 
+    public Attribute fromDTO() {
+        Attribute a = new Attribute();
+        a.setId(this.id);
+        a.setKey(this.key);
+        a.setValue(this.value);
+        a.setDescription(this.description);
+        a.setType(this.type);
+        a.setEncrypted(this.isEncrypted);
+        a.setTransformation(this.transformation.fromDTO());
+        return a;
+    }
+
     public long getId() {
         return id;
     }

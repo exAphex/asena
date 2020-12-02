@@ -34,6 +34,24 @@ public class RemoteSystemDTO {
         return rsDTO;
     }
 
+    public RemoteSystem fromDTO() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setId(this.id);
+        rs.setName(this.name);
+        rs.setDescription(this.description);
+        rs.setActive(this.active);
+        rs.setType(this.type);
+        
+        for (AttributeDTO a : this.attributes) {
+            rs.addAttribute(a.fromDTO());
+        }
+
+        for (ConnectionPropertyDTO cp : this.properties) {
+            rs.addProperty(cp.fromDTO());
+        }
+        return rs;
+    }
+
     public String getId() {
         return id;
     }

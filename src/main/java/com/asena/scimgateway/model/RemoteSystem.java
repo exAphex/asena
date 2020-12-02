@@ -31,7 +31,10 @@ public class RemoteSystem {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties = new HashSet<>();
 
+    @NotBlank(message = "System type is mandatory")
     private String type;
+
+    public RemoteSystem() {}
 
     public RemoteSystem(String name, String description) {
         this.name = name;
@@ -41,6 +44,13 @@ public class RemoteSystem {
     public RemoteSystem addProperty(ConnectionProperty cp) {
         if (cp != null) {
             properties.add(cp);
+        }
+        return this;
+    }
+
+    public RemoteSystem addAttribute(Attribute a) {
+        if (a != null) {
+            attributes.add(a);
         }
         return this;
     }

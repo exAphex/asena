@@ -22,6 +22,17 @@ public class ConnectionPropertyDTO {
         return cpDTO;
     }
 
+    public ConnectionProperty fromDTO() {
+        ConnectionProperty cp = new ConnectionProperty();
+        cp.setId(this.id);
+        cp.setKey(this.key);
+        cp.setValue(this.value);
+        cp.setDescription(this.description);
+        cp.setEncrypted(this.isEncrypted);
+        cp.setType(this.type);
+        return cp;
+    }
+
     public long getId() {
         return id;
     }

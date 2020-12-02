@@ -15,6 +15,14 @@ public class ScriptDTO {
         return sDTO;
     }
 
+    public Script fromDTO() {
+        Script s = new Script();
+        s.setId(this.id);
+        s.setName(this.name);
+        s.setContent(this.content);
+        return s;
+    }
+
     public long getId() {
         return id;
     }
