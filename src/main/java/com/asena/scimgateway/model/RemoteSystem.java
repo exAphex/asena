@@ -25,10 +25,10 @@ public class RemoteSystem {
     private String description;
     private boolean active;
 
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attribute> attributes = new HashSet<>();
 
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties = new HashSet<>();
 
     private String type;

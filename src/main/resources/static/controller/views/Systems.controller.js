@@ -14,11 +14,31 @@ sap.ui.define([
         },
 
         _onObjectMatched: function() {
+            this.loadRemoteSystems();
     	},
 
         _onDisplay: function () {
             var mainModel = sap.ui.getCore().getModel("mainModel");
             mainModel.setProperty("/showNavButton", true);
+        },
+
+        _onRefreshSystems: function() {
+            this.loadRemoteSystems();
+        },
+
+        loadRemoteSystems: function() {
+            var sQuery = "/api/v1/remotesystem";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
         }
     });
 });
