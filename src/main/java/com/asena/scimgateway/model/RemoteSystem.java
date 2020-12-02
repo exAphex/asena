@@ -1,17 +1,49 @@
 package com.asena.scimgateway.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import com.asena.scimgateway.model.Attribute.AttributeType;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
+@Entity
+@Table(name = "remotesystems")
 public class RemoteSystem {
+
+    @Id
     private String id;
+
+    @Column(unique = true)
+    @NotBlank(message = "System name is mandatory")
     private String name;
     private String description;
     private boolean active;
-    private Set<AttributeType> attributes;
-    private Set<ConnectionProperty> properties;
+
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Attribute> attributes = new HashSet<>();
+
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) 
+    private Set<ConnectionProperty> properties = new HashSet<>();
+
     private String type;
+
+    public RemoteSystem(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public RemoteSystem addProperty(ConnectionProperty cp) {
+        if (cp != null) {
+            properties.add(cp);
+        }
+        return this;
+    }
 
     public String getId() {
         return id;
@@ -33,11 +65,11 @@ public class RemoteSystem {
         this.properties = properties;
     }
 
-    public Set<AttributeType> getAttributes() {
+    public Set<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<AttributeType> attributes) {
+    public void setAttributes(Set<Attribute> attributes) {
         this.attributes = attributes;
     }
 

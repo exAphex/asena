@@ -1,15 +1,51 @@
 package com.asena.scimgateway.model;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "connectionproperties")
 public class ConnectionProperty {
     public enum ConnectionPropertyType {
         STRING, INT, BOOLEAN
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "connectionproperties_seq")
+    @SequenceGenerator(name = "connectionproperties_seq", sequenceName = "connectionproperties_sequence", allocationSize = 1)
     private long id;
+
+    @NotBlank(message = "Connection property is mandatory")
     private String key;
     private String value;
     private String description;
     private boolean isEncrypted;
+
+    @Enumerated(EnumType.ORDINAL)
+    private ConnectionPropertyType type;
+
+    public ConnectionProperty(String key, String value, String description, boolean isEncrypted, ConnectionPropertyType type) {
+        this.key = key;
+        this.value = value;
+        this.description = description;
+        this.isEncrypted = isEncrypted;
+        this.type = type;
+    }
+
+    public ConnectionPropertyType getType() {
+        return type;
+    }
+
+    public void setType(ConnectionPropertyType type) {
+        this.type = type;
+    }
 
     public long getId() {
         return id;
