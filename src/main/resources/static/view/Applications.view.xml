@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.uxap" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" height="100%" controllerName="com.asena.ui5.controller.views.Applications">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" height="100%" controllerName="com.asena.ui5.controller.views.Applications">
 	<m:Page id="pageApplications" showHeader="false">
 		<m:content>
-			<ObjectPageLayout id="ObjectPageLayout">
-				<sections id="test">
-					<ObjectPageSection id="avTiles" title="{i18n>Applications.titProjects}">
-						<subSections>
-							<ObjectPageSubSection>
-								<layout:HorizontalLayout id="dispTiles" allowWrapping="true"></layout:HorizontalLayout>
-							</ObjectPageSubSection>
-						</subSections>
-					</ObjectPageSection>
-					<ObjectPageSection id="searchTiles" title="{i18n>Applications.titSearch}">
-						<subSections>
-							<ObjectPageSubSection>
-								<layout:HorizontalLayout id="hlSearchTiles" allowWrapping="true"></layout:HorizontalLayout>
-							</ObjectPageSubSection>
-						</subSections>
-					</ObjectPageSection>
-				</sections>
-			</ObjectPageLayout>
+			<layout:HorizontalLayout id="dispTiles" allowWrapping="true">
+				<m:GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.tileSystems}" press="_onSystemsPressed">
+					<m:TileContent >
+						<m:NumericContent value="{
+							path: '/',
+							formatter: '.formatter.countSystems'
+						}" icon="sap-icon://it-system" withMargin="false" />
+					</m:TileContent>
+				</m:GenericTile>
+			</layout:HorizontalLayout>
 		</m:content>
 		<m:footer></m:footer>
 	</m:Page>

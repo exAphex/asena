@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="com.asena.ui5.controller.views.Systems">
+	<Page id="pageApplications" showHeader="false">
+        <content>
+		</content>
+	</Page>
+</mvc:View>

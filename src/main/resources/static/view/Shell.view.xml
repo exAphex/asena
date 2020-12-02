@@ -24,11 +24,7 @@
             <tnt:SideNavigation
 				expanded="true">
                 <tnt:NavigationList>
-                    <tnt:NavigationListItem text="Projects" icon="sap-icon://idea-wall" select="onSelectProjects">
-                        <tnt:NavigationListItem text="Management" select="onSelectProjectManagement" /> 
-                    </tnt:NavigationListItem>
-                    <tnt:NavigationListItem text="Users" icon="sap-icon://group" select="onSelectUsers" />
-                    <tnt:NavigationListItem text="Settings" icon="sap-icon://action-settings" /> 
+                    <tnt:NavigationListItem text="{i18n>Shell.nvlSystems}" icon="sap-icon://it-system" select="onSelectProjects" />
                 </tnt:NavigationList> 
             </tnt:SideNavigation>    
         </tnt:sideContent>

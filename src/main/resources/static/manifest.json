@@ -62,6 +62,11 @@
                     "pattern": "", 
                     "name": "applications", 
                     "target": "Applications" 
+                },
+                {
+                    "pattern": "Systems",
+                    "name": "systems",
+                    "target": "Systems"
                 }
             ],
             "targets":
@@ -75,6 +80,11 @@
                 { 
                     "viewName": "NotFound", 
                     "transition": "show", 
+                    "viewLevel": 2 
+                },
+                "Systems": 
+                { 
+                    "viewName": "Systems",
                     "viewLevel": 2 
                 }
             }
