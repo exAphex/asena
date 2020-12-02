@@ -44,6 +44,22 @@ public class RemoteSystemService {
     public RemoteSystem update(RemoteSystem rs, long id) {
         return findById(id)
         .map(r -> {
+            if (rs.getType() != null) {
+                r.setType(rs.getType());
+            }
+
+            if (rs.getAttributes() != null) {
+                r.setAttributes(rs.getAttributes());
+            }
+
+            if (rs.getProperties() != null) {
+                r.setProperties(rs.getProperties());
+            }
+
+            if (rs.getDescription() != null) {
+                r.setDescription(rs.getDescription());
+            }
+
             return remoteSystemRepository.save(r);
         })
         .orElseThrow(() -> new NotFoundException(id));
