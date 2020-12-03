@@ -26,13 +26,14 @@
             </ObjectPageSection>
             <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titConnProperties}">
                 <subSections>
-                    <ObjectPageSubSection titleUppercase="false">
+                    <ObjectPageSubSection  titleUppercase="false">
                         <blocks>
-                            <t:Table id="tblConnProperties" rows="{/properties/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="1" ariaLabelledBy="title">
+                            <t:Table id="tblConnProperties" rows="{/properties/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
                                 <t:rowActionTemplate>
                                     <t:RowAction>
                                         <t:items>
-                                            <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onSystemDelete" />
+                                            <t:RowActionItem visible="true" icon="sap-icon://edit" press="_onConnectionPropertyEdit" />
+                                            <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onConnectionPropertyDelete" />
                                         </t:items>
                                     </t:RowAction>
                                 </t:rowActionTemplate>
@@ -46,19 +47,19 @@
                                 </t:toolbar>
                                 <t:columns>
                                     <t:Column sortProperty="key" width="auto">
-                                        <m:Label text="{i18n>Systems.colName}" />
+                                        <m:Label text="{i18n>EditSystem.colName}" />
                                         <t:template>
                                             <m:Text text="{key}" wrapping="false" />
                                         </t:template>
                                     </t:Column>
                                     <t:Column sortProperty="value" width="auto">
-                                        <m:Label text="{i18n>Systems.colDescription}" />
+                                        <m:Label text="{i18n>EditSystem.colValue}" />
                                         <t:template>
                                             <m:Text text="{value}" wrapping="false" />
                                         </t:template>
                                     </t:Column>
                                     <t:Column sortProperty="description" width="auto">
-                                        <m:Label text="{i18n>Systems.colType}" />
+                                        <m:Label text="{i18n>EditSystem.colDescription}" />
                                         <t:template>
                                             <m:Text text="{description}" wrapping="false" />
                                         </t:template>
@@ -84,7 +85,7 @@
                                 <t:toolbar>
                                     <m:Toolbar>
                                         <m:ToolbarSpacer />
-                                        <m:Button icon="sap-icon://add" press="_onAddConnectionProperty" />
+                                        <m:Button icon="sap-icon://add" press="_onAddWriteMapping" />
                                         <m:ToolbarSeparator />
                                         <m:SearchField search="_onSearchConnectionProperty" width="15rem" />
                                     </m:Toolbar>

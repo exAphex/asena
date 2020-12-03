@@ -23,6 +23,33 @@ sap.ui.define([
             mainModel.setProperty("/showNavButton", true);
         },
 
+        _onAddWriteMapping: function() {
+            var mdl = new JSONModel({});
+            this.getView().setModel(mdl, "mdlAttributeDialog");
+
+            this.isEdit = false;
+            this.isWriteMapping = true;
+            
+            this.loadSuggestions();
+            this.loadFragment("AttributeDialog");
+        },
+
+        loadSuggestions: function() {
+            var sQuery = "/model/suggestions.json";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlSourceSuggestions");
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+            
+        },
+
         loadRemoteSystem: function(id) {
             var sQuery = "/api/v1/remotesystem/" + id;
             var mParameters = {
