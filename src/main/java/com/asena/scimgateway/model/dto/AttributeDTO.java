@@ -20,7 +20,10 @@ public class AttributeDTO {
         aDTO.setDescription(a.getDescription());
         aDTO.setType(a.getType());
         aDTO.setEncrypted(a.isEncrypted());
-        aDTO.setTransformation(ScriptDTO.toDTO(a.getTransformation()));
+        if (a.getTransformation() != null) {
+            aDTO.setTransformation(ScriptDTO.toDTO(a.getTransformation()));
+        }
+        
         return aDTO;
     }
 

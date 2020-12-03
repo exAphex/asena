@@ -43,6 +43,13 @@ public class RemoteSystemController {
 		return retDTO; 
     } 
 
+    @GetMapping("{id}/template")
+    public RemoteSystemDTO getRemoteSystemTemplate(@PathVariable String id) {
+        RemoteSystem rs = remoteSystemService.findById(id).orElseThrow(() -> new NotFoundException(id));
+        RemoteSystem rsSuggestions = ConnectorProcessor.getRemoteSystemByType(rs.getType());
+        return RemoteSystemDTO.toDTO(rsSuggestions);
+    }
+
     @GetMapping("")
     public Set<RemoteSystemDTO> getAllRemoteSystems() {
         Set<RemoteSystemDTO> retDTO = new HashSet<>();

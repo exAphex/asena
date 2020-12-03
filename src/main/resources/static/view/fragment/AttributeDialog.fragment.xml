@@ -15,10 +15,10 @@
                     <Label text="{i18n>AttributeDialog.lblDestination}" />
                     <ComboBox
                         items="{
-                            path: '/CountriesCollection',
-                            sorter: { path: 'text' }
+                            path: 'mdlTargetSuggestions>/writeMappings',
+                            sorter: { path: 'destination' }
                         }">
-                        <core:Item key="{key}" text="{text}" />
+                        <core:Item key="{mdlTargetSuggestions>destination}" text="{mdlTargetSuggestions>destination}" />
                     </ComboBox>
                     <Label text="{i18n>AttributeDialog.lblTransformation}" />
                     <ActionSelect

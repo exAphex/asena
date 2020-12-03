@@ -34,6 +34,14 @@ public class Attribute {
     @ManyToOne(fetch = FetchType.LAZY)
     private Script transformation;
 
+    public Attribute(String source, String destination, String description) {
+        this.source = source;
+        this.destination = destination;
+        this.description = description;
+    }
+
+    public Attribute() {}
+
     public boolean isEncrypted() {
         return isEncrypted;
     }

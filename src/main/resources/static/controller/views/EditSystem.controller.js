@@ -29,12 +29,13 @@ sap.ui.define([
 
             this.isEdit = false;
             this.isWriteMapping = true;
-            
-            this.loadSuggestions();
+
+            this.loadRemoteSystemSuggestions(this.id);
+            this.loadSCIMSuggestions();
             this.loadFragment("AttributeDialog");
         },
 
-        loadSuggestions: function() {
+        loadSCIMSuggestions: function() {
             var sQuery = "/model/suggestions.json";
             var mParameters = {
                 bShowBusyIndicator: true
@@ -47,7 +48,21 @@ sap.ui.define([
                 .catch(function (oError) {
                     this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
                 }.bind(this));
-            
+        },
+
+        loadRemoteSystemSuggestions: function(id) {
+            var sQuery = "/api/v1/remotesystem/" + id + "/template";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlTargetSuggestions");
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
         },
 
         loadRemoteSystem: function(id) {
