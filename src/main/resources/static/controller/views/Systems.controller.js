@@ -44,6 +44,17 @@ sap.ui.define([
             this.loadRemoteSystems();
         },
 
+        _onSystemEdit: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var objSystem = ctx.getModel().getProperty(ctx.getPath());
+
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("editsystem", {
+				app: "editsystem",
+				id: objSystem.id
+			}, false);		
+		},
+
         _onSystemDelete: function(oEvent) {
             var rowItem = oEvent.getSource();
             var ctx = rowItem.getBindingContext();

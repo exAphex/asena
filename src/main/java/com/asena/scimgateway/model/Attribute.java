@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "attributes")
@@ -24,20 +23,35 @@ public class Attribute {
     @SequenceGenerator(name = "attributes_seq", sequenceName = "attributes_sequence", allocationSize = 1)
     private long id;
 
-    @NotBlank(message = "Key is mandatory")
-    private String key;
-    private String value;
+    private String source;
+    private String destination;
     private String description;
 
     @Enumerated(EnumType.ORDINAL)
     private AttributeType type;
     private boolean isEncrypted;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Script transformation;
 
     public boolean isEncrypted() {
         return isEncrypted;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public Script getTransformation() {
@@ -62,22 +76,6 @@ public class Attribute {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public AttributeType getType() {

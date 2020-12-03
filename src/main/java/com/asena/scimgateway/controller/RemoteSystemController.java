@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.dto.RemoteSystemDTO;
 import com.asena.scimgateway.processor.ConnectorProcessor;
@@ -50,6 +51,12 @@ public class RemoteSystemController {
             retDTO.add(RemoteSystemDTO.toDTO(rs));
         }
         return retDTO;
+    }
+
+    @GetMapping("/{id}")
+    public RemoteSystem getRemoteSystem(@PathVariable String id) {
+        RemoteSystem rs = remoteSystemService.findById(id).orElseThrow(() -> new NotFoundException(id));
+        return rs;
     }
 
     @PostMapping("")

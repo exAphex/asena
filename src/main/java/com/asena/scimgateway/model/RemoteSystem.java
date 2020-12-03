@@ -29,12 +29,24 @@ public class RemoteSystem {
     private Set<Attribute> attributes;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Attribute> writeMappings;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties;
 
     @NotBlank(message = "System type is mandatory")
     private String type;
 
-    public RemoteSystem() {}
+    public RemoteSystem() {
+    }
+
+    public Set<Attribute> getWriteMappings() {
+        return writeMappings;
+    }
+
+    public void setWriteMappings(Set<Attribute> writeMappings) {
+        this.writeMappings = writeMappings;
+    }
 
     public RemoteSystem(String name, String description) {
         this.name = name;
@@ -59,6 +71,17 @@ public class RemoteSystem {
 
         if (a != null) {
             attributes.add(a);
+        }
+        return this;
+    }
+
+    public RemoteSystem addWriteMapping(Attribute a) {
+        if (this.writeMappings == null) {
+            this.writeMappings = new HashSet<>();
+        }
+
+        if (a != null) {
+            writeMappings.add(a);
         }
         return this;
     }

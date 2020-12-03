@@ -13,6 +13,7 @@ public class RemoteSystemDTO {
     private String description;
     private boolean active;
     private Set<AttributeDTO> attributes;
+    private Set<AttributeDTO> writeMappings;
     private Set<ConnectionPropertyDTO> properties;
     private String type;
 
@@ -23,23 +24,37 @@ public class RemoteSystemDTO {
         rsDTO.setDescription(rs.getDescription());
         rsDTO.setActive(rs.isActive());
         rsDTO.setType(rs.getType());
-        
+
         if (rs.getAttributes() != null) {
             rsDTO.attributes = new HashSet<>();
             for (Attribute a : rs.getAttributes()) {
-                
                 rsDTO.attributes.add(AttributeDTO.toDTO(a));
             }
         }
-        
+
+        if (rs.getWriteMappings() != null) {
+            rsDTO.writeMappings = new HashSet<>();
+            for (Attribute a : rs.getWriteMappings()) {
+                rsDTO.writeMappings.add(AttributeDTO.toDTO(a));
+            }
+        }
+
         if (rs.getProperties() != null) {
             rsDTO.properties = new HashSet<>();
             for (ConnectionProperty cp : rs.getProperties()) {
                 rsDTO.properties.add(ConnectionPropertyDTO.toDTO(cp));
             }
         }
-        
+
         return rsDTO;
+    }
+
+    public Set<AttributeDTO> getWriteMappings() {
+        return writeMappings;
+    }
+
+    public void setWriteMappings(Set<AttributeDTO> writeMappings) {
+        this.writeMappings = writeMappings;
     }
 
     public RemoteSystem fromDTO() {
@@ -53,6 +68,12 @@ public class RemoteSystemDTO {
         if (this.attributes != null) {
             for (AttributeDTO a : this.attributes) {
                 rs.addAttribute(a.fromDTO());
+            }
+        }
+
+        if (this.writeMappings != null) {
+            for (AttributeDTO a : this.writeMappings) {
+                rs.addWriteMapping(a.fromDTO());
             }
         }
         

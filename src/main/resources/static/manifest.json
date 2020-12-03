@@ -67,6 +67,11 @@
                     "pattern": "Systems",
                     "name": "systems",
                     "target": "Systems"
+                },
+                {
+                    "pattern": "EditSystem/{id}", 
+                    "name": "editsystem", 
+                    "target": "EditSystem" 
                 }
             ],
             "targets":
@@ -85,6 +90,11 @@
                 "Systems": 
                 { 
                     "viewName": "Systems",
+                    "viewLevel": 2 
+                },
+                "EditSystem": 
+                { 
+                    "viewName": "EditSystem",
                     "viewLevel": 2 
                 }
             }

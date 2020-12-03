@@ -5,8 +5,8 @@ import com.asena.scimgateway.model.Attribute.AttributeType;
 
 public class AttributeDTO {
     private long id;
-    private String key;
-    private String value;
+    private String destination;
+    private String source;
     private String description;
     private AttributeType type;
     private boolean isEncrypted;
@@ -15,8 +15,8 @@ public class AttributeDTO {
     public static AttributeDTO toDTO(Attribute a) {
         AttributeDTO aDTO = new AttributeDTO();
         aDTO.setId(a.getId());
-        aDTO.setKey(a.getKey());
-        aDTO.setValue(a.getValue());
+        aDTO.setDestination(a.getDestination());
+        aDTO.setSource(a.getSource());
         aDTO.setDescription(a.getDescription());
         aDTO.setType(a.getType());
         aDTO.setEncrypted(a.isEncrypted());
@@ -24,11 +24,27 @@ public class AttributeDTO {
         return aDTO;
     }
 
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
     public Attribute fromDTO() {
         Attribute a = new Attribute();
         a.setId(this.id);
-        a.setKey(this.key);
-        a.setValue(this.value);
+        a.setDestination(this.destination);
+        a.setSource(this.source);
         a.setDescription(this.description);
         a.setType(this.type);
         a.setEncrypted(this.isEncrypted);
@@ -72,25 +88,7 @@ public class AttributeDTO {
         this.description = description;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
     public void setId(long id) {
         this.id = id;
     }
-
-    
 }
