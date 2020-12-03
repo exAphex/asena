@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.processor.ConnectorProcessor;
@@ -37,11 +39,11 @@ public class RemoteSystemService {
         return remoteSystemRepository.save(rs);
     }
 
-    public Optional<RemoteSystem> findById(long id) {
+    public Optional<RemoteSystem> findById(String id) {
         return remoteSystemRepository.findById(id);
     }
 
-    public RemoteSystem update(RemoteSystem rs, long id) {
+    public RemoteSystem update(RemoteSystem rs, String id) {
         return findById(id)
         .map(r -> {
             if (rs.getType() != null) {
@@ -60,8 +62,20 @@ public class RemoteSystemService {
                 r.setDescription(rs.getDescription());
             }
 
+            r.setActive(rs.isActive());
+
             return remoteSystemRepository.save(r);
         })
         .orElseThrow(() -> new NotFoundException(id));
     }
+
+    @Transactional
+    public RemoteSystem deleteById(String id) {
+        return findById(id)
+        .map(sys -> {
+            remoteSystemRepository.deleteById(id);
+            return sys;
+        })
+        .orElseThrow(() -> new NotFoundException(id));
+    } 
 }

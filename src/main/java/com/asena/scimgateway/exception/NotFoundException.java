@@ -15,4 +15,8 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(RemoteSystem rs) {
         super("Could not find connector type: " + rs.getType());
     }
+
+    public NotFoundException(String id) {
+        super("Could not find id: " + id);
+    }
 }

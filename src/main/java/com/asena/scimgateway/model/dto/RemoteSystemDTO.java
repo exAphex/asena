@@ -12,8 +12,8 @@ public class RemoteSystemDTO {
     private String name;
     private String description;
     private boolean active;
-    private Set<AttributeDTO> attributes = new HashSet<>();
-    private Set<ConnectionPropertyDTO> properties = new HashSet<>();
+    private Set<AttributeDTO> attributes;
+    private Set<ConnectionPropertyDTO> properties;
     private String type;
 
     public static RemoteSystemDTO toDTO(RemoteSystem rs) {
@@ -24,13 +24,21 @@ public class RemoteSystemDTO {
         rsDTO.setActive(rs.isActive());
         rsDTO.setType(rs.getType());
         
-        for (Attribute a : rs.getAttributes()) {
-            rsDTO.attributes.add(AttributeDTO.toDTO(a));
+        if (rs.getAttributes() != null) {
+            rsDTO.attributes = new HashSet<>();
+            for (Attribute a : rs.getAttributes()) {
+                
+                rsDTO.attributes.add(AttributeDTO.toDTO(a));
+            }
         }
-
-        for (ConnectionProperty cp : rs.getProperties()) {
-            rsDTO.properties.add(ConnectionPropertyDTO.toDTO(cp));
+        
+        if (rs.getProperties() != null) {
+            rsDTO.properties = new HashSet<>();
+            for (ConnectionProperty cp : rs.getProperties()) {
+                rsDTO.properties.add(ConnectionPropertyDTO.toDTO(cp));
+            }
         }
+        
         return rsDTO;
     }
 
@@ -42,13 +50,18 @@ public class RemoteSystemDTO {
         rs.setActive(this.active);
         rs.setType(this.type);
         
-        for (AttributeDTO a : this.attributes) {
-            rs.addAttribute(a.fromDTO());
+        if (this.attributes != null) {
+            for (AttributeDTO a : this.attributes) {
+                rs.addAttribute(a.fromDTO());
+            }
         }
-
-        for (ConnectionPropertyDTO cp : this.properties) {
-            rs.addProperty(cp.fromDTO());
+        
+        if (this.properties != null) {
+            for (ConnectionPropertyDTO cp : this.properties) {
+                rs.addProperty(cp.fromDTO());
+            }
         }
+        
         return rs;
     }
 

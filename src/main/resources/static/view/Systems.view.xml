@@ -6,7 +6,7 @@
 				<t:rowActionTemplate>
 					<t:RowAction>
 						<t:items>
-							<t:RowActionItem visible="true" icon="sap-icon://activate" press="_onSystemChangeStatus" />
+							<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onSystemEdit" />
 							<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onSystemDelete" />
 						</t:items>
 					</t:RowAction>
@@ -31,6 +31,12 @@
 						<Label text="{i18n>Systems.colDescription}" />
 						<t:template>
 							<Text text="{description}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					<t:Column sortProperty="type" width="auto">
+						<Label text="{i18n>Systems.colType}" />
+						<t:template>
+							<Text text="{type}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					<t:Column sortProperty="active" width="auto">

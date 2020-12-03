@@ -12,6 +12,7 @@ import com.asena.scimgateway.service.RemoteSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,8 +59,13 @@ public class RemoteSystemController {
     }
 
     @PutMapping("/{id}")
-    public RemoteSystemDTO updateSystem(@RequestBody RemoteSystemDTO rsDTO, @PathVariable long id) {
+    public RemoteSystemDTO updateSystem(@RequestBody RemoteSystemDTO rsDTO, @PathVariable String id) {
         RemoteSystem system = rsDTO.fromDTO();
         return RemoteSystemDTO.toDTO(remoteSystemService.update(system, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSystem(@PathVariable String id) {
+        remoteSystemService.deleteById(id);
     }
 }

@@ -26,10 +26,10 @@ public class RemoteSystem {
     private boolean active;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Attribute> attributes = new HashSet<>();
+    private Set<Attribute> attributes;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ConnectionProperty> properties = new HashSet<>();
+    private Set<ConnectionProperty> properties;
 
     @NotBlank(message = "System type is mandatory")
     private String type;
@@ -42,6 +42,10 @@ public class RemoteSystem {
     }
 
     public RemoteSystem addProperty(ConnectionProperty cp) {
+        if (this.properties == null) {
+            this.properties = new HashSet<>();
+        }
+
         if (cp != null) {
             properties.add(cp);
         }
@@ -49,6 +53,10 @@ public class RemoteSystem {
     }
 
     public RemoteSystem addAttribute(Attribute a) {
+        if (this.attributes == null) {
+            this.attributes = new HashSet<>();
+        }
+
         if (a != null) {
             attributes.add(a);
         }

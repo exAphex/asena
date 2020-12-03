@@ -1,8 +1,9 @@
 sap.ui.define([
     "controller/core/BaseController",
     "sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
     "com/asena/ui5/formatter/Formatter"
-], function (Controller, JSONModel, Formatter) {
+], function (Controller, JSONModel, MessageBox, Formatter) {
     "use strict"; 
     return Controller.extend("com.asena.ui5.controller.views.Systems", {
         formatter: Formatter,
@@ -41,6 +42,33 @@ sap.ui.define([
 
         _onRefreshSystems: function() {
             this.loadRemoteSystems();
+        },
+
+        _onSystemDelete: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var objSystem = ctx.getModel().getProperty(ctx.getPath());
+
+            MessageBox.warning("Are you sure you want to delete the system " + objSystem.name + "?", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+                    if (sAction == MessageBox.Action.OK) {
+                        var sQuery = "/api/v1/remotesystem/" + objSystem.id;
+                        var mParameters = {
+                            bShowBusyIndicator: true
+                        };
+                        this.deleteWithJSONP(sQuery, mParameters)
+                            .then(function () {
+                                this.messageBoxGenerator("System was deleted successfully!", true);
+                                this.loadRemoteSystems();
+                            }.bind(this))
+                            .catch(function (oError) {
+                                this.showError(oError); 
+                            }.bind(this));
+                    }
+				}.bind(this)
+			});
         },
 
         loadRemoteSystems: function() {
