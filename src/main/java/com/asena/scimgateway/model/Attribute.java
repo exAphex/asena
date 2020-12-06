@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity
 @Table(name = "attributes")
 public class Attribute {
@@ -41,6 +43,13 @@ public class Attribute {
     }
 
     public Attribute() {}
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+        hcb.append(id);
+        return hcb.toHashCode();
+    }
 
     public boolean isEncrypted() {
         return isEncrypted;

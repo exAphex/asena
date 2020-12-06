@@ -8,6 +8,7 @@ import com.asena.scimgateway.service.AttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,5 +35,10 @@ public class AttributeController {
     public AttributeDTO updateAttribute(@RequestBody AttributeDTO attrDTO, @PathVariable long id) {
         Attribute a = attrDTO.fromDTO();
         return AttributeDTO.toDTO(attributeService.update(a, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSystem(@PathVariable long id) {
+        attributeService.deleteById(id);
     }
 }

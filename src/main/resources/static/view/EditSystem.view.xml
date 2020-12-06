@@ -79,7 +79,7 @@
                                     <t:RowAction>
                                         <t:items>
                                             <t:RowActionItem visible="true" icon="sap-icon://edit" press="_onWriteMappingEdit" />
-                                            <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onSystemDelete" />
+                                            <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onWriteMappingDelete" />
                                         </t:items>
                                     </t:RowAction>
                                 </t:rowActionTemplate>

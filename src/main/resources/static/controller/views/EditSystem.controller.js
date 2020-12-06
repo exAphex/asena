@@ -1,8 +1,9 @@
 sap.ui.define([
     "controller/core/BaseController",
     "sap/ui/model/json/JSONModel",
-    "com/asena/ui5/formatter/Formatter"
-], function (Controller, JSONModel, Formatter) {
+    "com/asena/ui5/formatter/Formatter",
+    "sap/m/MessageBox"
+], function (Controller, JSONModel, Formatter, MessageBox) {
     "use strict"; 
     return Controller.extend("com.asena.ui5.controller.views.EditSystem", {
         formatter: Formatter,
@@ -56,6 +57,33 @@ sap.ui.define([
             this.loadRemoteSystemSuggestions(this.id);
             this.loadSCIMSuggestions();
             this.loadFragment("AttributeDialog");
+        },
+
+        _onWriteMappingDelete: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
+
+            MessageBox.warning("Are you sure you want to delete the selected write mapping?", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+                    if (sAction == MessageBox.Action.OK) {
+                        var sQuery = "/api/v1/attribute/" + obj.id;
+                        var mParameters = {
+                            bShowBusyIndicator: true
+                        };
+                        this.deleteWithJSONP(sQuery, mParameters)
+                            .then(function () {
+                                this.messageBoxGenerator("Mapping was deleted successfully!", true);
+                                this.loadRemoteSystem(this.id);
+                            }.bind(this))
+                            .catch(function (oError) {
+                                this.showError(oError); 
+                            }.bind(this));
+                    }
+				}.bind(this)
+			});
         },
 
         loadSCIMSuggestions: function() {

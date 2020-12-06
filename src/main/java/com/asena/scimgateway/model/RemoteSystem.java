@@ -86,6 +86,10 @@ public class RemoteSystem {
         return this;
     }
 
+    public void deleteWriteMapping(Attribute a) {
+        writeMappings.remove(a);
+    }
+
     public String getId() {
         return id;
     }
