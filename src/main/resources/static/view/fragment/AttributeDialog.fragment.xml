@@ -7,7 +7,7 @@
                     <Label text="{i18n>AttributeDialog.lblSource}" />
                     <ComboBox
                         id="cmbSourceAttribute"
-                        change="_onChangeSourceAttribute"
+                        value="{mdlAttributeDialog>/source}"
                         items="{
                             path: 'mdlSourceSuggestions>/scim',
                             sorter: { path: 'name' }
@@ -17,7 +17,7 @@
                     <Label text="{i18n>AttributeDialog.lblDestination}" />
                     <ComboBox
                         id="cmdDestinationAttribute"
-                        change="_onChangeDestinationAttribute"
+                        value="{mdlAttributeDialog>/destination}"
                         items="{
                             path: 'mdlTargetSuggestions>/writeMappings',
                             sorter: { path: 'destination' }

@@ -74,10 +74,11 @@
                 <subSections>
                     <ObjectPageSubSection titleUppercase="false">
                         <blocks>
-                            <t:Table id="tblWriteMapping" rows="{/writeMappings/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="1" ariaLabelledBy="title">
+                            <t:Table id="tblWriteMapping" rows="{/writeMappings/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
                                 <t:rowActionTemplate>
                                     <t:RowAction>
                                         <t:items>
+                                            <t:RowActionItem visible="true" icon="sap-icon://edit" press="_onWriteMappingEdit" />
                                             <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onSystemDelete" />
                                         </t:items>
                                     </t:RowAction>

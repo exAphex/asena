@@ -28,7 +28,6 @@ sap.ui.define([
             this.getView().setModel(mdl, "mdlAttributeDialog");
 
             this.isEdit = false;
-            this.isWriteMapping = true;
 
             this.loadRemoteSystemSuggestions(this.id);
             this.loadSCIMSuggestions();
@@ -38,19 +37,25 @@ sap.ui.define([
         _onSaveAttribute: function() {
             var mdl = this.getView().getModel("mdlAttributeDialog");
             var obj = mdl.getProperty("/");
-            this.addWriteMapping(this.id, obj);
+            if (this.isEdit) {
+                this.updateMapping(obj);
+            } else {
+                this.addWriteMapping(this.id, obj);
+            }
         },
 
-        _onChangeSourceAttribute: function(oEvent) {
-            var val = oEvent.getParameter("value");
-            var mdl = this.getView().getModel("mdlAttributeDialog");
-            mdl.setProperty("/source", val);
-        },
+        _onWriteMappingEdit: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
 
-        _onChangeDestinationAttribute: function(oEvent) {
-            var val = oEvent.getParameter("value");
-            var mdl = this.getView().getModel("mdlAttributeDialog");
-            mdl.setProperty("/destination", val);
+            var mdl = new JSONModel(obj);
+            this.getView().setModel(mdl, "mdlAttributeDialog");
+
+            this.isEdit = true;
+            this.loadRemoteSystemSuggestions(this.id);
+            this.loadSCIMSuggestions();
+            this.loadFragment("AttributeDialog");
         },
 
         loadSCIMSuggestions: function() {
@@ -108,6 +113,22 @@ sap.ui.define([
                     this.genericDialog.close();
                     this.messageBoxGenerator("Write mapping added!", true);
                     this.loadRemoteSystem(this.id);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
+
+        updateMapping: function(obj) {
+            var sQuery = "/api/v1/attribute/" + obj.id;
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("Mapping saved!", true);
+                    this.loadRemoteSystem(this.id);;
                 }.bind(this))
                 .catch(function (oError) {
                     this.showError(oError); 
