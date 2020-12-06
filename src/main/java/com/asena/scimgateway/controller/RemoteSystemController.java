@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.dto.AttributeDTO;
 import com.asena.scimgateway.model.dto.RemoteSystemDTO;
 import com.asena.scimgateway.processor.ConnectorProcessor;
 import com.asena.scimgateway.service.RemoteSystemService;
@@ -70,6 +71,11 @@ public class RemoteSystemController {
     public RemoteSystemDTO createSystem(@RequestBody RemoteSystemDTO rsDTO) {
         RemoteSystem system = rsDTO.fromDTO();
         return RemoteSystemDTO.toDTO(remoteSystemService.create(system));
+    }
+
+    @PostMapping("/{id}/write")
+    public RemoteSystemDTO addWriteMapping(@RequestBody AttributeDTO attrDTO, @PathVariable String id) {
+        return RemoteSystemDTO.toDTO(remoteSystemService.addWriteMapping(attrDTO.fromDTO(), id));
     }
 
     @PutMapping("/{id}")

@@ -35,6 +35,24 @@ sap.ui.define([
             this.loadFragment("AttributeDialog");
         },
 
+        _onSaveAttribute: function() {
+            var mdl = this.getView().getModel("mdlAttributeDialog");
+            var obj = mdl.getProperty("/");
+            this.addWriteMapping(this.id, obj);
+        },
+
+        _onChangeSourceAttribute: function(oEvent) {
+            var val = oEvent.getParameter("value");
+            var mdl = this.getView().getModel("mdlAttributeDialog");
+            mdl.setProperty("/source", val);
+        },
+
+        _onChangeDestinationAttribute: function(oEvent) {
+            var val = oEvent.getParameter("value");
+            var mdl = this.getView().getModel("mdlAttributeDialog");
+            mdl.setProperty("/destination", val);
+        },
+
         loadSCIMSuggestions: function() {
             var sQuery = "/model/suggestions.json";
             var mParameters = {
@@ -78,6 +96,22 @@ sap.ui.define([
                 .catch(function (oError) {
                     this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
                 }.bind(this));
-        }
+        },
+
+        addWriteMapping: function(id, obj) {
+            var sQuery = "/api/v1/remotesystem/" + id + "/write";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("Write mapping added!", true);
+                    this.loadRemoteSystem(this.id);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
     });
 });

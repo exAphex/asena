@@ -6,6 +6,8 @@
                 <f:content>
                     <Label text="{i18n>AttributeDialog.lblSource}" />
                     <ComboBox
+                        id="cmbSourceAttribute"
+                        change="_onChangeSourceAttribute"
                         items="{
                             path: 'mdlSourceSuggestions>/scim',
                             sorter: { path: 'name' }
@@ -14,6 +16,8 @@
                     </ComboBox>
                     <Label text="{i18n>AttributeDialog.lblDestination}" />
                     <ComboBox
+                        id="cmdDestinationAttribute"
+                        change="_onChangeDestinationAttribute"
                         items="{
                             path: 'mdlTargetSuggestions>/writeMappings',
                             sorter: { path: 'destination' }
@@ -22,7 +26,7 @@
                     </ComboBox>
                     <Label text="{i18n>AttributeDialog.lblTransformation}" />
                     <ActionSelect
-                        id="select"
+                        id="selectScript"
                         buttons="button1"
                         items="{
                             path: '/ProductCollection',

@@ -91,20 +91,20 @@
                                     </m:Toolbar>
                                 </t:toolbar>
                                 <t:columns>
-                                    <t:Column sortProperty="key" width="auto">
-                                        <m:Label text="{i18n>Systems.colName}" />
+                                    <t:Column sortProperty="source" width="auto">
+                                        <m:Label text="{i18n>EditSystem.colSource}" />
                                         <t:template>
-                                            <m:Text text="{key}" wrapping="false" />
+                                            <m:Text text="{source}" wrapping="false" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column sortProperty="value" width="auto">
-                                        <m:Label text="{i18n>Systems.colDescription}" />
+                                    <t:Column sortProperty="destination" width="auto">
+                                        <m:Label text="{i18n>EditSystem.colDestination}" />
                                         <t:template>
-                                            <m:Text text="{value}" wrapping="false" />
+                                            <m:Text text="{destination}" wrapping="false" />
                                         </t:template>
                                     </t:Column>
                                     <t:Column sortProperty="description" width="auto">
-                                        <m:Label text="{i18n>Systems.colType}" />
+                                        <m:Label text="{i18n>EditSystem.colTransformation}" />
                                         <t:template>
                                             <m:Text text="{description}" wrapping="false" />
                                         </t:template>

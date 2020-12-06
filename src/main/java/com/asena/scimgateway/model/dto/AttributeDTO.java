@@ -51,7 +51,9 @@ public class AttributeDTO {
         a.setDescription(this.description);
         a.setType(this.type);
         a.setEncrypted(this.isEncrypted);
-        a.setTransformation(this.transformation.fromDTO());
+        if (this.transformation != null) {
+            a.setTransformation(this.transformation.fromDTO());
+        }
         return a;
     }
 
