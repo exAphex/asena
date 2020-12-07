@@ -77,7 +77,12 @@
                     "pattern": "Scripts", 
                     "name": "scripts", 
                     "target": "Scripts" 
-                } 
+                },
+                {
+                    "pattern": "EditScript/{id}", 
+                    "name": "editscript", 
+                    "target": "EditScript" 
+                }
             ],
             "targets":
             {
@@ -100,6 +105,11 @@
                 "EditSystem": 
                 { 
                     "viewName": "EditSystem",
+                    "viewLevel": 2 
+                },
+                "EditScript": 
+                { 
+                    "viewName": "EditScript",
                     "viewLevel": 2 
                 },
                 "Scripts": 

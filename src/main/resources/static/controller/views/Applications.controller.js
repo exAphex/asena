@@ -15,6 +15,7 @@ sap.ui.define([
 
         _onObjectMatched: function() {
             this.loadRemoteSystems();
+            this.loadScripts();
     	},
 
         _onDisplay: function () {
@@ -31,6 +32,21 @@ sap.ui.define([
                 .then(function (oData) {
                     var oMainModel = new JSONModel(oData);
                     this.getView().setModel(oMainModel);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+        },
+
+        loadScripts: function() {
+            var sQuery = "/api/v1/script";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlScripts");
                 }.bind(this))
                 .catch(function (oError) {
                     this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);

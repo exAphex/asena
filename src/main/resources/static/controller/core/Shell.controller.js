@@ -20,10 +20,10 @@ sap.ui.define([
 		},
 
 		// TODO this is not working correctly
-		onPressLogOff: function (oEvent) {
+		onPressLogOff: function () {
 		},
 
-		onBackPressed: function (oEvent) {
+		onBackPressed: function () {
 			if (History.getInstance().getPreviousHash() !== undefined) {
 				window.history.go(-1);
 			} else { // nav to home screen if history is lost
@@ -36,6 +36,24 @@ sap.ui.define([
 		onMenuPressed: function() {
 			var tpMain = this.getView().byId("tpMain");	
 			tpMain.setSideExpanded(!tpMain.getSideExpanded());
+		},
+
+		_onSelectSystems: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("systems", {
+				app: "systems"
+			}, false);	
+		},
+
+        _onSelectScripts: function() {
+            sap.ui.core.UIComponent.getRouterFor(this).navTo("scripts", {
+                    app: "scripts"
+            }, false);
+		},
+		
+		_onSelectHome: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("applications", {
+				app: "applications"
+			}, false);	
 		}
 
 	});

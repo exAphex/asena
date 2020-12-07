@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:edit="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.EditScript">
+	<Page title="{/name}" titleAlignment="Center" showHeader="true">
+		<content>
+            <edit:CodeEditor
+                colorTheme="xcode"
+                type="javascript"
+                value='{/content}'
+                height="100%" />
+        </content>
+        <footer>
+            <Toolbar>
+                <ToolbarSpacer/>
+                <Button press="_onSaveScript" text="{i18n>EditScript.btnSave}" type="Emphasized" icon="sap-icon://save" />
+            </Toolbar>
+        </footer>
+	</Page>
+</mvc:View>

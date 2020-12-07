@@ -2,7 +2,11 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.Systems">
 	<Page showHeader="false">
 		<content>
-			<t:Table id="tblSystems" rows="{/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
+			<t:Table id="tblSystems" rows="{path: '/',
+			sorter : {
+				path : 'name' 
+			 }
+		}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
 				<t:rowActionTemplate>
 					<t:RowAction>
 						<t:items>

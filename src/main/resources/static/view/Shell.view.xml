@@ -7,10 +7,16 @@
     controllerName = "com.asena.ui5.controller.core.Shell">
     <tnt:ToolPage id="tpMain">
         <tnt:header>
-            <f:ShellBar showMenuButton="true"
+            <f:ShellBar showMenuButton="true" title="Asena SCIM Gateway" secondTitle="1.0.0"
                 showNavButton="{mainModel>/showNavButton}"
                 navButtonPressed="onBackPressed"
                 menuButtonPressed="onMenuPressed">
+                <f:menu>
+                    <Menu>
+                        <MenuItem text="Flight booking" icon="sap-icon://flight" />
+                        <MenuItem text="Car rental" icon="sap-icon://car-rental" />
+                    </Menu>
+                </f:menu>
                 <f:profile>
                     <f:Avatar initials="UI"/>
                 </f:profile>
@@ -24,7 +30,9 @@
             <tnt:SideNavigation
 				expanded="true">
                 <tnt:NavigationList>
-                    <tnt:NavigationListItem text="{i18n>Shell.nvlSystems}" icon="sap-icon://it-system" select="onSelectProjects" />
+                    <tnt:NavigationListItem text="{i18n>Shell.nvlHome}" icon="sap-icon://home" select="_onSelectHome" />
+                    <tnt:NavigationListItem text="{i18n>Shell.nvlSystems}" icon="sap-icon://it-system" select="_onSelectSystems" />
+                    <tnt:NavigationListItem text="{i18n>Shell.nvlScripts}" icon="sap-icon://syntax" select="_onSelectScripts" />
                 </tnt:NavigationList> 
             </tnt:SideNavigation>    
         </tnt:sideContent>

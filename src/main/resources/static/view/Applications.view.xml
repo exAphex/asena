@@ -13,7 +13,10 @@
 				</m:GenericTile>
 				<m:GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleScripts}" press="_onScriptsPressed">
 					<m:TileContent >
-						<m:NumericContent value="0" icon="sap-icon://syntax" withMargin="false" />
+						<m:NumericContent value="{
+							path: 'mdlScripts>/',
+							formatter: '.formatter.countSystems'
+						}" icon="sap-icon://syntax" withMargin="false" />
 					</m:TileContent>
 				</m:GenericTile>
 			</layout:HorizontalLayout>

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "scripts")
@@ -20,6 +21,9 @@ public class Script {
     @Column(unique = true)
     @NotBlank(message = "Scriptname is mandatory")
     private String name;
+
+    @Size(max=8192, message = "Script is too long")
+    @Column(length = 8192)
     private String content;
 
     public long getId() {
