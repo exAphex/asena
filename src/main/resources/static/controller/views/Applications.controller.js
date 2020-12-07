@@ -41,6 +41,12 @@ sap.ui.define([
             sap.ui.core.UIComponent.getRouterFor(this).navTo("systems", {
                     app: "systems"
             }, false);
+        },
+
+        _onScriptsPressed: function(oEvent) {
+            sap.ui.core.UIComponent.getRouterFor(this).navTo("scripts", {
+                    app: "scripts"
+            }, false);
         }
 
     });

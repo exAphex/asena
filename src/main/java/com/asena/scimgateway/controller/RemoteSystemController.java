@@ -62,9 +62,9 @@ public class RemoteSystemController {
     }
 
     @GetMapping("/{id}")
-    public RemoteSystem getRemoteSystem(@PathVariable String id) {
+    public RemoteSystemDTO getRemoteSystem(@PathVariable String id) {
         RemoteSystem rs = remoteSystemService.findById(id).orElseThrow(() -> new NotFoundException(id));
-        return rs;
+        return RemoteSystemDTO.toDTO(rs);
     }
 
     @PostMapping("")
