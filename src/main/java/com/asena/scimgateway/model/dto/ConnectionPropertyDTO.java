@@ -8,7 +8,7 @@ public class ConnectionPropertyDTO {
     private String key;
     private String value;
     private String description;
-    private boolean isEncrypted;
+    private boolean encrypted;
     private ConnectionPropertyType type;
 
     public static ConnectionPropertyDTO toDTO(ConnectionProperty cp) {
@@ -28,7 +28,7 @@ public class ConnectionPropertyDTO {
         cp.setKey(this.key);
         cp.setValue(this.value);
         cp.setDescription(this.description);
-        cp.setEncrypted(this.isEncrypted);
+        cp.setEncrypted(this.encrypted);
         cp.setType(this.type);
         return cp;
     }
@@ -46,11 +46,11 @@ public class ConnectionPropertyDTO {
     }
 
     public boolean isEncrypted() {
-        return isEncrypted;
+        return encrypted;
     }
 
     public void setEncrypted(boolean isEncrypted) {
-        this.isEncrypted = isEncrypted;
+        this.encrypted = isEncrypted;
     }
 
     public String getDescription() {

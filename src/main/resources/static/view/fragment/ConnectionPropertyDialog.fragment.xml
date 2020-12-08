@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:t="sap.ui.table">
+    <Dialog draggable="true" resizable="true" title="{i18n>ConnectionPropertyDialog.title}">
+        <content>
+            <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
+                <f:content>
+                    <Label text="{i18n>ConnectionPropertyDialog.lblKey}" />
+                    <Input value="{mdlConnectionProperty>/key}" />
+                    <Label text="{i18n>ConnectionPropertyDialog.lblValue}" />
+                    <Input value="{mdlConnectionProperty>/value}" />
+                    <Label text="{i18n>ConnectionPropertyDialog.lblDescription}" />
+                    <Input value="{mdlConnectionProperty>/description}" />
+                    <Label text="{i18n>ConnectionPropertyDialog.lblEncrypted}" />
+                    <Switch type="AcceptReject" state="{mdlConnectionProperty>/encrypted}" />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="{i18n>btnSave}" type="Emphasized" press="_onSaveConnectionProperty" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="_onCloseDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

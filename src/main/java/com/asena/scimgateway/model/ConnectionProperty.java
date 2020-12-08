@@ -26,16 +26,16 @@ public class ConnectionProperty {
     private String key;
     private String value;
     private String description;
-    private boolean isEncrypted;
+    private boolean encrypted;
 
     @Enumerated(EnumType.ORDINAL)
     private ConnectionPropertyType type;
 
-    public ConnectionProperty(String key, String value, String description, boolean isEncrypted, ConnectionPropertyType type) {
+    public ConnectionProperty(String key, String value, String description, boolean encrypted, ConnectionPropertyType type) {
         this.key = key;
         this.value = value;
         this.description = description;
-        this.isEncrypted = isEncrypted;
+        this.encrypted = encrypted;
         this.type = type;
     }
 
@@ -54,11 +54,11 @@ public class ConnectionProperty {
     }
 
     public boolean isEncrypted() {
-        return isEncrypted;
+        return encrypted;
     }
 
     public void setEncrypted(boolean isEncrypted) {
-        this.isEncrypted = isEncrypted;
+        this.encrypted = isEncrypted;
     }
 
     public String getDescription() {
