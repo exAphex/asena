@@ -36,6 +36,14 @@ sap.ui.define([
             this.loadFragment("AttributeDialog");
         },
 
+        _onAddConnectionProperty: function() {
+            var mdl = new JSONModel({});
+            this.getView().setModel(mdl, "mdlConnectionProperty");
+
+            this.isEdit = false;
+            this.loadFragment("ConnectionPropertyDialog");
+        },
+
         _onSaveAttribute: function() {
             var mdl = this.getView().getModel("mdlAttributeDialog");
             var obj = mdl.getProperty("/");
