@@ -20,10 +20,6 @@
                 <f:profile>
                     <f:Avatar initials="UI"/>
                 </f:profile>
-                <f:searchManager>
-                    <f:SearchManager id="searchField"
-                        search="onSearchProjects" />
-                </f:searchManager>
             </f:ShellBar>
         </tnt:header>
         <tnt:sideContent>

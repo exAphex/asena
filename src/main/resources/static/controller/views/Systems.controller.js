@@ -127,5 +127,13 @@ sap.ui.define([
                     this.showError(oError); 
                 }.bind(this));
         },
+
+        _onSearchSystems: function(oEvent) {
+            var sQuery = oEvent.getParameter("query");
+
+            var oFilter = this.getSystemFilters(sQuery);
+            var oTable = this.getView().byId("tblSystems");
+            oTable.getBinding("rows").filter(oFilter, "Application");
+        }
     });
 });

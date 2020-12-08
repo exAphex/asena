@@ -28,7 +28,11 @@
                 <subSections>
                     <ObjectPageSubSection  titleUppercase="false">
                         <blocks>
-                            <t:Table id="tblConnProperties" rows="{/properties/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
+                            <t:Table id="tblConnProperties" rows="{path: '/properties/',
+                            sorter : {
+                                path : 'key' 
+                             }
+                        }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
                                 <t:rowActionTemplate>
                                     <t:RowAction>
                                         <t:items>
@@ -74,7 +78,11 @@
                 <subSections>
                     <ObjectPageSubSection titleUppercase="false">
                         <blocks>
-                            <t:Table id="tblWriteMapping" rows="{/writeMappings/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
+                            <t:Table id="tblWriteMapping" rows="{path: '/writeMappings/',
+                            sorter : {
+                                path : 'key' 
+                             }
+                        }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
                                 <t:rowActionTemplate>
                                     <t:RowAction>
                                         <t:items>
@@ -88,7 +96,7 @@
                                         <m:ToolbarSpacer />
                                         <m:Button icon="sap-icon://add" press="_onAddWriteMapping" />
                                         <m:ToolbarSeparator />
-                                        <m:SearchField search="_onSearchConnectionProperty" width="15rem" />
+                                        <m:SearchField search="_onSearchWriteMappings" width="15rem" />
                                     </m:Toolbar>
                                 </t:toolbar>
                                 <t:columns>

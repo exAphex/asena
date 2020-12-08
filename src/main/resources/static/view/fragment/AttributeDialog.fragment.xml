@@ -27,17 +27,14 @@
                     <Label text="{i18n>AttributeDialog.lblTransformation}" />
                     <ActionSelect
                         id="selectScript"
-                        buttons="button1"
+                        forceSelection="false"
                         items="{
-                            path: '/ProductCollection',
-                            sorter: { path: 'Name' }
+                            path: 'mdlScriptSuggestions>/',
+                            sorter: { path: 'name' }
                         }">
                         <items>
-                            <core:Item key="{ProductId}" text="{Name}" />
+                            <core:Item key="{mdlScriptSuggestions>id}" text="{mdlScriptSuggestions>name}" />
                         </items>
-                        <dependents>
-                            <Button id="button1" text="{i18n>AttributeDialog.btnAddScript}" press="_onAddScript" />
-                        </dependents>
                     </ActionSelect>
                 </f:content>
             </f:SimpleForm>

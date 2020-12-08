@@ -31,6 +31,7 @@ sap.ui.define([
             this.isEdit = false;
 
             this.loadRemoteSystemSuggestions(this.id);
+            this.loadScriptSuggestions();
             this.loadSCIMSuggestions();
             this.loadFragment("AttributeDialog");
         },
@@ -56,6 +57,7 @@ sap.ui.define([
             this.isEdit = true;
             this.loadRemoteSystemSuggestions(this.id);
             this.loadSCIMSuggestions();
+            this.loadScriptSuggestions();
             this.loadFragment("AttributeDialog");
         },
 
@@ -100,6 +102,22 @@ sap.ui.define([
                     this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
                 }.bind(this));
         },
+
+        loadScriptSuggestions: function() {
+            var sQuery = "/api/v1/script";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    oData.push({id:null, name:""});
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlScriptSuggestions");
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+        }, 
 
         loadRemoteSystemSuggestions: function(id) {
             var sQuery = "/api/v1/remotesystem/" + id + "/template";
@@ -162,5 +180,21 @@ sap.ui.define([
                     this.showError(oError); 
                 }.bind(this));
         },
+
+        _onSearchConnectionProperty: function(oEvent) {
+            var sQuery = oEvent.getParameter("query");
+
+            var oFilter = this.getConnectionPropertyFilters(sQuery);
+            var oTable = this.getView().byId("tblConnProperties");
+            oTable.getBinding("rows").filter(oFilter, "Application");
+        },
+
+        _onSearchWriteMappings: function(oEvent) {
+            var sQuery = oEvent.getParameter("query");
+
+            var oFilter = this.getWriteMappingFilters(sQuery);
+            var oTable = this.getView().byId("tblWriteMapping");
+            oTable.getBinding("rows").filter(oFilter, "Application");
+        }
     });
 });

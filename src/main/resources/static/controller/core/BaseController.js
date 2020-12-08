@@ -198,6 +198,40 @@ sap.ui.define([
 
         _onCloseDialog: function() {
             this.genericDialog.close();
+        },
+
+        getSystemFilters: function(sQuery) {
+            var oFilter = new Filter([
+                new Filter("name", FilterOperator.Contains, sQuery),
+                new Filter("description", FilterOperator.Contains, sQuery),
+                new Filter("type", FilterOperator.Contains, sQuery)
+            ]);
+            return oFilter;
+        },
+
+        getScriptFilters: function(sQuery) {
+            var oFilter = new Filter([
+                new Filter("name", FilterOperator.Contains, sQuery)
+            ]);
+            return oFilter;
+        },
+
+        getConnectionPropertyFilters: function(sQuery) {
+            var oFilter = new Filter([
+                new Filter("key", FilterOperator.Contains, sQuery),
+                new Filter("value", FilterOperator.Contains, sQuery),
+                new Filter("description", FilterOperator.Contains, sQuery)
+            ]);
+            return oFilter;
+        },
+
+        getWriteMappingFilters: function(sQuery) {
+            var oFilter = new Filter([
+                new Filter("source", FilterOperator.Contains, sQuery),
+                new Filter("destination", FilterOperator.Contains, sQuery),
+                new Filter("description", FilterOperator.Contains, sQuery)
+            ]);
+            return oFilter;
         }
     });
 });
