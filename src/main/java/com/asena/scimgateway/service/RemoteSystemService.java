@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
+import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.processor.ConnectorProcessor;
 import com.asena.scimgateway.repository.RemoteSystemRepository;
@@ -89,4 +90,12 @@ public class RemoteSystemService {
         rs.addWriteMapping(a);
         return remoteSystemRepository.save(rs);
     }
+   
+    public RemoteSystem addConnectionProperty(ConnectionProperty cp, String id) {
+        RemoteSystem rs = findById(id).orElseThrow(() -> new NotFoundException(id));
+        rs.addProperty(cp);
+        return remoteSystemRepository.save(rs);
+    }
+
+    
 }
