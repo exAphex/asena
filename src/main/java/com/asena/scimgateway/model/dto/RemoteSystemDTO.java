@@ -6,6 +6,7 @@ import java.util.Set;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.User;
 
 public class RemoteSystemDTO {
     private String id;
@@ -16,6 +17,7 @@ public class RemoteSystemDTO {
     private Set<AttributeDTO> writeMappings;
     private Set<ConnectionPropertyDTO> properties;
     private String type;
+    private User serviceUser;
 
     public static RemoteSystemDTO toDTO(RemoteSystem rs) {
         RemoteSystemDTO rsDTO = new RemoteSystemDTO();
@@ -45,8 +47,18 @@ public class RemoteSystemDTO {
                 rsDTO.properties.add(ConnectionPropertyDTO.toDTO(cp));
             }
         }
+        
+        rsDTO.setServiceUser(rs.getServiceUser());
 
         return rsDTO;
+    }
+
+    public User getServiceUser() {
+        return serviceUser;
+    }
+
+    public void setServiceUser(User serviceUser) {
+        this.serviceUser = serviceUser;
     }
 
     public Set<AttributeDTO> getWriteMappings() {
@@ -82,6 +94,8 @@ public class RemoteSystemDTO {
                 rs.addProperty(cp.fromDTO());
             }
         }
+
+        rs.setServiceUser(this.serviceUser);
         
         return rs;
     }

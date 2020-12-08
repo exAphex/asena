@@ -17,9 +17,21 @@
                                     <m:Label text="{i18n>EditSystem.lblDescription}" />
                                     <m:Input value="{/description}" />
                                     <m:Label text="{i18n>EditSystem.lblStatus}" />
-                                    <m:Switch type="AcceptReject" state="{/status}" />
+                                    <m:Switch type="AcceptReject" state="{/active}" />
                                 </f:content>
                             </f:SimpleForm>
+                            <m:Panel width="auto" visible="{/active}">
+                                <m:content>
+                                    <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
+                                        <f:content>
+                                            <m:Label text="{i18n>EditSystem.lblUserName}" />
+                                            <m:Input value="{/serviceUser/userName}" editable="false" />
+                                            <m:Label text="{i18n>EditSystem.lblPassword}" />
+                                            <m:Input value="{/serviceUser/password}" />
+                                        </f:content>
+                                    </f:SimpleForm>
+                                </m:content>
+                            </m:Panel>
                         </blocks>
                     </ObjectPageSubSection>
                 </subSections>
