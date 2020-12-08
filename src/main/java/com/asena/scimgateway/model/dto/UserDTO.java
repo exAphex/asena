@@ -1,30 +1,33 @@
-package com.asena.scimgateway.model;
+package com.asena.scimgateway.model.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import com.asena.scimgateway.model.User;
 
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-    @SequenceGenerator(name = "users_seq", sequenceName = "users_sequence", allocationSize = 1)
+public class UserDTO {
     private long id;
-
-    @Column(unique = true)
-    @NotBlank(message = "Username is mandatory")
     private String userName;
-    @NotBlank(message = "Username is mandatory")
     private String password;
     private String mail;
     private boolean active;
+
+    public User fromDTO() {
+        User u = new User();
+        u.setId(this.id);
+        u.setUserName(this.userName);
+        u.setPassword(this.password);
+        u.setMail(this.mail);
+        u.setActive(this.active);
+        return u;
+    }
+
+    public static UserDTO toDTO(User u) {
+        UserDTO usrDTO = new UserDTO();
+        usrDTO.setId(u.getId());
+        usrDTO.setUserName(u.getUserName());
+        usrDTO.setPassword(u.getPassword());
+        usrDTO.setMail(u.getMail());
+        usrDTO.setActive(u.isActive());
+        return usrDTO;
+    }
 
     public long getId() {
         return id;

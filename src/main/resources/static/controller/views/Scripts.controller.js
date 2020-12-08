@@ -33,7 +33,7 @@ sap.ui.define([
         _onSaveScript: function() {
             var mdl = this.getView().getModel("mdlScriptDialog");
             var scriptObj = mdl.getProperty("/");
-            scriptObj.content = "function " + scriptObj.name + "(param) {\n}";
+            scriptObj.content = "/*\n * Author: \n * Description: \n * Created on: " + new Date().toISOString().slice(0, 10) + "\n*/\n\nfunction " + scriptObj.name + "(param) {\n\treturn \"\";\n}";
             this.createScript(scriptObj);
         },
 

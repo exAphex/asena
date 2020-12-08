@@ -8,7 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -34,10 +36,22 @@ public class RemoteSystem {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "serviceuser_id", referencedColumnName = "id")
+    private User serviceUser;
+
     @NotBlank(message = "System type is mandatory")
     private String type;
 
     public RemoteSystem() {
+    }
+
+    public User getServiceUser() {
+        return serviceUser;
+    }
+
+    public void setServiceUser(User serviceUser) {
+        this.serviceUser = serviceUser;
     }
 
     public Set<Attribute> getWriteMappings() {

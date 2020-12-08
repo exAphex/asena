@@ -21,6 +21,9 @@ public class RemoteSystemService {
     @Autowired
     private RemoteSystemRepository remoteSystemRepository;
 
+    @Autowired
+    private UserService userService;
+
     public List<RemoteSystem> list() {
         return remoteSystemRepository.findAll();
     }
@@ -36,6 +39,7 @@ public class RemoteSystemService {
         rs.setActive(false);
         rs.setAttributes(connector.getAttributes());
         rs.setProperties(connector.getProperties());
+        rs.setServiceUser(userService.createServiceUser(rs.getName()));
 
         return remoteSystemRepository.save(rs);
     }
