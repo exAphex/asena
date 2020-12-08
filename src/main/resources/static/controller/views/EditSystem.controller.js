@@ -41,7 +41,19 @@ sap.ui.define([
             this.getView().setModel(mdl, "mdlConnectionProperty");
 
             this.isEdit = false;
+            this.loadRemoteSystemSuggestions(this.id);
             this.loadFragment("ConnectionPropertyDialog");
+        },
+
+        _onSaveConnectionProperty: function() {
+            var mdl = this.getView().getModel("mdlConnectionProperty");
+            var obj = mdl.getProperty("/");
+            console.log(obj);
+            if (this.isEdit) {
+                //this.updateMapping(obj);
+            } else {
+                //this.addWriteMapping(this.id, obj);
+            }
         },
 
         _onSaveAttribute: function() {

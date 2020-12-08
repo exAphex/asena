@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:t="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="com.asena.ui5.controller.views.EditSystem">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="com.asena.ui5.controller.views.EditSystem">
     <ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
         <headerTitle>
             <ObjectPageHeader objectTitle="{/name}" class="sapUiTinyMarginTop" objectSubtitle="{/description}" />
@@ -8,6 +8,7 @@
                 <subSections>
                     <ObjectPageSubSection titleUppercase="false">
                         <blocks>
+                            <l:VerticalLayout class="sapUiContentPadding" width="100%">
                             <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
                                 <f:content>
                                     <m:Label text="{i18n>EditSystem.lblSystemName}" />
@@ -32,6 +33,7 @@
                                     </f:SimpleForm>
                                 </m:content>
                             </m:Panel>
+                            </l:VerticalLayout>
                         </blocks>
                     </ObjectPageSubSection>
                 </subSections>

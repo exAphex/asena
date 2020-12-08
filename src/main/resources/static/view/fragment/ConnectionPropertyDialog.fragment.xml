@@ -5,7 +5,12 @@
             <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
                 <f:content>
                     <Label text="{i18n>ConnectionPropertyDialog.lblKey}" />
-                    <Input value="{mdlConnectionProperty>/key}" />
+                    <ComboBox value="{mdlConnectionProperty>/key}" items="{
+                            path: 'mdlTargetSuggestions>/properties',
+                            sorter: { path: 'key' }
+                        }">
+                        <core:Item key="{mdlTargetSuggestions>key}" text="{mdlTargetSuggestions>key}" />
+                    </ComboBox>
                     <Label text="{i18n>ConnectionPropertyDialog.lblValue}" />
                     <Input value="{mdlConnectionProperty>/value}" />
                     <Label text="{i18n>ConnectionPropertyDialog.lblDescription}" />
