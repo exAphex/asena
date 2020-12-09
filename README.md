@@ -9,11 +9,14 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 * Segregation of duties by creating different communication users for each system
 * Fieldtested
 
-## Supported systems
+### Supported target systems
 Currently only hardcoded connectors are supported by asena. In the next releases we want to give users to the functionality to create own connectors.
 
 Supported systems:
 * CSV
+
+### Supported client systems
+* SAP Identity Management
 
 ## Getting started
 ### 1. Create a new target system
@@ -27,3 +30,9 @@ Change the mapping between the SCIM attributes received by Asena and your target
 
 ### 4. Activate System
 Activate the system. A communication user will be provided. Use this user for basic auth to communicate with Asena. Also a URL for the SCIM communication will be provided.
+
+## Scripting
+Using the scripting engine, you can create complex tranformation rules in a simple manner.
+Scripts always take "param" as the current value of the attribute. The return value will then be written to the remote system.
+
+### Example
