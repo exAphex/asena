@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.CSVConnector;
+import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class ConnectorProcessor {
@@ -26,6 +27,11 @@ public class ConnectorProcessor {
         }
 
         return null;
+    }
+
+    public static IConnector getConnectorByType(String type) {
+        CSVConnector csv = new CSVConnector();
+        return csv;
     }
 
 }

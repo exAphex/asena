@@ -13,4 +13,5 @@ public interface RemoteSystemRepository extends JpaRepository<RemoteSystem, Long
     public Optional<RemoteSystem> findById(String id); 
     public void deleteById(String id);
     List<RemoteSystem> findByWriteMappingsId(long id);
+    List<RemoteSystem> findByPropertiesId(long id);
 }

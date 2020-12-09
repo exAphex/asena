@@ -1,5 +1,7 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="com.asena.ui5.controller.views.EditSystem">
-    <ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
+    <m:Page title="{/name}" titleAlignment="Center" showHeader="true">
+		<m:content>
+            <ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
         <headerTitle>
             <ObjectPageHeader objectTitle="{/name}" class="sapUiTinyMarginTop" objectSubtitle="{/description}" />
         </headerTitle>
@@ -140,4 +142,12 @@
             </ObjectPageSection>
         </sections>
     </ObjectPageLayout>
+</m:content>
+        <m:footer>
+            <m:OverflowToolbar>
+				<m:ToolbarSpacer />
+				<m:Button type="Emphasized" press="_onSaveSystem" text="{i18n>EditSystem.btnSave}"/>
+			</m:OverflowToolbar>
+        </m:footer>
+    </m:Page> 
 </mvc:View>

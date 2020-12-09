@@ -104,6 +104,10 @@ public class RemoteSystem {
         writeMappings.remove(a);
     }
 
+    public void deleteProperty(ConnectionProperty cp) {
+        properties.remove(cp);
+    }
+
     public String getId() {
         return id;
     }

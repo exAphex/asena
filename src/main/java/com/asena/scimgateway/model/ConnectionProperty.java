@@ -10,6 +10,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity
 @Table(name = "connectionproperties")
 public class ConnectionProperty {
@@ -41,6 +43,13 @@ public class ConnectionProperty {
 
     public ConnectionProperty() {}
 
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+        hcb.append(id);
+        return hcb.toHashCode();
+    }
+    
     public ConnectionPropertyType getType() {
         return type;
     }

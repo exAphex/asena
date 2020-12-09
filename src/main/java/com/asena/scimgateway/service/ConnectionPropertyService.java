@@ -1,10 +1,13 @@
 package com.asena.scimgateway.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.repository.ConnectionPropertyRepository;
+import com.asena.scimgateway.repository.RemoteSystemRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service;
 public class ConnectionPropertyService {
     @Autowired
     private ConnectionPropertyRepository connectionPropertyRepository;
+
+    @Autowired
+    private RemoteSystemRepository remoteSystemRepository;
 
     public Optional<ConnectionProperty> findById(long id) {
         return connectionPropertyRepository.findById(id);
@@ -31,11 +37,11 @@ public class ConnectionPropertyService {
     }
 
     public void delete(ConnectionProperty cp) {
-        /*List<RemoteSystem> rs = remoteSystemRepository.findByWriteMappingsId(a.getId());
+        List<RemoteSystem> rs = remoteSystemRepository.findByPropertiesId(cp.getId());
         for (RemoteSystem r : rs) {
-            r.deleteWriteMapping(a);
+            r.deleteProperty(cp);
             remoteSystemRepository.save(r);
-        }*/
+        }
 
         connectionPropertyRepository.delete(cp);
     }

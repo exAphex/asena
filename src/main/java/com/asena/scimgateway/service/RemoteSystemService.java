@@ -52,23 +52,12 @@ public class RemoteSystemService {
     public RemoteSystem update(RemoteSystem rs, String id) {
         return findById(id)
         .map(r -> {
-            if (rs.getType() != null) {
-                r.setType(rs.getType());
-            }
-
-            if (rs.getAttributes() != null) {
-                r.setAttributes(rs.getAttributes());
-            }
-
-            if (rs.getProperties() != null) {
-                r.setProperties(rs.getProperties());
-            }
-
-            if (rs.getDescription() != null) {
-                r.setDescription(rs.getDescription());
-            }
-
+            r.setDescription(rs.getDescription()); 
             r.setActive(rs.isActive());
+
+            if (rs.getServiceUser() != null) {
+                r.getServiceUser().setPassword(rs.getServiceUser().getPassword());
+            }
 
             return remoteSystemRepository.save(r);
         })

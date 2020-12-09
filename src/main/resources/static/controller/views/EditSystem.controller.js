@@ -48,11 +48,10 @@ sap.ui.define([
         _onSaveConnectionProperty: function() {
             var mdl = this.getView().getModel("mdlConnectionProperty");
             var obj = mdl.getProperty("/");
-            console.log(obj);
             if (this.isEdit) {
-                //this.updateMapping(obj);
+                this.updateProperty(obj);
             } else {
-                //this.addWriteMapping(this.id, obj);
+                this.addConnectionProperty(this.id, obj);
             }
         },
 
@@ -81,6 +80,19 @@ sap.ui.define([
             this.loadFragment("AttributeDialog");
         },
 
+        _onConnectionPropertyEdit: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
+
+            var mdl = new JSONModel(obj);
+            this.getView().setModel(mdl, "mdlConnectionProperty");
+
+            this.isEdit = true;
+            this.loadRemoteSystemSuggestions(this.id);
+            this.loadFragment("ConnectionPropertyDialog");
+        },
+
         _onWriteMappingDelete: function(oEvent) {
             var rowItem = oEvent.getSource();
             var ctx = rowItem.getBindingContext();
@@ -106,6 +118,39 @@ sap.ui.define([
                     }
 				}.bind(this)
 			});
+        },
+
+        _onConnectionPropertyDelete: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
+
+            MessageBox.warning("Are you sure you want to delete the selected property?", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+                    if (sAction == MessageBox.Action.OK) {
+                        var sQuery = "/api/v1/property/" + obj.id;
+                        var mParameters = {
+                            bShowBusyIndicator: true
+                        };
+                        this.deleteWithJSONP(sQuery, mParameters)
+                            .then(function () {
+                                this.messageBoxGenerator("Property was deleted successfully!", true);
+                                this.loadRemoteSystem(this.id);
+                            }.bind(this))
+                            .catch(function (oError) {
+                                this.showError(oError); 
+                            }.bind(this));
+                    }
+				}.bind(this)
+			});
+        },
+
+        _onSaveSystem: function(oEvent) {
+            var mdl = this.getView().getModel();
+            var obj = mdl.getProperty("/");
+            this.updateRemoteSystem(obj);
         },
 
         loadSCIMSuggestions: function() {
@@ -185,6 +230,38 @@ sap.ui.define([
                 }.bind(this));
         },
 
+        updateProperty: function(obj) {
+            var sQuery = "/api/v1/property/" + obj.id;
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("Connection property saved!", true);
+                    this.loadRemoteSystem(this.id);;
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
+
+        addConnectionProperty: function(id, obj) {
+            var sQuery = "/api/v1/remotesystem/" + id + "/connection";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("Connection property added!", true);
+                    this.loadRemoteSystem(this.id);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
+
         updateMapping: function(obj) {
             var sQuery = "/api/v1/attribute/" + obj.id;
             var mParameters = {
@@ -194,6 +271,21 @@ sap.ui.define([
                 .then(function () {
                     this.genericDialog.close();
                     this.messageBoxGenerator("Mapping saved!", true);
+                    this.loadRemoteSystem(this.id);;
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
+
+        updateRemoteSystem: function(obj) {
+            var sQuery = "/api/v1/remotesystem/" + this.id;
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.messageBoxGenerator("Remote system saved!", true);
                     this.loadRemoteSystem(this.id);;
                 }.bind(this))
                 .catch(function (oError) {
