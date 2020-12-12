@@ -9,7 +9,7 @@ import com.asena.scimgateway.model.RemoteSystem;
 import com.jayway.jsonpath.JsonPath;
 
 public class SCIMProcessor {
-    public static Object processUser(RemoteSystem rs, Object obj) {
+    public static Object processUser(RemoteSystem rs, Object obj) throws Exception {
         Set<Attribute> attrs = rs.getWriteMappings();
         HashMap<String, Object> data = new HashMap<>();
         for (Attribute a : attrs) {
@@ -30,7 +30,8 @@ public class SCIMProcessor {
         return retObj;
     }
 
-    public static void transferToConnector(String type, RemoteSystem rs, HashMap<String, Object> data) {
+    public static void transferToConnector(String type, RemoteSystem rs, HashMap<String, Object> data)
+            throws Exception {
         IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.writeData(type, rs, data);
     }

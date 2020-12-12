@@ -27,7 +27,8 @@ public class SCIMUserController {
     private RemoteSystemService remoteSystemService;
 
     @PostMapping("") 
-    public @ResponseBody Object usersPost(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response){
+    public @ResponseBody Object usersPost(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response)
+            throws Exception {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         response.setStatus(201);
         return SCIMProcessor.processUser(rs, params);

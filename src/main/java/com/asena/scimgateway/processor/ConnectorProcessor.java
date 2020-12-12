@@ -3,16 +3,16 @@ package com.asena.scimgateway.processor;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.asena.scimgateway.connector.CSVConnector;
 import com.asena.scimgateway.connector.IConnector;
+import com.asena.scimgateway.connector.LDAPConnector;
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class ConnectorProcessor {
     public static Set<RemoteSystem> getAvailableConnectors() {
         Set<RemoteSystem> retSystems = new HashSet<>();
-        CSVConnector csv = new CSVConnector();
+        LDAPConnector ldap = new LDAPConnector();
         
-        retSystems.add(csv.getRemoteSystemTemplate());
+        retSystems.add(ldap.getRemoteSystemTemplate());
         
         return retSystems;
     }
@@ -30,7 +30,7 @@ public class ConnectorProcessor {
     }
 
     public static IConnector getConnectorByType(String type) {
-        CSVConnector csv = new CSVConnector();
+        LDAPConnector csv = new LDAPConnector();
         return csv;
     }
 
