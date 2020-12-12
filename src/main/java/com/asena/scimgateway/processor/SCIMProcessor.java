@@ -16,7 +16,7 @@ public class SCIMProcessor {
             Object o = getObjectFromPath(obj, a.getSource());
             data.put(a.getDestination(), o);
         } 
-        transferToConnector("User", rs, data);
+        transferToConnector("CreateUser", rs, data);
         return obj;
     }
 
@@ -33,7 +33,8 @@ public class SCIMProcessor {
     public static void transferToConnector(String type, RemoteSystem rs, HashMap<String, Object> data)
             throws Exception {
         IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
-        conn.writeData(type, rs, data);
+        conn.setupConnector(rs);
+        conn.writeData(type, data);
     }
 
 }

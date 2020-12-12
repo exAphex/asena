@@ -14,6 +14,11 @@ public class AttributeDTO {
 
     public static AttributeDTO toDTO(Attribute a) {
         AttributeDTO aDTO = new AttributeDTO();
+
+        if (a == null) {
+            return null;
+        }
+        
         aDTO.setId(a.getId());
         aDTO.setDestination(a.getDestination());
         aDTO.setSource(a.getSource());

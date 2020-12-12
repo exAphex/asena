@@ -3,11 +3,12 @@ package com.asena.scimgateway.connector;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
+import com.asena.scimgateway.utils.ConnectorUtil;
 
+import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 
@@ -21,11 +22,16 @@ public class LDAPConnector implements IConnector {
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
         RemoteSystem retSystem = new RemoteSystem();
-        retSystem.addProperty(new ConnectionProperty("host", "example.com", "Hostname of the ldap server", false, ConnectionPropertyType.STRING));
-        retSystem.addProperty(new ConnectionProperty("port", "389", "Port of the ldap server", false, ConnectionPropertyType.INT));
-        retSystem.addProperty(new ConnectionProperty("user", "uid=admin,dc=example,dc=com", "[OPTIONAL] Communication user", false, ConnectionPropertyType.STRING)); 
-        retSystem.addProperty(new ConnectionProperty("password", "test1234", "[OPTIONAL] Password of communication user", true, ConnectionPropertyType.STRING));
-        return null;
+        retSystem.addProperty(new ConnectionProperty("host", "example.com", "Hostname of the ldap server", false,
+                ConnectionPropertyType.STRING));
+        retSystem.addProperty(
+                new ConnectionProperty("port", "389", "Port of the ldap server", false, ConnectionPropertyType.INT));
+        retSystem.addProperty(new ConnectionProperty("user", "uid=admin,dc=example,dc=com",
+                "[OPTIONAL] Communication user", false, ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("password", "test1234",
+                "[OPTIONAL] Password of communication user", true, ConnectionPropertyType.STRING));
+        retSystem.setType("LDAP");
+        return retSystem;
     }
 
     @Override
@@ -50,37 +56,31 @@ public class LDAPConnector implements IConnector {
     }
 
     @Override
-    public void writeData(String type, RemoteSystem rs, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-
+    public void writeData(String type, HashMap<String, Object> data) throws Exception {
+        switch (type) {
+            case "CreateUser":
+                createEntity(data);
+                break;
+            case "CreateGroup":
+                createEntity(data);
+        } 
     }
 
-    public void createUser() {
+    public void createEntity(HashMap<String, Object> data) throws Exception {
         LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
-        connection.bind(bindDN,bindPassword);
+        connection.bind(this.user, this.password);
         DefaultEntry newEntry = new DefaultEntry();
-        newEntry.setDn(dn);
-        for(Iterator iterator = json.keySet().iterator(); iterator.hasNext();) {
-            Object tmpObj = iterator.next();
-            String key = (String) tmpObj;
-            Object value = json.get(tmpObj);
-            
-            if (value instanceof JSONArray) {
-                JSONArray tmpArray = (JSONArray) value;
-                for (Object o: tmpArray) {
-                    newEntry.add(key, (String)o);
-                }
-            } else if (value instanceof String) {
-                newEntry.add(key, (String) value);
+        newEntry.setDn((String)ConnectorUtil.getAttributeValue("dn", data));
+
+        for (String key : data.keySet()) {
+            if (!key.equals("dn")) {
+                newEntry.add(key, (String)data.get(key));
             }
         }
-        
         connection.add(newEntry);
         
         connection.unBind();
         connection.close();
-        retJSON.put("operation", "success");
-        return retJSON;
     }
     
 }
