@@ -14,6 +14,9 @@ public class SCIMProcessor {
         HashMap<String, Object> data = new HashMap<>();
         for (Attribute a : attrs) {
             Object o = getObjectFromPath(obj, a.getSource());
+            if (a.getTransformation() != null) {
+                o = ScriptProcessor.processTransformation(a, o);
+            }
             data.put(a.getDestination(), o);
         } 
         transferToConnector("CreateUser", rs, data);

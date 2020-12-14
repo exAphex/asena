@@ -1,16 +1,21 @@
 package com.asena.scimgateway.connector;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
 
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapOperationException;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.mozilla.javascript.NativeArray;
 
 public class LDAPConnector implements IConnector {
 
@@ -63,24 +68,55 @@ public class LDAPConnector implements IConnector {
                 break;
             case "CreateGroup":
                 createEntity(data);
-        } 
+        }
     }
 
-    public void createEntity(HashMap<String, Object> data) throws Exception {
-        LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
-        connection.bind(this.user, this.password);
-        DefaultEntry newEntry = new DefaultEntry();
-        newEntry.setDn((String)ConnectorUtil.getAttributeValue("dn", data));
-
-        for (String key : data.keySet()) {
-            if (!key.equals("dn")) {
-                newEntry.add(key, (String)data.get(key));
-            }
+    public void closeLDAPConnection(LdapConnection conn) {
+        try {
+            conn.unBind();
+            conn.close();
+        } catch (LdapException ldap) {
+            // TODO Auto-generated catch block
+            ldap.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        connection.add(newEntry);
+    }
+
+    public void createEntity(HashMap<String, Object> data) {
+        LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
+        try {
+            connection.bind(this.user, this.password);
+            DefaultEntry newEntry = new DefaultEntry();
+            newEntry.setDn((String)ConnectorUtil.getAttributeValue("dn", data));
+
+            for (String key : data.keySet()) {
+                if (!key.equals("dn")) {
+                    Object objData = data.get(key);
+                    if (objData instanceof NativeArray) {
+                        NativeArray tempArr = (NativeArray) objData;
+                        for (int i = 0; i < tempArr.size(); i++) {
+                            newEntry.add(key, (String) tempArr.get(i));
+                        }
+                    } else {
+                        newEntry.add(key, (String)data.get(key));
+                    }
+                }
+            }
+            connection.add(newEntry);
+        } catch (LdapException ldap) {
+            if (ldap instanceof LdapOperationException) {
+                LdapOperationException ldapOpErr = (LdapOperationException) ldap;
+
+                throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
+            } else {
+                throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
+            }
+        } finally {
+            closeLDAPConnection(connection);
+        }
         
-        connection.unBind();
-        connection.close();
     }
     
 }

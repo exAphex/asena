@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.processor.SCIMProcessor;
 import com.asena.scimgateway.service.RemoteSystemService;
-
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,14 @@ public class SCIMUserController {
     public @ResponseBody Object usersPost(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response)
             throws Exception {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
-        response.setStatus(201);
-        return SCIMProcessor.processUser(rs, params);
+        Object o = null;
+        try {
+            o = SCIMProcessor.processUser(rs, params);
+            response.setStatus(201);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalErrorException(e.getMessage());
+        }
+        return o;
     } 
 }
