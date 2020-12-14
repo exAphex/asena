@@ -33,7 +33,7 @@ public class AttributeService {
             a.setDescription(attr.getDescription());
             a.setEncrypted(attr.isEncrypted());
             a.setType(attr.getType());
-            a.setTransformation(a.getTransformation());
+            a.setTransformation(attr.getTransformation());
             return attributeRepository.save(a);
         })
         .orElseThrow(() -> new NotFoundException(id));

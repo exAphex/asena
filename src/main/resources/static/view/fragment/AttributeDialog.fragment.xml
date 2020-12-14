@@ -25,17 +25,18 @@
                         <core:Item key="{mdlTargetSuggestions>destination}" text="{mdlTargetSuggestions>destination}" />
                     </ComboBox>
                     <Label text="{i18n>AttributeDialog.lblTransformation}" />
-                    <ActionSelect
+                    <Select
                         id="selectScript"
+                        selectedKey="{mdlAttributeDialog>/transformation/id}"
                         forceSelection="false"
                         items="{
                             path: 'mdlScriptSuggestions>/',
                             sorter: { path: 'name' }
                         }">
                         <items>
-                            <core:Item key="{mdlScriptSuggestions>id}" text="{mdlScriptSuggestions>name}" />
+                            <core:ListItem key="{mdlScriptSuggestions>id}" text="{mdlScriptSuggestions>name}" />
                         </items>
-                    </ActionSelect>
+                    </Select>
                 </f:content>
             </f:SimpleForm>
         </content>

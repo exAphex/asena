@@ -25,7 +25,7 @@ sap.ui.define([
         },
 
         _onAddWriteMapping: function() {
-            var mdl = new JSONModel({});
+            var mdl = new JSONModel({transformation:{}});
             this.getView().setModel(mdl, "mdlAttributeDialog");
 
             this.isEdit = false;
@@ -71,6 +71,9 @@ sap.ui.define([
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
             var mdl = new JSONModel(obj);
+            if (!obj.transformation) {
+                mdl.setProperty("/transformation", {});
+            }
             this.getView().setModel(mdl, "mdlAttributeDialog");
 
             this.isEdit = true;
@@ -219,6 +222,9 @@ sap.ui.define([
             var mParameters = {
                 bShowBusyIndicator: true
             };
+            if ((obj.transformation) && ((!obj.transformation.id) || (!(obj.transformation.id >= 0)))) {
+                obj.transformation = null;
+            }
             this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
                 .then(function () {
                     this.genericDialog.close();
@@ -267,6 +273,9 @@ sap.ui.define([
             var mParameters = {
                 bShowBusyIndicator: true
             };
+            if ((obj.transformation) && ((!obj.transformation.id) || (!(obj.transformation.id >= 0)))) {
+                obj.transformation = null;
+            }
             this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
                 .then(function () {
                     this.genericDialog.close();

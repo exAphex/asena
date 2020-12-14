@@ -21,6 +21,11 @@ public class RemoteSystemDTO {
 
     public static RemoteSystemDTO toDTO(RemoteSystem rs) {
         RemoteSystemDTO rsDTO = new RemoteSystemDTO();
+
+        if (rs == null) {
+            return null;
+        }
+        
         rsDTO.setId(rs.getId());
         rsDTO.setName(rs.getName());
         rsDTO.setDescription(rs.getDescription());

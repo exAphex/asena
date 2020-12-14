@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -34,6 +35,7 @@ public class Attribute {
     private boolean isEncrypted;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transformation_id")
     private Script transformation;
 
     public Attribute(String source, String destination, String description) {

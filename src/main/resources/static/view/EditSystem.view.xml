@@ -96,7 +96,7 @@
                         <blocks>
                             <t:Table id="tblWriteMapping" rows="{path: '/writeMappings/',
                             sorter : {
-                                path : 'key' 
+                                path : 'destination' 
                              }
                         }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
                                 <t:rowActionTemplate>
@@ -128,10 +128,10 @@
                                             <m:Text text="{destination}" wrapping="false" />
                                         </t:template>
                                     </t:Column>
-                                    <t:Column sortProperty="description" width="auto">
+                                    <t:Column sortProperty="transformation/name" width="auto">
                                         <m:Label text="{i18n>EditSystem.colTransformation}" />
                                         <t:template>
-                                            <m:Text text="{description}" wrapping="false" />
+                                            <m:Text text="{transformation/name}" wrapping="false" />
                                         </t:template>
                                     </t:Column>
                                 </t:columns>
