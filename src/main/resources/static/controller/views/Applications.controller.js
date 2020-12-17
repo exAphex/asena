@@ -16,6 +16,7 @@ sap.ui.define([
         _onObjectMatched: function() {
             this.loadRemoteSystems();
             this.loadScripts();
+            this.loadLogs();
     	},
 
         _onDisplay: function () {
@@ -47,6 +48,21 @@ sap.ui.define([
                 .then(function (oData) {
                     var oMainModel = new JSONModel(oData);
                     this.getView().setModel(oMainModel, "mdlScripts");
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+        },
+
+        loadLogs: function() {
+            var sQuery = "/api/v1/log/count";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel({count:oData});
+                    this.getView().setModel(oMainModel, "mdlLogs"); 
                 }.bind(this))
                 .catch(function (oError) {
                     this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);

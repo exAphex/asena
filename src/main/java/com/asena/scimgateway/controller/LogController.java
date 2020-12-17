@@ -31,4 +31,9 @@ public class LogController {
     public void deleteLogs() {
         logService.deleteAll();
     }
+
+    @GetMapping("/count")
+    public long getLogCount() {
+        return logService.getCount();
+    }
 }

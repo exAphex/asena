@@ -54,6 +54,12 @@ sap.ui.define([
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("applications", {
 				app: "applications"
 			}, false);	
+		},
+
+		_onSelectLogs: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("logs", {
+				app: "logs"
+			}, false);	
 		}
 
 	});

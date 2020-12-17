@@ -82,6 +82,11 @@
                     "pattern": "EditScript/{id}", 
                     "name": "editscript", 
                     "target": "EditScript" 
+                },
+                {
+                    "pattern": "Logs", 
+                    "name": "logs", 
+                    "target": "Logs" 
                 }
             ],
             "targets":
@@ -115,6 +120,11 @@
                 "Scripts": 
                 {
                     "viewName": "Scripts",
+                    "viewLevel": 2
+                },
+                "Logs": 
+                {
+                    "viewName": "Logs",
                     "viewLevel": 2
                 }
             }

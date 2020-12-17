@@ -25,4 +25,8 @@ public class LogService {
     public void deleteAll() {
         logRepository.deleteAll();
     }
+
+    public long getCount() {
+        return logRepository.count();
+    }
 }

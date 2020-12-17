@@ -29,6 +29,7 @@
                     <tnt:NavigationListItem text="{i18n>Shell.nvlHome}" icon="sap-icon://home" select="_onSelectHome" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlSystems}" icon="sap-icon://it-system" select="_onSelectSystems" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlScripts}" icon="sap-icon://syntax" select="_onSelectScripts" />
+                        <tnt:NavigationListItem text="{i18n>Shell.nvlLogs}" icon="sap-icon://order-status" select="_onSelectLogs" />
                 </tnt:NavigationList> 
             </tnt:SideNavigation>    
         </tnt:sideContent>
