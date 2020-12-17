@@ -8,6 +8,7 @@ import com.asena.scimgateway.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,5 +25,10 @@ public class LogController {
     @GetMapping("")
     public List<Log> getLogs() {
         return logService.list();
+    }
+
+    @DeleteMapping("")
+    public void deleteLogs() {
+        logService.deleteAll();
     }
 }

@@ -21,4 +21,8 @@ public class LogService {
     public List<Log> list() {
         return logRepository.findAll();
     }
+
+    public void deleteAll() {
+        logRepository.deleteAll();
+    }
 }

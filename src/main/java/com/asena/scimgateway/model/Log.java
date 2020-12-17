@@ -1,6 +1,6 @@
 package com.asena.scimgateway.model;
 
-import java.sql.Date;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "logs_seq")
     @SequenceGenerator(name = "logs_seq", sequenceName = "logs_sequence", allocationSize = 1)
     private long id;
-    private Date timestamp;
+    private Instant timestamp;
 
     @Enumerated(EnumType.ORDINAL)
     private LogType type;
@@ -34,8 +34,10 @@ public class Log {
     public Log(String message, LogType type) {
         setMessage(message);
         this.type = type;
-        this.timestamp = new java.sql.Date(System.currentTimeMillis());
+        this.timestamp = Instant.now();
     }
+
+    public Log() {}
 
     public long getId() {
         return id;
@@ -55,16 +57,17 @@ public class Log {
 
     public void setMessage(String message) {
         if ((message != null) && (message.length() >= 1024)) {
-            message = message.substring(0,1023);
+            message = message.substring(0,1018);
+            message += "[...]";
         }
         this.message = message;
     }
 
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

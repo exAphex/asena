@@ -65,6 +65,7 @@ public final class Logger {
                 InternalErrorException tmpE = (InternalErrorException)e;
                 if (tmpE.getObj() != null) {
                     String sObj = ((InternalErrorException)e).getObj().toString();
+                    sObj = "Object: " + sObj;
                     Log objectLog = new Log(sObj, LogType.ERROR);
                     logService.create(objectLog);
                 }
