@@ -86,5 +86,8 @@ public class RemoteSystemService {
         return remoteSystemRepository.save(rs);
     }
 
+    public void deleteAll() {
+        remoteSystemRepository.deleteAll();
+    }
     
 }

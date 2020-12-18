@@ -1,9 +1,12 @@
 package com.asena.scimgateway.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.asena.scimgateway.exception.NotFoundException;
+import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.User;
+import com.asena.scimgateway.repository.RemoteSystemRepository;
 import com.asena.scimgateway.repository.UserRepository;
 import com.asena.scimgateway.utils.PasswordUtil;
 
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     
+    @Autowired
+    private RemoteSystemRepository remoteSystemRepository;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -24,12 +30,29 @@ public class UserService {
         return create(u);
     }
 
-    public User create(User u) {
+    private User create(User u) {
         return userRepository.save(u);
     }
 
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
+    }
+
+    private void deleteUser(User u) {
+        List<RemoteSystem> rs = remoteSystemRepository.findByServiceUserId(u.getId());
+        for (RemoteSystem r : rs) {
+            r.setServiceUser(null);
+            r = remoteSystemRepository.save(r);
+        }
+
+        userRepository.deleteById(u.getId());
+    }
+
+    public void deleteAll() {
+        List<User> users = userRepository.findAll();
+        for (User u : users) {
+            deleteUser(u);
+        }
     }
 
     public User deleteById(long id) {
