@@ -11,14 +11,14 @@
 				<t:rowActionTemplate>
 					<t:RowAction>
 						<t:items>
-							<t:RowActionItem visible="true" icon="sap-icon://detail-view" press="_onLogDetail" />
+							<t:RowActionItem tooltip="{i18n>Logs.toolInspectLog}" visible="true" icon="sap-icon://detail-view" press="_onLogDetail" />
 						</t:items>
 					</t:RowAction>
 				</t:rowActionTemplate>
 				<t:toolbar>
 					<Toolbar>
 						<ToolbarSpacer />
-						<Button icon="sap-icon://delete" press="_onDeleteLogs" />
+						<Button tooltip="{i18n>Logs.toolDeleteLogs}" icon="sap-icon://delete" press="_onDeleteLogs" />
 						<Button icon="sap-icon://refresh" press="_onRefreshLogs" />
 						<ToolbarSeparator />
 						<SearchField search="_onSearchLogs" width="15rem" />
@@ -31,7 +31,7 @@
 							<Text text="{timestamp}" wrapping="false" />
 						</t:template>
 					</t:Column>
-					<t:Column sortProperty="type" width="5em">
+					<t:Column sortProperty="type" hAlign="Center" width="5em">
 						<Label text="{i18n>Logs.colType}" />
 						<t:template>
 							<ObjectStatus

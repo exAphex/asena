@@ -3,7 +3,7 @@
 	<m:Page id="pageApplications" showHeader="false">
 		<m:content>
 			<layout:HorizontalLayout id="dispTiles" allowWrapping="true">
-				<m:GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.tileSystems}" press="_onSystemsPressed">
+				<m:GenericTile tooltip="{i18n>Applications.toolSystems}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.tileSystems}" press="_onSystemsPressed">
 					<m:TileContent >
 						<m:NumericContent value="{
 							path: '/',
@@ -11,7 +11,7 @@
 						}" icon="sap-icon://it-system" withMargin="false" />
 					</m:TileContent>
 				</m:GenericTile>
-				<m:GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleScripts}" press="_onScriptsPressed">
+				<m:GenericTile tooltip="{i18n>Applications.toolScripts}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleScripts}" press="_onScriptsPressed">
 					<m:TileContent >
 						<m:NumericContent value="{
 							path: 'mdlScripts>/',
@@ -19,7 +19,7 @@
 						}" icon="sap-icon://syntax" withMargin="false" />
 					</m:TileContent>
 				</m:GenericTile>
-				<m:GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleLogs}" press="_onScriptsPressed">
+				<m:GenericTile tooltip="{i18n>Applications.toolLogs}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleLogs}" press="_onScriptsPressed">
 					<m:TileContent >
 						<m:NumericContent value="{mdlLogs>/count}" icon="sap-icon://order-status" withMargin="false" />
 					</m:TileContent>

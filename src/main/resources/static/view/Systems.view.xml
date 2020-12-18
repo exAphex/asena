@@ -10,15 +10,15 @@
 				<t:rowActionTemplate>
 					<t:RowAction>
 						<t:items>
-							<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onSystemEdit" />
-							<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onSystemDelete" />
+							<t:RowActionItem tooltip="{i18n>Systems.toolEditSystem}" visible="true" icon="sap-icon://edit" press="_onSystemEdit" />
+							<t:RowActionItem tooltip="{i18n>Systems.toolDeleteSystem}" visible="true" icon="sap-icon://delete" press="_onSystemDelete" />
 						</t:items>
 					</t:RowAction>
 				</t:rowActionTemplate>
 				<t:toolbar>
 					<Toolbar>
 						<ToolbarSpacer />
-						<Button icon="sap-icon://add" press="_onAddSystem" />
+						<Button icon="sap-icon://add" tooltip="{i18n>Systems.toolAddSystem}" press="_onAddSystem" />
 						<Button icon="sap-icon://refresh" press="_onRefreshSystems" />
 						<ToolbarSeparator />
 						<SearchField search="_onSearchSystems" width="15rem" />
@@ -43,7 +43,7 @@
 							<Text text="{type}" wrapping="false" />
 						</t:template>
 					</t:Column>
-					<t:Column sortProperty="active" width="5rem">
+					<t:Column sortProperty="active" hAlign="Center" width="5rem">
 						<Label text="{i18n>Systems.colStatus}" />
 						<t:template>
 							<ObjectStatus

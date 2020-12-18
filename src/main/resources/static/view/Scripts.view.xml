@@ -10,15 +10,15 @@
 				<t:rowActionTemplate>
 					<t:RowAction>
 						<t:items>
-							<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onScriptEdit" />
-							<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onScriptDelete" />
+							<t:RowActionItem tooltip="{i18n>Scripts.toolEditScript}" visible="true" icon="sap-icon://edit" press="_onScriptEdit" />
+							<t:RowActionItem tooltip="{i18n>Scripts.toolDeleteScript}" visible="true" icon="sap-icon://delete" press="_onScriptDelete" />
 						</t:items>
 					</t:RowAction>
 				</t:rowActionTemplate>
 				<t:toolbar>
 					<Toolbar>
 						<ToolbarSpacer />
-						<Button icon="sap-icon://add" press="_onAddScript" />
+						<Button icon="sap-icon://add" tooltip="{i18n>Scripts.toolAddScript}" press="_onAddScript" />
 						<Button icon="sap-icon://refresh" press="_onRefreshScript" />
 						<ToolbarSeparator />
 						<SearchField search="_onSearchScripts" width="15rem" />
