@@ -14,8 +14,8 @@ public class LogService {
     @Autowired
     private LogRepository logRepository;
 
-    public void create(Log l) {
-        logRepository.save(l);
+    public Log create(Log l) {
+        return logRepository.save(l);
     }
     
     public List<Log> list() {

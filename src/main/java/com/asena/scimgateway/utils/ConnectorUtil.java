@@ -4,8 +4,12 @@ import java.util.HashMap;
 
 public class ConnectorUtil {
     public static Object getAttributeValue(String key, HashMap<String, Object> attrs) {
+        if ((attrs == null) || (key == null)) {
+            return null;
+        }
+
         for (String k : attrs.keySet()) {
-            if (k.toUpperCase().equals(key.toUpperCase())) {
+            if ((k != null) && (k.toUpperCase().equals(key.toUpperCase()))) {
                 return attrs.get(k);
             }
         }
