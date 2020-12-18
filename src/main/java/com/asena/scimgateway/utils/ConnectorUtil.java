@@ -3,6 +3,9 @@ package com.asena.scimgateway.utils;
 import java.util.HashMap;
 
 public class ConnectorUtil {
+
+    private ConnectorUtil() {}
+    
     public static Object getAttributeValue(String key, HashMap<String, Object> attrs) {
         if ((attrs == null) || (key == null)) {
             return null;

@@ -2,7 +2,10 @@ package com.asena.scimgateway.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
@@ -33,5 +36,13 @@ public class ConnectorUtilTests {
 
         o = ConnectorUtil.getAttributeValue("TEST1", attrs); 
         assertNotEquals(null, o);
+    }
+
+    @Test
+    public void testPrivateConstructor() throws Exception {
+        Constructor<ConnectorUtil> constructor = ConnectorUtil.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
     }
 }

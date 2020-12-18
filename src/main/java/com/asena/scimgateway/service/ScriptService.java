@@ -49,4 +49,8 @@ public class ScriptService {
         })
         .orElseThrow(() -> new NotFoundException(id)); 
     }
+
+    public void deleteAll() {
+        scriptRepository.deleteAll();
+    }
 }
