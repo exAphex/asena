@@ -25,7 +25,7 @@
 					</Toolbar>
 				</t:toolbar>
 				<t:columns>
-					<t:Column sortProperty="name" width="auto">
+					<t:Column sortProperty="name" width="15em">
 						<Label text="{i18n>Systems.colName}" />
 						<t:template>
 							<Text text="{name}" wrapping="false" />
@@ -37,19 +37,19 @@
 							<Text text="{description}" wrapping="false" />
 						</t:template>
 					</t:Column>
-					<t:Column sortProperty="type" width="auto">
+					<t:Column sortProperty="type" width="15em">
 						<Label text="{i18n>Systems.colType}" />
 						<t:template>
 							<Text text="{type}" wrapping="false" />
 						</t:template>
 					</t:Column>
-					<t:Column sortProperty="active" width="auto">
+					<t:Column sortProperty="active" width="5rem">
 						<Label text="{i18n>Systems.colStatus}" />
 						<t:template>
-							<tnt:InfoLabel
+							<ObjectStatus
 								text="{path: 'active',formatter: '.formatter.convertSystemStatus'}"
-								displayOnly="true"
-								colorScheme= "{path: 'active', formatter: '.formatter.convertSystemColor'}" />
+								inverted="true"
+								state="{path: 'active', formatter: '.formatter.convertSystemColor'}" />
 						</t:template>
 					</t:Column>
 				</t:columns>

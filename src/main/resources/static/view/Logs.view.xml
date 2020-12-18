@@ -4,31 +4,47 @@
 		<content>
 			<t:Table id="tblLogs" rows="{path: '/',
 				sorter : {
-					path : 'name' 
+					path : 'timestamp',
+					descending: true
 				 }
-			}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
+			}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="1" ariaLabelledBy="title">
 				<t:rowActionTemplate>
 					<t:RowAction>
 						<t:items>
-							<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onScriptEdit" />
-							<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onScriptDelete" />
+							<t:RowActionItem visible="true" icon="sap-icon://detail-view" press="_onLogDetail" />
 						</t:items>
 					</t:RowAction>
 				</t:rowActionTemplate>
 				<t:toolbar>
 					<Toolbar>
 						<ToolbarSpacer />
-						<Button icon="sap-icon://add" press="_onAddScript" />
-						<Button icon="sap-icon://refresh" press="_onRefreshScript" />
+						<Button icon="sap-icon://delete" press="_onDeleteLogs" />
+						<Button icon="sap-icon://refresh" press="_onRefreshLogs" />
 						<ToolbarSeparator />
-						<SearchField search="_onSearchScripts" width="15rem" />
+						<SearchField search="_onSearchLogs" width="15rem" />
 					</Toolbar>
 				</t:toolbar>
 				<t:columns>
-					<t:Column sortProperty="name" width="auto">
-						<Label text="{i18n>Scripts.colName}" />
+					<t:Column sortProperty="timestamp" width="10em">
+						<Label text="{i18n>Logs.colTime}" />
 						<t:template>
-							<Text text="{name}" wrapping="false" />
+							<Text text="{timestamp}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					<t:Column sortProperty="type" width="5em">
+						<Label text="{i18n>Logs.colType}" />
+						<t:template>
+							<ObjectStatus
+								text="Error"
+								inverted="true"
+								state="Error" 
+								icon="sap-icon://message-error"/>
+						</t:template>
+					</t:Column>
+					<t:Column sortProperty="message" width="auto">
+						<Label text="{i18n>Logs.colMessage}" />
+						<t:template>
+							<Text text="{message}" wrapping="false" />
 						</t:template>
 					</t:Column>
 				</t:columns>

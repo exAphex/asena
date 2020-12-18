@@ -19,9 +19,9 @@ sap.ui.define(function() {
 
       convertSystemColor: function(state) {
         if (state) {
-          return 8;
+          return "Success";
         } else {
-          return 3;
+          return "Error";
         }
       },
 

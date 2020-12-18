@@ -232,6 +232,15 @@ sap.ui.define([
                 new Filter("description", FilterOperator.Contains, sQuery)
             ]);
             return oFilter;
+        },
+
+        getLogFilters: function(sQuery) {
+            var oFilter = new Filter([
+                new Filter("timestamp", FilterOperator.Contains, sQuery),
+                new Filter("type", FilterOperator.Contains, sQuery),
+                new Filter("message", FilterOperator.Contains, sQuery)
+            ]);
+            return oFilter;
         }
     });
 });
