@@ -25,6 +25,10 @@ public class AttributeService {
         return attributeRepository.findById(id);
     }
 
+    public Attribute create(Attribute a) {
+        return attributeRepository.save(a);
+    }
+
     public Attribute update(Attribute attr, long id) {
         return findById(id)
         .map(a -> {
