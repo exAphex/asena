@@ -13,6 +13,11 @@ public class ConnectionPropertyDTO {
 
     public static ConnectionPropertyDTO toDTO(ConnectionProperty cp) {
         ConnectionPropertyDTO cpDTO = new ConnectionPropertyDTO();
+
+        if (cp == null) {
+            return null;
+        }
+        
         cpDTO.setId(cp.getId());
         cpDTO.setKey(cp.getKey());
         cpDTO.setValue(cp.getValue());
@@ -24,12 +29,12 @@ public class ConnectionPropertyDTO {
 
     public ConnectionProperty fromDTO() {
         ConnectionProperty cp = new ConnectionProperty();
-        cp.setId(this.id);
-        cp.setKey(this.key);
-        cp.setValue(this.value);
-        cp.setDescription(this.description);
-        cp.setEncrypted(this.encrypted);
-        cp.setType(this.type);
+        cp.setId(getId());
+        cp.setKey(getKey());
+        cp.setValue(getValue());
+        cp.setDescription(getDescription());
+        cp.setEncrypted(isEncrypted());
+        cp.setType(getType());
         return cp;
     }
 
