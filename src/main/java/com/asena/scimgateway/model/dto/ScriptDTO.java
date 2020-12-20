@@ -17,9 +17,9 @@ public class ScriptDTO {
 
     public Script fromDTO() {
         Script s = new Script();
-        s.setId(this.id);
-        s.setName(this.name);
-        s.setContent(this.content);
+        s.setId(getId());
+        s.setName(getName());
+        s.setContent(getContent());
         return s;
     }
 
