@@ -59,4 +59,52 @@ public class RemoteSystemServiceTest {
         List<RemoteSystem> rss = remoteSystemService.list();
         assertEquals(1, rss.size());
     }
+
+    @Test
+    void findByIdTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setActive(true);
+        rs.setDescription("Testdesc");
+        rs.setName("Testname");
+        rs.setType("LDAP");
+        
+        rs = remoteSystemService.create(rs);
+
+        remoteSystemService.findById(rs.getId()).orElseThrow(() -> new NotFoundException(0l));
+
+        assertThrows(NotFoundException.class, () -> {
+            remoteSystemService.findById("").orElseThrow(() -> new NotFoundException(0l));
+        }); 
+    }
+
+    @Test
+    void updateTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setActive(true);
+        rs.setDescription("Testdesc");
+        rs.setName("Testname");
+        rs.setType("LDAP");
+        
+        rs = remoteSystemService.create(rs);
+
+        rs.setActive(true);
+        rs.setDescription("Testdesc1");
+        rs.getServiceUser().setPassword("password");
+        
+        rs = remoteSystemService.update(rs, rs.getId());
+
+        assertEquals(true, rs.isActive());
+        assertEquals("Testdesc1", rs.getDescription());
+        assertEquals("password", rs.getServiceUser().getPassword());
+
+        rs.setServiceUser(null);
+        rs = remoteSystemService.update(rs, rs.getId());
+
+        assertEquals("password", rs.getServiceUser().getPassword());
+
+        assertThrows(NotFoundException.class, () -> {
+            remoteSystemService.update(null, "");
+        }); 
+
+    }
 }
