@@ -25,6 +25,7 @@ public class ConnectionPropertyServiceTest {
     @BeforeEach
     void prepareDb() {
         connectionPropertyService.deleteAll();
+        remoteSystemService.deleteAll();
     }
 
     @Test
