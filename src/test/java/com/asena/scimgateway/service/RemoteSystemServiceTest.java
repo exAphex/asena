@@ -8,7 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import com.asena.scimgateway.exception.NotFoundException;
+import com.asena.scimgateway.model.Attribute;
+import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.processor.ConnectorProcessor;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -105,6 +108,71 @@ public class RemoteSystemServiceTest {
         assertThrows(NotFoundException.class, () -> {
             remoteSystemService.update(null, "");
         }); 
+    }
 
+    @Test
+    void deleteTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setActive(true);
+        rs.setDescription("Testdesc");
+        rs.setName("Testname");
+        rs.setType("LDAP");
+        
+        rs = remoteSystemService.create(rs);
+
+        rs = remoteSystemService.addWriteMapping(new Attribute("src", "dest", "desc"), rs.getId());
+
+        remoteSystemService.deleteById(rs.getId());
+
+        assertThrows(NotFoundException.class, () -> {
+            remoteSystemService.deleteById("");
+        }); 
+    }
+
+    @Test
+    void addWriteMappingTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setActive(true);
+        rs.setDescription("Testdesc");
+        rs.setName("Testname");
+        rs.setType("LDAP");
+        
+        rs = remoteSystemService.create(rs);
+
+        rs = remoteSystemService.addWriteMapping(new Attribute("src", "dest", "desc"), rs.getId());
+        
+        Attribute[] a = new Attribute[rs.getWriteMappings().size()];
+        rs.getWriteMappings().toArray(a);
+
+        assertEquals(1, rs.getWriteMappings().size());
+       
+        assertEquals("src", a[0].getSource());
+        assertEquals("dest", a[0].getDestination());
+        assertEquals("desc", a[0].getDescription());
+
+        assertThrows(NotFoundException.class, () -> {
+            remoteSystemService.addWriteMapping(null, "");
+        }); 
+    }
+
+    @Test
+    void addConnectionPropertyTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setActive(true);
+        rs.setDescription("Testdesc");
+        rs.setName("Testname");
+        rs.setType("LDAP");
+        
+        rs = remoteSystemService.create(rs);
+
+        int presetLen = rs.getProperties().size();
+
+        rs = remoteSystemService.addConnectionProperty(new ConnectionProperty("key", "value", "dest", false, ConnectionPropertyType.BOOLEAN), rs.getId());
+
+        assertEquals(presetLen + 1, rs.getProperties().size());
+
+        assertThrows(NotFoundException.class, () -> {
+            remoteSystemService.addConnectionProperty(null, "");
+        }); 
     }
 }

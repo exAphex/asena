@@ -16,6 +16,7 @@ import com.asena.scimgateway.repository.RemoteSystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Transactional
 @Service
 public class RemoteSystemService {
 
@@ -63,7 +64,7 @@ public class RemoteSystemService {
         .orElseThrow(() -> new NotFoundException(id));
     }
 
-    @Transactional
+    
     public RemoteSystem deleteById(String id) {
         return findById(id)
         .map(sys -> {
