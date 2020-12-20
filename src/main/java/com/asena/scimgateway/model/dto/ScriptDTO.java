@@ -9,6 +9,11 @@ public class ScriptDTO {
 
     public static ScriptDTO toDTO(Script s) {
         ScriptDTO sDTO = new ScriptDTO();
+
+        if (s == null) {
+            return null;
+        }
+        
         sDTO.setId(s.getId());
         sDTO.setName(s.getName());
         sDTO.setContent(s.getContent());

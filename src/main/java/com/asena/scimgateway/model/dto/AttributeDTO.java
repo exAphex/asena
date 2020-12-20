@@ -50,14 +50,14 @@ public class AttributeDTO {
 
     public Attribute fromDTO() {
         Attribute a = new Attribute();
-        a.setId(this.id);
-        a.setDestination(this.destination);
-        a.setSource(this.source);
-        a.setDescription(this.description);
-        a.setType(this.type);
-        a.setEncrypted(this.isEncrypted);
-        if (this.transformation != null) {
-            a.setTransformation(this.transformation.fromDTO());
+        a.setId(getId());
+        a.setDestination(getDestination());
+        a.setSource(getSource());
+        a.setDescription(getDescription());
+        a.setType(getType());
+        a.setEncrypted(isEncrypted());
+        if (getTransformation() != null) {
+            a.setTransformation(getTransformation().fromDTO());
         }
         return a;
     }

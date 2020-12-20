@@ -1,6 +1,7 @@
 package com.asena.scimgateway.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.dto.ScriptDTO;
@@ -37,5 +38,8 @@ public class ScriptDTOTest {
         assertEquals(0, s.getId());
         assertEquals("testcontent", sDTO.getContent());
         assertEquals("testname", sDTO.getName());
+
+        sDTO = ScriptDTO.toDTO(null);
+        assertNull(sDTO);
     }
 }

@@ -21,6 +21,11 @@ public class UserDTO {
 
     public static UserDTO toDTO(User u) {
         UserDTO usrDTO = new UserDTO();
+
+        if (u == null) {
+            return null;
+        }
+        
         usrDTO.setId(u.getId());
         usrDTO.setUserName(u.getUserName());
         usrDTO.setPassword(u.getPassword());

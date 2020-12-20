@@ -1,6 +1,7 @@
 package com.asena.scimgateway.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.asena.scimgateway.model.User;
 import com.asena.scimgateway.model.dto.UserDTO;
@@ -43,5 +44,8 @@ public class UserDTOTest {
         assertEquals("testmail", uDTO.getMail());
         assertEquals("testpass", uDTO.getPassword());
         assertEquals("testname", uDTO.getUserName());
+
+        uDTO = UserDTO.toDTO(null);
+        assertNull(uDTO);
     }
 }
