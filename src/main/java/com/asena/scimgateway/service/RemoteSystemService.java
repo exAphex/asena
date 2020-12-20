@@ -38,7 +38,6 @@ public class RemoteSystemService {
 
         rs.setId(UUID.randomUUID().toString());
         rs.setActive(false);
-        rs.setAttributes(connector.getAttributes());
         rs.setProperties(connector.getProperties());
         rs.setServiceUser(userService.createServiceUser(rs.getName()));
 

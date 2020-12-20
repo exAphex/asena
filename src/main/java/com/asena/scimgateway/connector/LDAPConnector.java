@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
+import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
@@ -36,6 +37,9 @@ public class LDAPConnector implements IConnector {
         retSystem.addProperty(new ConnectionProperty("password", "test1234",
                 "[OPTIONAL] Password of communication user", true, ConnectionPropertyType.STRING));
         retSystem.setType("LDAP");
+
+        retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
+        retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
         return retSystem;
     }
 
