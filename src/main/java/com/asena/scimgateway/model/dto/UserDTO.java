@@ -11,11 +11,11 @@ public class UserDTO {
 
     public User fromDTO() {
         User u = new User();
-        u.setId(this.id);
-        u.setUserName(this.userName);
-        u.setPassword(this.password);
-        u.setMail(this.mail);
-        u.setActive(this.active);
+        u.setId(getId());
+        u.setUserName(getUserName());
+        u.setPassword(getPassword());
+        u.setMail(getMail());
+        u.setActive(isActive());
         return u;
     }
 
