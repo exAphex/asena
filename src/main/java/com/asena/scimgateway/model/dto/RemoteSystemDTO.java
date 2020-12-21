@@ -17,7 +17,7 @@ public class RemoteSystemDTO {
     private Set<AttributeDTO> writeMappings;
     private Set<ConnectionPropertyDTO> properties;
     private String type;
-    private User serviceUser;
+    private UserDTO serviceUser;
 
     public static RemoteSystemDTO toDTO(RemoteSystem rs) {
         RemoteSystemDTO rsDTO = new RemoteSystemDTO();
@@ -53,16 +53,16 @@ public class RemoteSystemDTO {
             }
         }
         
-        rsDTO.setServiceUser(rs.getServiceUser());
+        rsDTO.setServiceUser(UserDTO.toDTO(rs.getServiceUser()));
 
         return rsDTO;
     }
 
-    public User getServiceUser() {
+    public UserDTO getServiceUser() {
         return serviceUser;
     }
 
-    public void setServiceUser(User serviceUser) {
+    public void setServiceUser(UserDTO serviceUser) {
         this.serviceUser = serviceUser;
     }
 
@@ -76,31 +76,31 @@ public class RemoteSystemDTO {
 
     public RemoteSystem fromDTO() {
         RemoteSystem rs = new RemoteSystem();
-        rs.setId(this.id);
-        rs.setName(this.name);
-        rs.setDescription(this.description);
-        rs.setActive(this.active);
-        rs.setType(this.type);
+        rs.setId(getId());
+        rs.setName(getName());
+        rs.setDescription(getDescription());
+        rs.setActive(isActive());
+        rs.setType(getType());
         
-        if (this.attributes != null) {
-            for (AttributeDTO a : this.attributes) {
+        if (getAttributes() != null) {
+            for (AttributeDTO a : getAttributes()) {
                 rs.addAttribute(a.fromDTO());
             }
         }
 
-        if (this.writeMappings != null) {
-            for (AttributeDTO a : this.writeMappings) {
+        if (getWriteMappings() != null) {
+            for (AttributeDTO a : getWriteMappings()) {
                 rs.addWriteMapping(a.fromDTO());
             }
         }
         
-        if (this.properties != null) {
-            for (ConnectionPropertyDTO cp : this.properties) {
+        if (getProperties() != null) {
+            for (ConnectionPropertyDTO cp : getProperties()) {
                 rs.addProperty(cp.fromDTO());
             }
         }
 
-        rs.setServiceUser(this.serviceUser);
+        rs.setServiceUser(getServiceUser().fromDTO());
         
         return rs;
     }
