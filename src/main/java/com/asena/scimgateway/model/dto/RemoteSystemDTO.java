@@ -6,7 +6,6 @@ import java.util.Set;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
-import com.asena.scimgateway.model.User;
 
 public class RemoteSystemDTO {
     private String id;
@@ -100,7 +99,9 @@ public class RemoteSystemDTO {
             }
         }
 
-        rs.setServiceUser(getServiceUser().fromDTO());
+        if (getServiceUser() != null) {
+            rs.setServiceUser(getServiceUser().fromDTO());
+        }
         
         return rs;
     }

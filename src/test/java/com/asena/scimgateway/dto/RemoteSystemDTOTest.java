@@ -6,9 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.asena.scimgateway.model.Attribute;
+import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.User;
 import com.asena.scimgateway.model.dto.AttributeDTO;
+import com.asena.scimgateway.model.dto.ConnectionPropertyDTO;
 import com.asena.scimgateway.model.dto.RemoteSystemDTO;
 import com.asena.scimgateway.model.dto.UserDTO;
 
@@ -34,9 +37,9 @@ public class RemoteSystemDTOTest {
         RemoteSystem rs = rsDTO.fromDTO();
 
         assertEquals("testid", rs.getId());
-        assertEquals("testname", rs.getId());
-        assertEquals("testdesc", rs.getId());
-        assertEquals(true, rs.getId());
+        assertEquals("testname", rs.getName());
+        assertEquals("testdesc", rs.getDescription());
+        assertEquals(true, rs.isActive());
         assertNull(rs.getAttributes());
         assertNull(rs.getWriteMappings());
         assertNull(rs.getProperties());
@@ -51,13 +54,71 @@ public class RemoteSystemDTOTest {
         Set<AttributeDTO> attrDTO = new HashSet<>();
         attrDTO.add(aDTO);
 
+        ConnectionPropertyDTO cDTO = new ConnectionPropertyDTO();
+        cDTO.setId(1);
+        Set<ConnectionPropertyDTO> cpDTO = new HashSet<>();
+        cpDTO.add(cDTO);
+
         rsDTO.setAttributes(attrDTO);
         rsDTO.setServiceUser(su);
         rsDTO.setWriteMappings(attrDTO);
+        rsDTO.setProperties(cpDTO);
 
         rs = rsDTO.fromDTO();
         assertEquals("testusername", rs.getServiceUser().getUserName());
         assertEquals(1, rs.getAttributes().size());
         assertEquals(1, rs.getWriteMappings().size());
+    }
+
+    @Test
+    void toDTOTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setId("testid");
+        rs.setName("testname");
+        rs.setDescription("testdesc");
+        rs.setActive(true);
+        rs.setAttributes(null);
+        rs.setWriteMappings(null);
+        rs.setProperties(null);
+        rs.setType("testtype");
+        rs.setServiceUser(null);
+
+        RemoteSystemDTO rsDTO = RemoteSystemDTO.toDTO(rs);
+        assertEquals("testid", rsDTO.getId());
+        assertEquals("testname", rsDTO.getName());
+        assertEquals("testdesc", rsDTO.getDescription());
+        assertEquals(true, rsDTO.isActive());
+        assertNull(rsDTO.getAttributes());
+        assertNull(rsDTO.getWriteMappings());
+        assertNull(rsDTO.getProperties());
+        assertEquals("testtype", rsDTO.getType());
+        assertNull(rsDTO.getServiceUser());
+
+        User su = new User();
+        su.setUserName("testusername");
+
+        Attribute a = new Attribute();
+        a.setDescription("testdesc");
+
+        Set<Attribute> attr = new HashSet<>();
+        attr.add(a);
+
+        ConnectionProperty c = new ConnectionProperty();
+        c.setId(1);
+        Set<ConnectionProperty> cp = new HashSet<>();
+        cp.add(c);
+
+        rs.setAttributes(attr);
+        rs.setServiceUser(su);
+        rs.setWriteMappings(attr);
+        rs.setProperties(cp);
+
+        rsDTO = RemoteSystemDTO.toDTO(rs);
+        assertEquals("testusername", rsDTO.getServiceUser().getUserName());
+        assertEquals(1, rsDTO.getAttributes().size());
+        assertEquals(1, rsDTO.getWriteMappings().size());
+
+        rsDTO = RemoteSystemDTO.toDTO(null);
+        assertNull(rsDTO);
     }
 }
