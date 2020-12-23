@@ -6,14 +6,15 @@ env:
     - POSTGRES_PORT=5431
 dist: trusty
 before_install:
-  - sudo sed -i -e 's/^#listen_addresses.*/listen_addresses = "*"/' /etc/postgresql/11/main/postgresql.conf
-  - sudo sed -i -e 's/^port = 5433/port = 5431/' /etc/postgresql/11/main/postgresql.conf
-  - sudo service postgresql restart 11
+  - sudo service postgresql stop 9
+  - sudo sed -i -e 's/^#listen_addresses.*/listen_addresses = "*"/' /etc/postgresql/9.5/main/postgresql.conf
+  - sudo sed -i -e 's/^port = 5433/port = 5431/' /etc/postgresql/9.5/main/postgresql.conf
+  - sudo service postgresql restart 9.5
 addons:
-  postgresql: '11'
+  postgresql: '9.5'
   apt:
     packages:
-      - postgresql-11
-      - postgresql-client-11
+      - postgresql-9.5
+      - postgresql-client-9.5
 
   
