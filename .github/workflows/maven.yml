@@ -44,3 +44,5 @@ jobs:
           ${{ runner.os }}-maven-
     - name: Run tests
       run: mvn test --file pom.xml
+    - name: Create Coverage reports
+      run: bash <(curl -s https://codecov.io/bash)
