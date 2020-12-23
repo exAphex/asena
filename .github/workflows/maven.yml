@@ -43,6 +43,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Run tests
-      run: mvn test --file pom.xml
+      run: mvn test --file pom.xml jacoco:reports
     - name: Create Coverage reports
       run: bash <(curl -s https://codecov.io/bash)
