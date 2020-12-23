@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Table(name = "logs")
 public class Log {
     public enum LogType {
-        INFO, DEBUG, WARNING, ERROR
+        INFO, DEBUG, WARNING, ERROR, NONE
     }
 
     @Id
