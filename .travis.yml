@@ -2,7 +2,7 @@ language: java
 jdk: oraclejdk8
 env:
   global:
-    - PGPORT=5431
+    - POSTGRES_PORT=5431
 dist: trusty
 services:
   - postgresql
