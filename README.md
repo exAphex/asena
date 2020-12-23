@@ -17,10 +17,15 @@ Supported systems:
 * LDAP
     * Create User
 
-
-
 ### Supported client systems
 * SAP Identity Management
+
+## ToDo
+* Group Handling
+* Reading entities
+* Authentication
+* SDK for custom connectors
+* more connectivity (SAP/IBM)
 
 ## Getting started
 ### 1. Create a new target system
