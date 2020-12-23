@@ -8,6 +8,8 @@ import com.asena.scimgateway.connector.LDAPConnector;
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class ConnectorProcessor {
+    private ConnectorProcessor() {}
+    
     public static Set<RemoteSystem> getAvailableConnectors() {
         Set<RemoteSystem> retSystems = new HashSet<>();
         LDAPConnector ldap = new LDAPConnector();
