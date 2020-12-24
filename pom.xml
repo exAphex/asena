@@ -96,7 +96,8 @@
 				<version>0.8.6</version>
 				<configuration>
                     <excludes>
-                        <exclude>**/*com/asena/scimgateway/connector/**</exclude>
+						<exclude>**/*com/asena/scimgateway/connector/**</exclude>
+						<exclude>**/*com/asena/scimgateway/ScimgatewayApplication.class</exclude>
                     </excludes>
                 </configuration>
 				<executions>
