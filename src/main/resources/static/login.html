@@ -21,12 +21,17 @@
             color: #333;
         }
 
+        .login-form-1 h5 {
+            text-align: center;
+            color: #333;
+        }
+
         .login-container form {
-            padding: 10%;
+            padding: 5%;
         }
 
         .btnSubmit {
-            width: 50%;
+            width: 100%;
             border-radius: 1rem;
             padding: 1.5%;
             border: none;
@@ -40,14 +45,40 @@
         }
     </style>
     <style type="text/css"></style>
+    <script>
+        function detectLogin() {
+            var errFound = findGetParameter("error");
+            if ((errFound) && (errFound == "true")) {
+                var h5 = document.createElement("h5");
+                var span = document.createElement("span");
+                span.setAttribute("class", "error text-danger");
+                span.innerHTML = "Invalid login!";
+                h5.appendChild(span);
+
+                document.getElementById("headerfield").appendChild(h5);
+            }
+        }
+
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            var items = location.search.substr(1).split("&");
+            for (var index = 0; index < items.length; index++) {
+                tmp = items[index].split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+            }
+            return result;
+        }
+    </script>
 </head>
 
-<body>
+<body onload="detectLogin()">
     <div class="container login-container">
         <div class="row">
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto login-form-1">
                 <h3>Asena Admin UI</h3>
-                <form name='f' action="perform_login" method='POST'>
+                <p id="headerfield" />
+                <form  name='f' action="perform_login" method='POST'>
                     <div class="form-group">
                         <input type="text" name="username" class="form-control" placeholder="Username *" value="">
                     </div>
@@ -61,7 +92,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript"></script>
 </body>
 
 </html>
