@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.User;
+import com.asena.scimgateway.model.User.UserType;
 import com.asena.scimgateway.repository.RemoteSystemRepository;
 import com.asena.scimgateway.repository.UserRepository;
 import com.asena.scimgateway.utils.PasswordUtil;
@@ -26,7 +27,7 @@ public class UserService {
         User u = new User();
         u.setUserName(prefix + "_COMM");
         u.setPassword(PasswordUtil.generatePassword(8));
-        u.setActive(false);
+        u.setType(UserType.TECHNICAL);
         return create(u);
     }
 

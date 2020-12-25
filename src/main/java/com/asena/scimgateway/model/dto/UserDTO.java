@@ -1,13 +1,14 @@
 package com.asena.scimgateway.model.dto;
 
 import com.asena.scimgateway.model.User;
+import com.asena.scimgateway.model.User.UserType;
 
 public class UserDTO {
     private long id;
     private String userName;
     private String password;
     private String mail;
-    private boolean active;
+    private UserType type;
 
     public User fromDTO() {
         User u = new User();
@@ -15,7 +16,7 @@ public class UserDTO {
         u.setUserName(getUserName());
         u.setPassword(getPassword());
         u.setMail(getMail());
-        u.setActive(isActive());
+        u.setType(getType());
         return u;
     }
 
@@ -30,7 +31,7 @@ public class UserDTO {
         usrDTO.setUserName(u.getUserName());
         usrDTO.setPassword(u.getPassword());
         usrDTO.setMail(u.getMail());
-        usrDTO.setActive(u.isActive());
+        usrDTO.setType(u.getType());
         return usrDTO;
     }
 
@@ -38,12 +39,12 @@ public class UserDTO {
         return id;
     }
 
-    public boolean isActive() {
-        return active;
+    public UserType getType() {
+        return this.type;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setType(UserType type) {
+        this.type = type;
     }
 
     public String getMail() {

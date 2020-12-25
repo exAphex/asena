@@ -2,6 +2,8 @@ package com.asena.scimgateway.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +14,10 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "users")
 public class User {
+
+    public enum UserType {
+        ADMIN, TECHNICAL
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
@@ -24,18 +30,21 @@ public class User {
     @NotBlank(message = "Username is mandatory")
     private String password;
     private String mail;
-    private boolean active;
+
+    @Enumerated(EnumType.ORDINAL)
+    private UserType type;
+    
 
     public long getId() {
         return id;
     }
 
-    public boolean isActive() {
-        return active;
+    public UserType getType() {
+        return this.type;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setType(UserType type) {
+        this.type = type;
     }
 
     public String getMail() {

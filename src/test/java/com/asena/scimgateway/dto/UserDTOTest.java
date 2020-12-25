@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.asena.scimgateway.model.User;
+import com.asena.scimgateway.model.User.UserType;
 import com.asena.scimgateway.model.dto.UserDTO;
 
 import org.junit.jupiter.api.Test;
@@ -16,14 +17,14 @@ public class UserDTOTest {
     void fromDTOTest() {
         UserDTO uDTO = new UserDTO();
         uDTO.setId(0);
-        uDTO.setActive(false);
+        uDTO.setType(UserType.ADMIN);
         uDTO.setMail("testmail");
         uDTO.setPassword("testpass");
         uDTO.setUserName("testname");
 
         User u = uDTO.fromDTO();
         assertEquals(0, u.getId());
-        assertEquals(false, u.isActive());
+        assertEquals(UserType.ADMIN, u.getType());
         assertEquals("testmail", u.getMail());
         assertEquals("testpass", u.getPassword());
         assertEquals("testname", u.getUserName());
@@ -33,14 +34,14 @@ public class UserDTOTest {
     void toDTOTest() {
         User u = new User();
         u.setId(0);
-        u.setActive(false);
+        u.setType(UserType.ADMIN);
         u.setMail("testmail");
         u.setPassword("testpass");
         u.setUserName("testname");
 
         UserDTO uDTO = UserDTO.toDTO(u);
         assertEquals(0, uDTO.getId());
-        assertEquals(false, uDTO.isActive());
+        assertEquals(UserType.ADMIN, uDTO.getType());
         assertEquals("testmail", uDTO.getMail());
         assertEquals("testpass", uDTO.getPassword());
         assertEquals("testname", uDTO.getUserName());

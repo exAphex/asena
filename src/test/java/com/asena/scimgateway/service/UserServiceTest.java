@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.User;
+import com.asena.scimgateway.model.User.UserType;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class UserServiceTest {
         User u = userService.createServiceUser("TEST");
         assertEquals("TEST_COMM", u.getUserName());
         assertEquals(8, u.getPassword().length());
-        assertEquals(false, u.isActive());
+        assertEquals(UserType.TECHNICAL, u.getType());
     }
 
     @Test
