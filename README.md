@@ -23,7 +23,7 @@ Supported systems:
 ## ToDo
 * Group Handling
 * Reading entities
-* Authentication
+* Authorization 
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 
