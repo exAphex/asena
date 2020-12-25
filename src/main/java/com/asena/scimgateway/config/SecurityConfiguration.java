@@ -5,27 +5,54 @@ import com.asena.scimgateway.security.service.AUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private AUserDetailsService userDetailsService;
     
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable();
-        httpSecurity.authorizeRequests()
-            .anyRequest().authenticated()
-            .and().formLogin().loginPage("/login.html")
-            .loginProcessingUrl("/perform_login")
-            .defaultSuccessUrl("/index.html", true)
-            .failureUrl("/login.html?error=true").permitAll()
-            .and().logout().permitAll();
-        //httpSecurity.authorizeRequests().antMatchers("/").permitAll();
+    @Configuration
+    @Order(1)
+    public static class ApiWebSecurityConfig extends WebSecurityConfigurerAdapter{
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .antMatcher("/gateway/**")
+                    .httpBasic()
+                        .realmName("API")
+                        .and()
+                    .csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers("/gateway/**").authenticated();
+        }
+    }
+
+    @Configuration
+    @Order(2)
+    public static class ApiTokenSecurityConfig extends WebSecurityConfigurerAdapter{
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable();
+            http.requestMatcher(new NegatedRequestMatcher(new AntPathRequestMatcher("/gateway/**"))).authorizeRequests()
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/login.html")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/index.html", true)
+                .failureUrl("/login.html?error=true").permitAll()
+                .and().logout().permitAll();
+        }
+
     }
 
     @Autowired
