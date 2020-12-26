@@ -57,6 +57,12 @@ public class AttributeService {
             remoteSystemRepository.save(r);
         }
 
+        rs = remoteSystemRepository.findByWriteNameIdId(a.getId());
+        for (RemoteSystem r : rs) {
+            r.setWriteNameId(null);
+            remoteSystemRepository.save(r);
+        }
+
         attributeRepository.delete(a);
     }
 
@@ -70,6 +76,9 @@ public class AttributeService {
     }
 
     public void deleteAll() {
-        attributeRepository.deleteAll();
+        List<Attribute> lstAttributes = attributeRepository.findAll();
+        for (Attribute attr : lstAttributes) {
+            delete(attr);
+        }
     }
 }

@@ -58,6 +58,7 @@ public class RemoteSystemServiceTest {
         assertEquals("Testname", rs.getName());
         assertEquals("LDAP", rs.getType());
         assertNotNull(rs.getServiceUser());
+        assertNotNull(rs.getWriteNameId());
 
         List<RemoteSystem> rss = remoteSystemService.list();
         assertEquals(1, rss.size());
