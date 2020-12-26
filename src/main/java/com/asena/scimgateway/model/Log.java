@@ -57,7 +57,7 @@ public class Log {
 
     public void setMessage(String message) {
         if ((message != null) && (message.length() >= 1024)) {
-            message = message.substring(0,1018);
+            message = message.substring(0,1019);
             message += "[...]";
         }
         this.message = message;

@@ -32,7 +32,19 @@ public class LogDTOTest {
         assertEquals(n, lDTO.getTimestamp());
         assertEquals(LogType.INFO, lDTO.getType());
         assertEquals("OMG", lDTO.getMessage());
+        
+        String s = "";
+        for (int i = 0; i < 512; i++) {
+            s += "TESTSTR";
+        }
+        l.setMessage(s);
+        lDTO = LogDTO.toDTO(l);
+        assertEquals(1024, lDTO.getMessage().length());
 
+        l.setMessage(null);
+        lDTO = LogDTO.toDTO(l);
+        assertNull(lDTO.getMessage());
+        
         l = null;
         lDTO = LogDTO.toDTO(l);
         assertNull(lDTO);

@@ -60,8 +60,8 @@ sap.ui.define([
                 bShowBusyIndicator: true
             };
             this.loadJsonWithAjaxP(sQuery, mParameters)
-                .then(function (oData) {
-                    var oMainModel = new JSONModel({count:oData});
+                .then(function (oData, rawData) {
+                    var oMainModel = new JSONModel({count:rawData});
                     this.getView().setModel(oMainModel, "mdlLogs"); 
                 }.bind(this))
                 .catch(function (oError) {
