@@ -33,6 +33,10 @@ public class RemoteSystem {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attribute> writeMappings;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "writenameid_id", referencedColumnName = "id")
+    private Attribute writeNameId;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties;
 
@@ -44,6 +48,14 @@ public class RemoteSystem {
     private String type;
 
     public RemoteSystem() {
+    }
+
+    public Attribute getWriteNameId() {
+        return writeNameId;
+    }
+
+    public void setWriteNameId(Attribute writeNameId) {
+        this.writeNameId = writeNameId;
     }
 
     public User getServiceUser() {

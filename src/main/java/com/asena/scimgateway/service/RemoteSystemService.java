@@ -41,6 +41,7 @@ public class RemoteSystemService {
         rs.setActive(false);
         rs.setProperties(connector.getProperties());
         rs.setServiceUser(userService.createServiceUser(rs.getName()));
+        rs.setWriteNameId(new Attribute("", "", ""));
 
         return remoteSystemRepository.save(rs);
     }

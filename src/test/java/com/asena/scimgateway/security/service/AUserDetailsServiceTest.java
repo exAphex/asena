@@ -3,7 +3,6 @@ package com.asena.scimgateway.security.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.User;
 import com.asena.scimgateway.service.UserService;
 

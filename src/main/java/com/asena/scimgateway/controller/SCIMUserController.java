@@ -27,8 +27,6 @@ public class SCIMUserController {
     @Autowired
     private RemoteSystemService remoteSystemService;
 
-   
-
     @PostMapping("") 
     public @ResponseBody Object usersPost(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response)
             throws Exception {
