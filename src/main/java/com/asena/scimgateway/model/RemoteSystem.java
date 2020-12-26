@@ -62,11 +62,6 @@ public class RemoteSystem {
         this.writeMappings = writeMappings;
     }
 
-    public RemoteSystem(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
     public RemoteSystem addProperty(ConnectionProperty cp) {
         if (this.properties == null) {
             this.properties = new HashSet<>();

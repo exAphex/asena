@@ -2,7 +2,7 @@ package com.asena.scimgateway.controller;
 
 import java.util.List;
 
-import com.asena.scimgateway.model.Log;
+import com.asena.scimgateway.model.dto.LogDTO;
 import com.asena.scimgateway.service.LogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ public class LogController {
     private LogService logService;
 
     @GetMapping("")
-    public List<Log> getLogs() {
-        return logService.list();
+    public List<LogDTO> getLogs() {
+        return LogDTO.toDTO(logService.list());
     }
 
     @DeleteMapping("")
