@@ -42,6 +42,8 @@ public class LDAPConnector implements IConnector {
 
         retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
         retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
+
+        retSystem.setWriteNameId(new Attribute("", "dn", ""));
         return retSystem;
     }
 
@@ -134,7 +136,6 @@ public class LDAPConnector implements IConnector {
         if ((nameId == null) || (nameId.length() == 0)) {
             throw new InternalErrorException("NameId is not valid!");
         }
-
         this.nameId = nameId;
     }
     
