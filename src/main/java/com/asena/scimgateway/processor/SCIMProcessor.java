@@ -1,27 +1,31 @@
 package com.asena.scimgateway.processor;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.RemoteSystem;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 public class SCIMProcessor {
-    public static Object processUser(RemoteSystem rs, Object obj) throws Exception {
+
+    @SuppressWarnings("unchecked")
+    public static Object createUser(RemoteSystem rs, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();
         String nameId = null;
         HashMap<String, Object> data = prepareData(rs, obj); 
         
         nameId = nameIdAttr.getDestination();
         String id = transferToConnector("CreateUser", rs, nameId, data);
-        obj = putIdToObject(obj, id);
-        return obj;
+        LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
+        retObj.put("id", id);
+        return retObj;
     }
 
+    @SuppressWarnings("unchecked")
     public static Object updateUser(RemoteSystem rs, String userId, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();
         String nameId = null;
@@ -31,25 +35,15 @@ public class SCIMProcessor {
         data.replace(nameIdAttr.getDestination(), userId);
 
         String id = transferToConnector("CreateUser", rs, nameId, data);
-        obj = putIdToObject(obj, id);
-        return obj;
+        LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
+        retObj.put("id", id);
+        return retObj;
     }
 
     private static Object getObjectFromPath(Object obj, String path) {
         Object retObj = null;
         try {
             retObj = JsonPath.parse(obj).read(path);
-        } catch (Exception e) {
-                     
-        }
-        return retObj;
-    }
-
-    private static Object putIdToObject(Object obj, String id) {
-        Object retObj = null;
-        try {
-            DocumentContext doc = JsonPath.parse(obj).set("$.id", id);
-            return doc.json();
         } catch (Exception e) {
                      
         }

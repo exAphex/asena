@@ -34,7 +34,7 @@ public class SCIMUserController {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         Object o = null;
         try {
-            o = SCIMProcessor.processUser(rs, params);
+            o = SCIMProcessor.createUser(rs, params);
             response.setStatus(201);
         } catch (Exception e) {
             throw new InternalErrorException(e.getMessage(), e, params);
