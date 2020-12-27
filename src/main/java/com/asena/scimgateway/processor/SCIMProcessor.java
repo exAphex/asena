@@ -23,6 +23,10 @@ public class SCIMProcessor {
         return obj;
     }
 
+    public static Object updateUser(RemoteSystem rs, String id, Object obj) throws Exception {
+        return null;
+    }
+
     public static Object getObjectFromPath(Object obj, String path) {
         Object retObj = null;
         try {
