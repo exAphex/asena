@@ -35,7 +35,7 @@ public class SCIMProcessor {
         return obj;
     }
 
-    public static Object getObjectFromPath(Object obj, String path) {
+    private static Object getObjectFromPath(Object obj, String path) {
         Object retObj = null;
         try {
             retObj = JsonPath.parse(obj).read(path);
@@ -45,7 +45,7 @@ public class SCIMProcessor {
         return retObj;
     }
 
-    public static Object putIdToObject(Object obj, String id) {
+    private static Object putIdToObject(Object obj, String id) {
         Object retObj = null;
         try {
             DocumentContext doc = JsonPath.parse(obj).set("$.id", id);
@@ -56,7 +56,7 @@ public class SCIMProcessor {
         return retObj;
     }
 
-    public static HashMap<String, Object> prepareData(RemoteSystem rs, Object obj) {
+    private static HashMap<String, Object> prepareData(RemoteSystem rs, Object obj) {
         Set<Attribute> attrs = rs.getWriteMappings();
         Attribute nameIdAttr = rs.getWriteNameId();
         HashMap<String, Object> data = new HashMap<>();
@@ -76,7 +76,7 @@ public class SCIMProcessor {
         return data;
     }
 
-    public static String transferToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+    private static String transferToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
             throws Exception {
         IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.setupConnector(rs);
