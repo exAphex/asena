@@ -7,5 +7,5 @@ import com.asena.scimgateway.model.RemoteSystem;
 public interface IConnector {
     public RemoteSystem getRemoteSystemTemplate();
     public void setupConnector(RemoteSystem rs);
-    public void writeData(String type, HashMap<String, Object> data) throws Exception;
+    public String writeData(String type, HashMap<String, Object> data) throws Exception;
 }

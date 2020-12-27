@@ -65,7 +65,7 @@ public class LDAPConnector implements IConnector {
     }
 
     @Override
-    public void writeData(String type, HashMap<String, Object> data) throws Exception {
+    public String writeData(String type, HashMap<String, Object> data) throws Exception {
         switch (type) {
             case "CreateUser":
                 createEntity(data);
@@ -73,6 +73,8 @@ public class LDAPConnector implements IConnector {
             case "CreateGroup":
                 createEntity(data);
         }
+        // FIXME
+        return "LEL";
     }
 
     public void closeLDAPConnection(LdapConnection conn) {
