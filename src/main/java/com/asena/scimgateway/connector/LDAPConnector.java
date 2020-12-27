@@ -1,7 +1,9 @@
 package com.asena.scimgateway.connector;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
@@ -12,6 +14,9 @@ import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
 
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
+import org.apache.directory.api.ldap.model.entry.DefaultModification;
+import org.apache.directory.api.ldap.model.entry.Modification;
+import org.apache.directory.api.ldap.model.entry.ModificationOperation;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.exception.LdapOperationException;
 import org.apache.directory.ldap.client.api.LdapConnection;
@@ -76,8 +81,10 @@ public class LDAPConnector implements IConnector {
                 return createEntity(data);
             case "CreateGroup":
                 return createEntity(data);
+            case "UpdateUser":
+                return updateEntity(data);
             default:
-                throw new InternalErrorException("Unsupported operation: " + this.rs.getName());
+                throw new InternalErrorException("Unsupported operation: " + type + " from system " + this.rs.getName());
         }
     }
 
@@ -94,7 +101,7 @@ public class LDAPConnector implements IConnector {
         }
     }
 
-    public String createEntity(HashMap<String, Object> data) {
+    private String createEntity(HashMap<String, Object> data) {
         LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
         String retStr = null;
         try {
@@ -129,6 +136,70 @@ public class LDAPConnector implements IConnector {
             closeLDAPConnection(connection);
         }
         return retStr; 
+    }
+
+    private void upsertAttribute(LdapConnection conn, String dn, String attr, String value) throws LdapException  {
+		Modification modAttr = new DefaultModification(ModificationOperation.REPLACE_ATTRIBUTE, attr);
+
+		if (value == null) {
+			modAttr.setOperation(ModificationOperation.REMOVE_ATTRIBUTE);
+		} else {
+			modAttr.getAttribute().add(value);
+		}
+		
+		conn.modify(dn, modAttr);
+	}
+	
+	private void upsertAttributeArray(LdapConnection conn, String dn, String attr, List<String> valueList) throws LdapException {
+		Modification modAttr = new DefaultModification(ModificationOperation.REPLACE_ATTRIBUTE, attr);
+		
+		for (String s: valueList) {
+            modAttr.getAttribute().add(s);
+		}
+		
+		if ((valueList == null) || (valueList.size() == 0)) {
+			modAttr.setOperation(ModificationOperation.REMOVE_ATTRIBUTE);
+			org.apache.directory.api.ldap.model.entry.Attribute a = modAttr.getAttribute();
+			a.clear();
+		}
+		
+		conn.modify(dn, modAttr);
+	}
+
+    private String updateEntity(HashMap<String, Object> data) {
+        LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
+        String retStr = null;
+        try {
+            connection.bind(this.user, this.password);
+            retStr = (String)ConnectorUtil.getAttributeValue(nameId, data);
+            for (String key : data.keySet()) {
+                if (!key.equals(nameId)) {
+                    Object objData = data.get(key);
+                    if (objData instanceof NativeArray) {
+                        NativeArray tempArr = (NativeArray) objData;
+                        List<String> lstValues = new ArrayList<String>();
+                        for (int i = 0; i < tempArr.size(); i++) {
+                            lstValues.add((String) tempArr.get(i));
+                        }
+                        upsertAttributeArray(connection, retStr, key, lstValues);
+                    } else {
+                        upsertAttribute(connection, retStr, key, (String)data.get(key));
+                    }
+                }
+            } 
+
+        } catch (LdapException ldap) {
+            if (ldap instanceof LdapOperationException) {
+                LdapOperationException ldapOpErr = (LdapOperationException) ldap;
+
+                throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
+            } else {
+                throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
+            }
+        } finally {
+            closeLDAPConnection(connection);
+        } 
+        return retStr;
     }
 
     @Override

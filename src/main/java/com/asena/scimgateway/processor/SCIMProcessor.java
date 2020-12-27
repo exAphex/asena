@@ -34,7 +34,7 @@ public class SCIMProcessor {
         nameId = nameIdAttr.getDestination();
         data.replace(nameIdAttr.getDestination(), userId);
 
-        String id = transferToConnector("CreateUser", rs, nameId, data);
+        String id = transferToConnector("UpdateUser", rs, nameId, data);
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
         retObj.put("id", id);
         return retObj;
