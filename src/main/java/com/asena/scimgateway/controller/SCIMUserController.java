@@ -42,7 +42,7 @@ public class SCIMUserController {
         return o;
     }
 
-    @PutMapping("(id}")
+    @PutMapping("/{id}")
     public @ResponseBody Object scimUserUpdate(@PathVariable String systemid, @PathVariable String id, @RequestBody Object params, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         Object o = null;

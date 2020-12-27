@@ -24,6 +24,8 @@ public class LDAPConnector implements IConnector {
     private int port;
     private String user;
     private String password;
+    private RemoteSystem rs;
+    private String nameId;
 
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
@@ -46,6 +48,7 @@ public class LDAPConnector implements IConnector {
     @Override
     public void setupConnector(RemoteSystem rs) {
         Set<ConnectionProperty> conns = rs.getProperties();
+        this.rs = rs;
         for (ConnectionProperty cp : conns) {
             switch (cp.getKey()) {
                 case "host":
@@ -68,13 +71,12 @@ public class LDAPConnector implements IConnector {
     public String writeData(String type, HashMap<String, Object> data) throws Exception {
         switch (type) {
             case "CreateUser":
-                createEntity(data);
-                break;
+                return createEntity(data);
             case "CreateGroup":
-                createEntity(data);
+                return createEntity(data);
+            default:
+                throw new InternalErrorException("Unsupported operation: " + this.rs.getName());
         }
-        // FIXME
-        return "LEL";
     }
 
     public void closeLDAPConnection(LdapConnection conn) {
@@ -90,15 +92,17 @@ public class LDAPConnector implements IConnector {
         }
     }
 
-    public void createEntity(HashMap<String, Object> data) {
+    public String createEntity(HashMap<String, Object> data) {
         LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
+        String retStr = null;
         try {
             connection.bind(this.user, this.password);
             DefaultEntry newEntry = new DefaultEntry();
-            newEntry.setDn((String)ConnectorUtil.getAttributeValue("dn", data));
+            retStr = (String)ConnectorUtil.getAttributeValue(nameId, data);
+            newEntry.setDn(retStr);
 
             for (String key : data.keySet()) {
-                if (!key.equals("dn")) {
+                if (!key.equals(nameId)) {
                     Object objData = data.get(key);
                     if (objData instanceof NativeArray) {
                         NativeArray tempArr = (NativeArray) objData;
@@ -122,7 +126,16 @@ public class LDAPConnector implements IConnector {
         } finally {
             closeLDAPConnection(connection);
         }
-        
+        return retStr; 
+    }
+
+    @Override
+    public void setNameId(String nameId) {
+        if ((nameId == null) || (nameId.length() == 0)) {
+            throw new InternalErrorException("NameId is not valid!");
+        }
+
+        this.nameId = nameId;
     }
     
 }

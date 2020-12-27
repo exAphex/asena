@@ -80,6 +80,7 @@ public class SCIMProcessor {
             throws Exception {
         IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.setupConnector(rs);
+        conn.setNameId(nameId);
         return conn.writeData(type, data);
     }
 
