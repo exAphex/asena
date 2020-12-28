@@ -14,6 +14,7 @@ public class RemoteSystemDTO {
     private boolean active;
     private Set<AttributeDTO> attributes;
     private Set<AttributeDTO> writeMappings;
+    private AttributeDTO writeNameId;
     private Set<ConnectionPropertyDTO> properties;
     private String type;
     private UserDTO serviceUser;
@@ -24,12 +25,13 @@ public class RemoteSystemDTO {
         if (rs == null) {
             return null;
         }
-        
+
         rsDTO.setId(rs.getId());
         rsDTO.setName(rs.getName());
         rsDTO.setDescription(rs.getDescription());
         rsDTO.setActive(rs.isActive());
         rsDTO.setType(rs.getType());
+        
 
         if (rs.getAttributes() != null) {
             rsDTO.attributes = new HashSet<>();
@@ -51,10 +53,19 @@ public class RemoteSystemDTO {
                 rsDTO.properties.add(ConnectionPropertyDTO.toDTO(cp));
             }
         }
-        
+
         rsDTO.setServiceUser(UserDTO.toDTO(rs.getServiceUser()));
+        rsDTO.setWriteNameId(AttributeDTO.toDTO(rs.getWriteNameId()));
 
         return rsDTO;
+    }
+
+    public AttributeDTO getWriteNameId() {
+        return writeNameId;
+    }
+
+    public void setWriteNameId(AttributeDTO writeNameId) {
+        this.writeNameId = writeNameId;
     }
 
     public UserDTO getServiceUser() {
@@ -101,6 +112,10 @@ public class RemoteSystemDTO {
 
         if (getServiceUser() != null) {
             rs.setServiceUser(getServiceUser().fromDTO());
+        }
+
+        if (getWriteNameId() != null) {
+            rs.setWriteNameId(getWriteNameId().fromDTO());
         }
         
         return rs;

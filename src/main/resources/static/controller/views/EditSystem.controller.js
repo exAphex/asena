@@ -16,6 +16,7 @@ sap.ui.define([
 
         _onObjectMatched: function(oEvent) {
             this.id = oEvent.getParameter("arguments").id; 
+            this.loadRemoteSystemSuggestions(this.id);
             this.loadRemoteSystem(this.id);
     	},
 

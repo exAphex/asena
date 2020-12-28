@@ -102,10 +102,28 @@ public class RemoteSystem {
             this.writeMappings = new HashSet<>();
         }
 
-        if (a != null) {
+        if ((a != null) && (!isWriteMappingDuplicate(a))){
             writeMappings.add(a);
         }
         return this;
+    }
+
+    private boolean isWriteMappingDuplicate(Attribute attr) {
+        if ((attr == null) || (attr.getDestination() == null)) {
+            return false;
+        }
+
+        if (this.writeMappings == null) {
+            return false;
+        }
+
+        for (Attribute a : this.writeMappings) {
+            if (attr.getDestination().equals(a.getDestination())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void deleteWriteMapping(Attribute a) {

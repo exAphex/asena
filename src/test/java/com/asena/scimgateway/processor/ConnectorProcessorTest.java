@@ -3,6 +3,7 @@ package com.asena.scimgateway.processor;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -10,6 +11,9 @@ import java.lang.reflect.Modifier;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.IConnector;
+import com.asena.scimgateway.connector.LDAPConnector;
+import com.asena.scimgateway.connector.NoOpConnector;
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.RemoteSystem;
 
 import org.junit.jupiter.api.Test;
@@ -37,6 +41,19 @@ public class ConnectorProcessorTest {
     void getConnectorByTypeTest() {
         IConnector conn = ConnectorProcessor.getConnectorByType("LDAP");
         assertNotNull(conn);
+        assertTrue(conn instanceof LDAPConnector);
+        
+        conn = ConnectorProcessor.getConnectorByType("NOOP");
+        assertNotNull(conn);
+        assertTrue(conn instanceof NoOpConnector);
+
+        assertThrows(InternalErrorException.class, () -> {
+            ConnectorProcessor.getConnectorByType(null);
+        });
+
+        assertThrows(InternalErrorException.class, () -> {
+            ConnectorProcessor.getConnectorByType("");
+        });
     }
 
     @Test

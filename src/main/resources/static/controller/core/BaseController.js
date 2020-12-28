@@ -103,7 +103,7 @@ sap.ui.define([
                             responseJSON.mSpecialParameters = mParameters.mSpecialParameters;
                         }
 
-                        resolve(responseJSON);
+                        resolve(responseJSON, httpresponse);
 
                         if (!bSuppressBusyIndicator) {
                             jQuery.sap.delayedCall(500, this, function () {

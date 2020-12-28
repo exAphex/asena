@@ -60,6 +60,14 @@ public class RemoteSystemService {
                 r.getServiceUser().setPassword(rs.getServiceUser().getPassword());
             }
 
+            if (rs.getWriteNameId() != null) {
+                if (r.getWriteNameId() != null) {
+                    r.getWriteNameId().setDestination(rs.getWriteNameId().getDestination());
+                } else {
+                    r.setWriteNameId(new Attribute("", rs.getWriteNameId().getDestination(), ""));
+                }
+            }
+
             return remoteSystemRepository.save(r);
         })
         .orElseThrow(() -> new NotFoundException(id));

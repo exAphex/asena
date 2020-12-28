@@ -19,7 +19,7 @@
                         id="cmdDestinationAttribute"
                         value="{mdlAttributeDialog>/destination}"
                         items="{
-                            path: 'mdlTargetSuggestions>/writeMappings',
+                            path: 'mdlTargetSuggestions>/attributes',
                             sorter: { path: 'destination' }
                         }">
                         <core:Item key="{mdlTargetSuggestions>destination}" text="{mdlTargetSuggestions>destination}" />
