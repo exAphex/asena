@@ -5,11 +5,13 @@ import java.util.Set;
 
 import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.connector.LDAPConnector;
+import com.asena.scimgateway.connector.NoOpConnector;
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class ConnectorProcessor {
     private ConnectorProcessor() {}
-    
+
     public static Set<RemoteSystem> getAvailableConnectors() {
         Set<RemoteSystem> retSystems = new HashSet<>();
         LDAPConnector ldap = new LDAPConnector();
@@ -33,7 +35,16 @@ public class ConnectorProcessor {
 
     public static IConnector getConnectorByType(String type) {
         LDAPConnector csv = new LDAPConnector();
-        return csv;
+        NoOpConnector noop = new NoOpConnector();
+        
+        switch (type) {
+            case "LDAP":
+                return csv;
+            case "NOOP":
+                return noop;
+            default:
+                throw new InternalErrorException("No connector found with type " + type);
+        }
     }
 
 }
