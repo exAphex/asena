@@ -31,8 +31,18 @@ public class NoOpConnector implements IConnector {
     }
 
     @Override
-    public String writeData(String type, HashMap<String, Object> data) throws Exception {
+    public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
         return (String)data.get(this.nameId);
+    }
+
+    @Override
+    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+        return (String)data.get(this.nameId);
+    }
+
+    @Override
+    public boolean deleteEntity(String entity) {
+        return true;
     }
     
 }

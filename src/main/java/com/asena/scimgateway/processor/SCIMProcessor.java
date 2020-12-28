@@ -21,7 +21,7 @@ public class SCIMProcessor {
         HashMap<String, Object> data = prepareData(rs, obj); 
         
         nameId = nameIdAttr.getDestination();
-        String id = transferToConnector("CreateUser", rs, nameId, data);
+        String id = transferCreateToConnector("User", rs, nameId, data);
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
         retObj.put("id", id);
         return retObj;
@@ -36,10 +36,14 @@ public class SCIMProcessor {
         nameId = nameIdAttr.getDestination();
         data.replace(nameIdAttr.getDestination(), userId);
 
-        String id = transferToConnector("UpdateUser", rs, nameId, data);
+        String id = transferUpdateToConnector("User", rs, nameId, data);
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
         retObj.put("id", id);
         return retObj;
+    }
+
+    public static boolean deleteUser(RemoteSystem rs, String userId) {
+        return true;
     }
 
     private static Object getObjectFromPath(Object obj, String path) {
@@ -72,12 +76,19 @@ public class SCIMProcessor {
         return data;
     }
 
-    private static String transferToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+    private static String transferCreateToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
             throws Exception {
         IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.setupConnector(rs);
         conn.setNameId(nameId);
-        return conn.writeData(type, data);
+        return conn.createEntity(type, data);
     }
 
+    private static String transferUpdateToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+            throws Exception {
+        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
+        conn.setupConnector(rs);
+        conn.setNameId(nameId);
+        return conn.updateEntity(type, data);
+    }
 }

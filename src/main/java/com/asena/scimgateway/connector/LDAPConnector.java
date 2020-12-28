@@ -29,7 +29,6 @@ public class LDAPConnector implements IConnector {
     private int port;
     private String user;
     private String password;
-    private RemoteSystem rs;
     private String nameId;
 
     @Override
@@ -55,7 +54,6 @@ public class LDAPConnector implements IConnector {
     @Override
     public void setupConnector(RemoteSystem rs) {
         Set<ConnectionProperty> conns = rs.getProperties();
-        this.rs = rs;
         for (ConnectionProperty cp : conns) {
             switch (cp.getKey()) {
                 case "host":
@@ -71,20 +69,6 @@ public class LDAPConnector implements IConnector {
                     this.password = cp.getValue();
                     break;
             }
-        }
-    }
-
-    @Override
-    public String writeData(String type, HashMap<String, Object> data) throws Exception {
-        switch (type) {
-            case "CreateUser":
-                return createEntity(data);
-            case "CreateGroup":
-                return createEntity(data);
-            case "UpdateUser":
-                return updateEntity(data);
-            default:
-                throw new InternalErrorException("Unsupported operation: " + type + " from system " + this.rs.getName());
         }
     }
 
@@ -208,6 +192,22 @@ public class LDAPConnector implements IConnector {
             throw new InternalErrorException("NameId is not valid!");
         }
         this.nameId = nameId;
+    }
+
+    @Override
+    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+        return updateEntity(data);
+    }
+
+    @Override
+    public boolean deleteEntity(String entity) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
+        return createEntity(data);
     }
     
 }

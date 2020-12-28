@@ -8,5 +8,7 @@ public interface IConnector {
     public RemoteSystem getRemoteSystemTemplate();
     public void setupConnector(RemoteSystem rs);
     public void setNameId(String nameId);
-    public String writeData(String type, HashMap<String, Object> data) throws Exception;
+    public String createEntity(String entity, HashMap<String, Object> data) throws Exception;
+    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception;
+    public boolean deleteEntity(String entity);
 }

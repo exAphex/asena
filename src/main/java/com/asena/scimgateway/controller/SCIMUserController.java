@@ -11,6 +11,7 @@ import com.asena.scimgateway.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,5 +54,15 @@ public class SCIMUserController {
             throw new InternalErrorException(e.getMessage(), e, params);
         }
         return o;
+    }
+    
+    @DeleteMapping("/{id}")
+    public void scimUserDelete(@PathVariable String systemid, @PathVariable String id, HttpServletResponse response) {
+        RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
+        if (SCIMProcessor.deleteUser(rs, id)) {
+            response.setStatus(204);
+        } else {
+            throw new NotFoundException(id);
+        }
     }
 }
