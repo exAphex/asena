@@ -16,6 +16,7 @@ Currently only hardcoded connectors are supported by asena. In the next releases
 Supported systems:
 * LDAP
     * Create User
+    * Update User
 
 ### Supported client systems
 * SAP Identity Management
