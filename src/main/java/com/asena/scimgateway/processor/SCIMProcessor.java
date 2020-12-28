@@ -12,6 +12,8 @@ import com.jayway.jsonpath.JsonPath;
 
 public class SCIMProcessor {
 
+    private SCIMProcessor() {}
+
     @SuppressWarnings("unchecked")
     public static Object createUser(RemoteSystem rs, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();

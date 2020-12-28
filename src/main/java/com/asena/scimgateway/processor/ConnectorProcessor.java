@@ -36,6 +36,10 @@ public class ConnectorProcessor {
     public static IConnector getConnectorByType(String type) {
         LDAPConnector csv = new LDAPConnector();
         NoOpConnector noop = new NoOpConnector();
+
+        if (type == null) {
+            throw new InternalErrorException("No connector found with type null");
+        }
         
         switch (type) {
             case "LDAP":
