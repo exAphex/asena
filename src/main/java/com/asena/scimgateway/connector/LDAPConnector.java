@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
+import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
@@ -18,6 +19,7 @@ import org.apache.directory.api.ldap.model.entry.DefaultModification;
 import org.apache.directory.api.ldap.model.entry.Modification;
 import org.apache.directory.api.ldap.model.entry.ModificationOperation;
 import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapNoSuchObjectException;
 import org.apache.directory.api.ldap.model.exception.LdapOperationException;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
@@ -29,7 +31,6 @@ public class LDAPConnector implements IConnector {
     private int port;
     private String user;
     private String password;
-    private RemoteSystem rs;
     private String nameId;
 
     @Override
@@ -55,7 +56,6 @@ public class LDAPConnector implements IConnector {
     @Override
     public void setupConnector(RemoteSystem rs) {
         Set<ConnectionProperty> conns = rs.getProperties();
-        this.rs = rs;
         for (ConnectionProperty cp : conns) {
             switch (cp.getKey()) {
                 case "host":
@@ -74,38 +74,35 @@ public class LDAPConnector implements IConnector {
         }
     }
 
-    @Override
-    public String writeData(String type, HashMap<String, Object> data) throws Exception {
-        switch (type) {
-            case "CreateUser":
-                return createEntity(data);
-            case "CreateGroup":
-                return createEntity(data);
-            case "UpdateUser":
-                return updateEntity(data);
-            default:
-                throw new InternalErrorException("Unsupported operation: " + type + " from system " + this.rs.getName());
+    public void closeLDAPConnection(LdapConnection conn) {
+        try {
+            if (conn != null) {
+                conn.unBind();
+            }
+        } catch (LdapException ldap) {
+            ldap.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void closeLDAPConnection(LdapConnection conn) {
-        try {
-            conn.unBind();
-            conn.close();
-        } catch (LdapException ldap) {
-            // TODO Auto-generated catch block
-            ldap.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    private LdapConnection ldapConnect() throws LdapException {
+        LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
+        connection.bind(this.user, this.password);
+        return connection;
     }
 
     private String createEntity(HashMap<String, Object> data) {
-        LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
+        LdapConnection connection = null; 
         String retStr = null;
         try {
-            connection.bind(this.user, this.password);
+            connection = ldapConnect();
             DefaultEntry newEntry = new DefaultEntry();
             retStr = (String)ConnectorUtil.getAttributeValue(nameId, data);
             newEntry.setDn(retStr);
@@ -123,11 +120,11 @@ public class LDAPConnector implements IConnector {
                     }
                 }
             }
+
             connection.add(newEntry);
         } catch (LdapException ldap) {
             if (ldap instanceof LdapOperationException) {
                 LdapOperationException ldapOpErr = (LdapOperationException) ldap;
-
                 throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
             } else {
                 throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
@@ -167,10 +164,10 @@ public class LDAPConnector implements IConnector {
 	}
 
     private String updateEntity(HashMap<String, Object> data) {
-        LdapConnection connection = new LdapNetworkConnection(this.host, this.port);
+        LdapConnection connection = null;
         String retStr = null;
         try {
-            connection.bind(this.user, this.password);
+            connection = ldapConnect();
             retStr = (String)ConnectorUtil.getAttributeValue(nameId, data);
             for (String key : data.keySet()) {
                 if (!key.equals(nameId)) {
@@ -208,6 +205,41 @@ public class LDAPConnector implements IConnector {
             throw new InternalErrorException("NameId is not valid!");
         }
         this.nameId = nameId;
+    }
+
+    @Override
+    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+        return updateEntity(data);
+    }
+
+    @Override
+    public boolean deleteEntity(String entity, HashMap<String, Object> data) {
+        boolean retBool = false;
+        LdapConnection connection = null;
+        String dn = "";
+        try {
+            connection = ldapConnect();
+            dn = (String)ConnectorUtil.getAttributeValue(nameId, data);
+            connection.delete(dn);
+            retBool = true;
+        } catch (LdapException ldap) {
+            if (ldap instanceof LdapNoSuchObjectException) {
+                throw new NotFoundException(dn);
+            } else if (ldap instanceof LdapOperationException) {
+                LdapOperationException ldapOpErr = (LdapOperationException) ldap;
+                throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
+            } else {
+                throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
+            }
+        } finally {
+            closeLDAPConnection(connection);
+        } 
+        return retBool;
+    }
+
+    @Override
+    public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
+        return createEntity(data);
     }
     
 }
