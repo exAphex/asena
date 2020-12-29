@@ -10,5 +10,5 @@ public interface IConnector {
     public void setNameId(String nameId);
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception;
     public String updateEntity(String entity, HashMap<String, Object> data) throws Exception;
-    public boolean deleteEntity(String entity);
+    public boolean deleteEntity(String entity, HashMap<String, Object> data) throws Exception;
 }

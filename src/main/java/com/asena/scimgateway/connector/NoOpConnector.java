@@ -41,7 +41,7 @@ public class NoOpConnector implements IConnector {
     }
 
     @Override
-    public boolean deleteEntity(String entity) {
+    public boolean deleteEntity(String entity, HashMap<String, Object> data) {
         return true;
     }
     
