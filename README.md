@@ -3,6 +3,14 @@
 # Asena SCIM Gateway
 Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It can be used as a middleware for identity management systems to provision users and group assignments. Providing a UI for administration it is easy to manage and is already used in productive environments.
 
+## Contents
+- [Functionality](#functionality)
+    - [Supported SCIM operations](#supported-scim-operations)
+    - [Supported target systems](#supported-target-systems)
+    - [Supported client systems](#supported-client-systems)
+- [ToDo](#todo)
+- [Getting started](#getting-started)
+
 ## Functionality
 * Administrative UI for configuration
 * Support for multiple target systems
@@ -10,13 +18,22 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 * Scripting support (JavaScript)
 * Segregation of duties by creating different communication users for each system
 
+### Supported SCIM operations
+| Operation  | Support?  |
+| -----------|:---------:| 
+| GET        | NO        |
+| POST       | YES       |
+| PUT        | YES       |
+| PATCH      | NO        |
+| DELETE     | YES       |
+
 ### Supported target systems
 Currently only hardcoded connectors are supported by asena. In the next releases we want to give users to the functionality to create own connectors.
 
-Supported systems:
-* LDAP
-    * Create User
-    * Update User
+| System type  | Create  | Update  | Delete  |
+| -----------|:---------:|:---------:| :---------:|  
+| LDAP        | YES        |YES        |YES        |
+
 
 ### Supported client systems
 * SAP Identity Management
