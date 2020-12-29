@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
+import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
@@ -18,6 +19,7 @@ import org.apache.directory.api.ldap.model.entry.DefaultModification;
 import org.apache.directory.api.ldap.model.entry.Modification;
 import org.apache.directory.api.ldap.model.entry.ModificationOperation;
 import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapNoSuchObjectException;
 import org.apache.directory.api.ldap.model.exception.LdapOperationException;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
@@ -214,15 +216,17 @@ public class LDAPConnector implements IConnector {
     public boolean deleteEntity(String entity, HashMap<String, Object> data) {
         boolean retBool = false;
         LdapConnection connection = null;
+        String dn = "";
         try {
             connection = ldapConnect();
-            String dn = (String)ConnectorUtil.getAttributeValue(nameId, data);
+            dn = (String)ConnectorUtil.getAttributeValue(nameId, data);
             connection.delete(dn);
             retBool = true;
         } catch (LdapException ldap) {
-            if (ldap instanceof LdapOperationException) {
+            if (ldap instanceof LdapNoSuchObjectException) {
+                throw new NotFoundException(dn);
+            } else if (ldap instanceof LdapOperationException) {
                 LdapOperationException ldapOpErr = (LdapOperationException) ldap;
-                
                 throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
             } else {
                 throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());

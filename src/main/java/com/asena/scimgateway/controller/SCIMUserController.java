@@ -38,7 +38,7 @@ public class SCIMUserController {
             o = SCIMProcessor.createUser(rs, params);
             response.setStatus(201);
         } catch (Exception e) {
-            throw new InternalErrorException(e.getMessage(), e, params);
+            handleControllerError(e, params);
         }
         return o;
     }
@@ -51,7 +51,7 @@ public class SCIMUserController {
             o = SCIMProcessor.updateUser(rs, id, params);
             response.setStatus(201);
         } catch (Exception e) {
-            throw new InternalErrorException(e.getMessage(), e, params);
+            handleControllerError(e, params);
         }
         return o;
     }
@@ -59,10 +59,24 @@ public class SCIMUserController {
     @DeleteMapping("/{id}")
     public void scimUserDelete(@PathVariable String systemid, @PathVariable String id, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
-        if (SCIMProcessor.deleteUser(rs, id)) {
+        boolean isDeleted = false;
+        try {
+            isDeleted = SCIMProcessor.deleteUser(rs, id);
             response.setStatus(204);
-        } else {
+        } catch (Exception e) {
+            handleControllerError(e, null);
+        }
+
+        if (!isDeleted) {
             throw new NotFoundException(id);
+        }
+    }
+
+    private void handleControllerError(Exception e, Object params) {
+        if (e instanceof NotFoundException) {
+            throw new NotFoundException(e.getMessage());
+        } else {
+            throw new InternalErrorException(e.getMessage(), e, params);
         }
     }
 }

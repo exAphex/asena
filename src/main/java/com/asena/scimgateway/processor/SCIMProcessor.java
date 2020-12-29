@@ -42,8 +42,14 @@ public class SCIMProcessor {
         return retObj;
     }
 
-    public static boolean deleteUser(RemoteSystem rs, String userId) {
-        return true;
+    public static boolean deleteUser(RemoteSystem rs, String userId) throws Exception {
+        Attribute nameIdAttr = rs.getWriteNameId();
+        String nameId = null;
+        HashMap<String, Object> data = new HashMap<>();
+        nameId = nameIdAttr.getDestination();
+        data.put(nameId, userId);
+
+        return transferDeleteToConnector("User", rs, nameId, data);
     }
 
     private static Object getObjectFromPath(Object obj, String path) {
@@ -90,5 +96,13 @@ public class SCIMProcessor {
         conn.setupConnector(rs);
         conn.setNameId(nameId);
         return conn.updateEntity(type, data);
+    }
+
+    private static boolean transferDeleteToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+            throws Exception {
+        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
+        conn.setupConnector(rs);
+        conn.setNameId(nameId);
+        return conn.deleteEntity(type, data);
     }
 }
