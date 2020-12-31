@@ -31,12 +31,16 @@ public class UserService {
         return create(u);
     }
 
-    private User create(User u) {
+    public User create(User u) {
         return userRepository.save(u);
     }
 
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
+    }
+
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 
     private void deleteUser(User u) {
