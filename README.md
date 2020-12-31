@@ -5,6 +5,8 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 
 ## Contents
 - [Functionality](#functionality)
+- [Prerequisites](#prerequisites)
+- [Compatibility](#compatibility)
     - [Supported SCIM operations](#supported-scim-operations)
     - [Supported target systems](#supported-target-systems)
     - [Supported client systems](#supported-client-systems)
@@ -18,6 +20,12 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 * Scripting support (JavaScript)
 * Segregation of duties by creating different communication users for each system
 
+## Prerequisites
+* JDK 8
+* Linux operating system
+* Postgresql Datbase
+
+## Compatibility
 ### Supported SCIM operations
 | Operation  | Support?  |
 | -----------|:---------:| 
