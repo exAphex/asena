@@ -71,11 +71,11 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.6</version>
           <configuration>
-                      <excludes>
+            <excludes>
               <exclude>**/*com/asena/scimgateway/connector/**</exclude>
               <exclude>**/*com/asena/scimgateway/ScimgatewayApplication.class</exclude>
-                      </excludes>
-                  </configuration>
+            </excludes>
+          </configuration>
           <executions>
             <execution>
               <goals>
@@ -91,10 +91,12 @@
             </execution>
           </executions>
         </plugin>
+        
       </plugins>
     </pluginManagement>
   </build>
-<modules>  <module>installer</module>
+  <modules>
+    <module>installer</module>
     <module>scimgateway</module>
   </modules>
 </project>
