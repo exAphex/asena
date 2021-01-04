@@ -13,6 +13,14 @@
     <tag>HEAD</tag>
   </scm>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub</name>
+      <url>https://maven.pkg.github.com/exAphex/asena</url>  
+    </repository>
+  </distributionManagement>
+
   <name>parent</name>
   <packaging>pom</packaging>
   <properties>
