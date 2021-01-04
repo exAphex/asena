@@ -29,3 +29,4 @@ target/
 .project
 
 test.sh
+release.properties
