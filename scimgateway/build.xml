@@ -1,7 +1,0 @@
-<project name="Asena" default="dist" basedir=".">
-   <property name="build" location="build"/>
-     <target name="finish">
-        <mkdir dir="${build}"/>
-        <copy file="/scimgateway/target/scimgateway.jar" tofile="/build/scimgateway.jar"/>
-     </target>
- </project>
