@@ -10,6 +10,8 @@ import com.asena.model.Step;
 import com.asena.processor.StepProcessor;
 import com.asena.security.SecurityUtils;
 import com.asena.validator.DatabaseTypeValidator;
+import com.asena.validator.DirectoryValidator;
+import com.asena.validator.FilePathValidator;
 import com.asena.validator.IntegerValidator;
 import com.asena.validator.StringValidator;
 
@@ -27,7 +29,9 @@ public class App {
 
     public static List<Step> prepareSteps() {
         List<Step> steps = new ArrayList<>();
-
+        
+        steps.add(new Step("com.asena.scimgateway.installationpath", "Provide an absolute path for the installation folder", "", new DirectoryValidator()));
+        steps.add(new Step("com.asena.scimgateway.jdbc", "Provide the absolute path to the jdbc driver", "", new FilePathValidator()));
         steps.add(new Step("spring.datasource.url", "Provide a jdbc url to your database",
                 "jdbc:postgresql://localhost:5431/postgres", new StringValidator()));
         steps.add(new Step("spring.datasource.username", "Provide the name of the databaseuser", "postgres",
@@ -48,9 +52,9 @@ public class App {
         System.out.println("=================");
     }
 
-    public static void postProcessSteps(HashMap<String, String> stepValues) throws NoSuchAlgorithmException {
+    public static HashMap<String, String> postProcessSteps(HashMap<String, String> stepValues) throws NoSuchAlgorithmException {
         stepValues.put("spring.jpa.hibernate.ddl-auto", "update");
         stepValues.put("com.asena.scimgateway.security.key", SecurityUtils.generateKey());
-        System.out.println(stepValues);
+        return stepValues;
     }
 }
