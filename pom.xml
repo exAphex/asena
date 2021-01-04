@@ -4,13 +4,13 @@
 
   <groupId>com.asena</groupId>
   <artifactId>parent</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.0</version>
 
   <scm>
     <connection>scm:git:git@github.com:exAphex/asena</connection>
     <url>scm:git:git@github.com:exAphex/asena</url>
     <developerConnection>scm:git:git@github.com:exAphex/asena</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v1.0</tag>
   </scm>
 
   <distributionManagement>
