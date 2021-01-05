@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.asena</groupId>
 	<artifactId>scimgateway</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.4</version>
 	<name>scimgateway</name>
 	<description>Asena SCIM Gateway</description>
 
@@ -118,4 +118,8 @@
 			</plugin>
 		</plugins>
 	</build>
+
+  <scm>
+    <tag>v1.4</tag>
+  </scm>
 </project>
