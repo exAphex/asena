@@ -27,6 +27,7 @@ target/
 .settings/
 .classpath
 .project
+build/
 
 test.sh
 release.properties
