@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import com.asena.model.Step;
 import com.asena.processor.InstallationProcessor;
+import com.asena.processor.ScriptProcessor;
 import com.asena.processor.StepProcessor;
 import com.asena.security.SecurityUtils;
 import com.asena.validator.DatabaseTypeValidator;
@@ -32,10 +33,12 @@ public class App {
         List<Step> steps;
         HashMap<String, String> retValues;
         showHeader();
+        
         steps = prepareSteps();
         retValues = StepProcessor.processSteps(scanner, steps);
         retValues = postProcessSteps(retValues);
         InstallationProcessor.processInstallation(retValues);
+        ScriptProcessor.installScripts(retValues);
         return retValues; 
     }
 

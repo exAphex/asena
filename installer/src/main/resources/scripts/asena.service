@@ -1,0 +1,10 @@
+[Unit]
+Description=Asena SCIM Gateway service
+After=syslog.target
+
+[Service]
+ExecStart=%s
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
