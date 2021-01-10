@@ -2,6 +2,7 @@ package com.asena.scimgateway.processor;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.IConnector;
@@ -50,6 +51,10 @@ public class SCIMProcessor {
         data.put(nameId, userId);
 
         return transferDeleteToConnector("User", rs, nameId, data);
+    }
+
+    public static List<HashMap<String, Object>> getUsers(RemoteSystem rs) throws Exception {
+        return transferGetUsersToConnector("User", rs);
     }
 
     private static Object getObjectFromPath(Object obj, String path) {
@@ -104,5 +109,11 @@ public class SCIMProcessor {
         conn.setupConnector(rs);
         conn.setNameId(nameId);
         return conn.deleteEntity(type, data);
+    }
+
+    private static List<HashMap<String, Object>> transferGetUsersToConnector(String type, RemoteSystem rs) throws Exception {
+        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
+        conn.setupConnector(rs);
+        return conn.getEntities(type);
     }
 }

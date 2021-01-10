@@ -1,6 +1,7 @@
 package com.asena.scimgateway.connector;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
@@ -13,8 +14,8 @@ public class NoOpConnector implements IConnector {
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
         RemoteSystem retSystem = new RemoteSystem();
-        retSystem.addProperty(new ConnectionProperty("noop", "noop.com", "noopdesc", false,
-                ConnectionPropertyType.STRING));
+        retSystem.addProperty(
+                new ConnectionProperty("noop", "noop.com", "noopdesc", false, ConnectionPropertyType.STRING));
         retSystem.setType("NOOP");
         retSystem.addAttribute(new Attribute("noop", "noop", "noop desc"));
         retSystem.setWriteNameId(new Attribute("", "noop", ""));
@@ -32,17 +33,23 @@ public class NoOpConnector implements IConnector {
 
     @Override
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
-        return (String)data.get(this.nameId);
+        return (String) data.get(this.nameId);
     }
 
     @Override
     public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        return (String)data.get(this.nameId);
+        return (String) data.get(this.nameId);
     }
 
     @Override
     public boolean deleteEntity(String entity, HashMap<String, Object> data) {
         return true;
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

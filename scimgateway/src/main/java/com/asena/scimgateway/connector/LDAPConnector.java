@@ -2,7 +2,9 @@ package com.asena.scimgateway.connector;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -14,13 +16,17 @@ import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
 
+import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.DefaultModification;
+import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.entry.Modification;
 import org.apache.directory.api.ldap.model.entry.ModificationOperation;
+import org.apache.directory.api.ldap.model.entry.Value;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.exception.LdapNoSuchObjectException;
 import org.apache.directory.api.ldap.model.exception.LdapOperationException;
+import org.apache.directory.api.ldap.model.message.SearchScope;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.mozilla.javascript.NativeArray;
@@ -32,18 +38,22 @@ public class LDAPConnector implements IConnector {
     private String user;
     private String password;
     private String nameId;
+    private String searchDN;
+    private String searchFilter;
 
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
         RemoteSystem retSystem = new RemoteSystem();
-        retSystem.addProperty(new ConnectionProperty("host", "example.com", "Hostname of the ldap server", false,
+        retSystem.addProperty(new ConnectionProperty("host", "example.org", "Hostname of the ldap server", false,
                 ConnectionPropertyType.STRING));
         retSystem.addProperty(
                 new ConnectionProperty("port", "389", "Port of the ldap server", false, ConnectionPropertyType.INT));
-        retSystem.addProperty(new ConnectionProperty("user", "uid=admin,dc=example,dc=com",
+        retSystem.addProperty(new ConnectionProperty("user", "cn=admin,dc=example,dc=org",
                 "[OPTIONAL] Communication user", false, ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("password", "test1234",
                 "[OPTIONAL] Password of communication user", true, ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("searchdn", "ou=users,dc=example,dc=org", "Entrypoint dn for search users", false, ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("searchfilter", "(objectclass=*)", "Search filter for users", false, ConnectionPropertyType.STRING));
         retSystem.setType("LDAP");
 
         retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
@@ -70,6 +80,12 @@ public class LDAPConnector implements IConnector {
                 case "password":
                     this.password = cp.getValue();
                     break;
+                case "searchdn":
+                    this.searchDN = cp.getValue();
+                    break;
+                case "searchfilter":
+                    this.searchFilter = cp.getValue();
+                    break;
             }
         }
     }
@@ -89,6 +105,16 @@ public class LDAPConnector implements IConnector {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void closeLDAPCursor(EntryCursor cursor) {
+        try {
+            if (cursor != null) {
+                cursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -123,12 +149,7 @@ public class LDAPConnector implements IConnector {
 
             connection.add(newEntry);
         } catch (LdapException ldap) {
-            if (ldap instanceof LdapOperationException) {
-                LdapOperationException ldapOpErr = (LdapOperationException) ldap;
-                throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
-            } else {
-                throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
-            }
+            parseLDAPException(ldap, "");
         } finally {
             closeLDAPConnection(connection);
         }
@@ -186,13 +207,7 @@ public class LDAPConnector implements IConnector {
             } 
 
         } catch (LdapException ldap) {
-            if (ldap instanceof LdapOperationException) {
-                LdapOperationException ldapOpErr = (LdapOperationException) ldap;
-
-                throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
-            } else {
-                throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
-            }
+            parseLDAPException(ldap, "");
         } finally {
             closeLDAPConnection(connection);
         } 
@@ -223,14 +238,7 @@ public class LDAPConnector implements IConnector {
             connection.delete(dn);
             retBool = true;
         } catch (LdapException ldap) {
-            if (ldap instanceof LdapNoSuchObjectException) {
-                throw new NotFoundException(dn);
-            } else if (ldap instanceof LdapOperationException) {
-                LdapOperationException ldapOpErr = (LdapOperationException) ldap;
-                throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
-            } else {
-                throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
-            }
+            parseLDAPException(ldap, dn);
         } finally {
             closeLDAPConnection(connection);
         } 
@@ -240,6 +248,58 @@ public class LDAPConnector implements IConnector {
     @Override
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
         return createEntity(data);
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+        LdapConnection connection = null;
+        List<HashMap<String,Object>> retList = new ArrayList<>();
+        EntryCursor cursor = null;
+        try {
+            connection = ldapConnect();
+            cursor = connection.search(searchDN, searchFilter, SearchScope.SUBTREE, "*" );
+            while ( cursor.next() )
+            {
+                Entry entry = cursor.get();
+                Collection<org.apache.directory.api.ldap.model.entry.Attribute> col = entry.getAttributes();
+
+                HashMap<String, Object> tmpObj = new HashMap<>();
+                tmpObj.put("dn", entry.getDn().toString());
+                
+                for (org.apache.directory.api.ldap.model.entry.Attribute a : col) {
+                    if (a.size() == 1) {
+                        tmpObj.put(a.getId(), a.getString());
+                    } else {
+                        List<String> tmpStringArr = new ArrayList<>();
+                        for (Iterator<Value> iterator = a.iterator(); iterator.hasNext();) {
+                            Value tmpVal = iterator.next();
+                            tmpStringArr.add(tmpVal.getString());
+                        }
+                        tmpObj.put(a.getId(), tmpStringArr);
+                    }
+                    
+                }
+                retList.add(tmpObj);
+            }
+            cursor.close();
+        } catch (LdapException ldap) {
+            parseLDAPException(ldap, "");
+        } finally {
+
+            closeLDAPConnection(connection);
+        } 
+        return retList;
+    }
+
+    private void parseLDAPException(LdapException ldap, String dn) {
+        if (ldap instanceof LdapNoSuchObjectException) {
+            throw new NotFoundException(dn);
+        } else if (ldap instanceof LdapOperationException) {
+            LdapOperationException ldapOpErr = (LdapOperationException) ldap;
+            throw new InternalErrorException("LDAP Error with code: " + ldapOpErr.getResultCode() + " on entry" + ldapOpErr.getResolvedDn() + " with cause: " + ldapOpErr.getMessage());
+        } else {
+            throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
+        }
     }
     
 }

@@ -1,5 +1,8 @@
 package com.asena.scimgateway.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,10 +37,15 @@ public class SCIMUserController {
     private RemoteSystemService remoteSystemService;
 
     @GetMapping("")
-    public @ResponseBody Map scimUserList(@PathVariable String systemid, @RequestParam Map<String, String> params) {
+    public @ResponseBody List<HashMap<String, Object>> scimUserList(@PathVariable String systemid, @RequestParam Map<String, String> params) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
-
-        return null;
+        List<HashMap<String, Object>> retUsers = new ArrayList<>();
+        try {
+            retUsers = SCIMProcessor.getUsers(rs);
+        } catch (Exception e) {
+            handleControllerError(e, params);
+        }
+        return retUsers;
     }
 
     @PostMapping("") 
