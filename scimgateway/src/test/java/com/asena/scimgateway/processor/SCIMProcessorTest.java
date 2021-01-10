@@ -68,7 +68,6 @@ public class SCIMProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void deleteUserTest() throws Exception {
         boolean deleted = SCIMProcessor.deleteUser(this.rs, "testuser");
         assertTrue(deleted); 
