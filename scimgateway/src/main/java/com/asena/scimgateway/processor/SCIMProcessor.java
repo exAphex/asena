@@ -19,7 +19,7 @@ public class SCIMProcessor {
     public static Object createUser(RemoteSystem rs, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();
         String nameId = null;
-        HashMap<String, Object> data = prepareData(rs, obj); 
+        HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj); 
         
         nameId = nameIdAttr.getDestination();
         String id = transferCreateToConnector("User", rs, nameId, data);
@@ -32,7 +32,7 @@ public class SCIMProcessor {
     public static Object updateUser(RemoteSystem rs, String userId, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();
         String nameId = null;
-        HashMap<String, Object> data = prepareData(rs, obj); 
+        HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj); 
 
         nameId = nameIdAttr.getDestination();
         data.replace(nameIdAttr.getDestination(), userId);
@@ -54,7 +54,10 @@ public class SCIMProcessor {
     }
 
     public static List<HashMap<String, Object>> getUsers(RemoteSystem rs) throws Exception {
-        return transferGetUsersToConnector("User", rs);
+        Attribute nameIdAttr = rs.getReadNameId();
+        String nameId = nameIdAttr.getDestination();
+        List<HashMap<String, Object>> data = transferGetUsersToConnector("User", rs, nameId); 
+        return data;
     }
 
     private static Object getObjectFromPath(Object obj, String path) {
@@ -67,7 +70,7 @@ public class SCIMProcessor {
         return retObj;
     }
 
-    private static HashMap<String, Object> prepareData(RemoteSystem rs, Object obj) {
+    private static HashMap<String, Object> prepareDataToRemoteSystem(RemoteSystem rs, Object obj) {
         Set<Attribute> attrs = rs.getWriteMappings();
         Attribute nameIdAttr = rs.getWriteNameId();
         HashMap<String, Object> data = new HashMap<>();
@@ -111,9 +114,10 @@ public class SCIMProcessor {
         return conn.deleteEntity(type, data);
     }
 
-    private static List<HashMap<String, Object>> transferGetUsersToConnector(String type, RemoteSystem rs) throws Exception {
+    private static List<HashMap<String, Object>> transferGetUsersToConnector(String type, RemoteSystem rs, String nameId) throws Exception {
         IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.setupConnector(rs);
+        conn.setNameId(nameId);
         return conn.getEntities(type);
     }
 }

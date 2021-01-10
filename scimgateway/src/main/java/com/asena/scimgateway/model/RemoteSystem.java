@@ -38,6 +38,13 @@ public class RemoteSystem {
     @JoinColumn(name = "writenameid_id", referencedColumnName = "id")
     private Attribute writeNameId;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "readnameid_id", referencedColumnName = "id")
+    private Attribute readNameId;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Attribute> readMappings;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties;
 
@@ -49,6 +56,22 @@ public class RemoteSystem {
     private String type;
 
     public RemoteSystem() {
+    }
+
+    public Set<Attribute> getReadMappings() {
+        return readMappings;
+    }
+
+    public void setReadMappings(Set<Attribute> readMappings) {
+        this.readMappings = readMappings;
+    }
+
+    public Attribute getReadNameId() {
+        return readNameId;
+    }
+
+    public void setReadNameId(Attribute readNameId) {
+        this.readNameId = readNameId;
     }
 
     public Attribute getWriteNameId() {
@@ -108,6 +131,17 @@ public class RemoteSystem {
         return this;
     }
 
+    public RemoteSystem addReadMapping(Attribute a) {
+        if (this.readMappings == null) {
+            this.readMappings = new HashSet<>();
+        }
+
+        if ((a != null) && (!isReadMappingDuplicate(a))){
+            readMappings.add(a);
+        }
+        return this;
+    }
+
     private boolean isWriteMappingDuplicate(Attribute attr) {
         if ((attr == null) || (attr.getDestination() == null)) {
             return false;
@@ -118,6 +152,24 @@ public class RemoteSystem {
         }
 
         for (Attribute a : this.writeMappings) {
+            if (attr.getDestination().equals(a.getDestination())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isReadMappingDuplicate(Attribute attr) {
+        if ((attr == null) || (attr.getDestination() == null)) {
+            return false;
+        }
+
+        if (this.readMappings == null) {
+            return false;
+        }
+
+        for (Attribute a : this.readMappings) {
             if (attr.getDestination().equals(a.getDestination())) {
                 return true;
             }

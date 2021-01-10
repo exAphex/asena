@@ -15,6 +15,8 @@ public class RemoteSystemDTO {
     private Set<AttributeDTO> attributes;
     private Set<AttributeDTO> writeMappings;
     private AttributeDTO writeNameId;
+    private AttributeDTO readNameId;
+    private Set<AttributeDTO> readMappings;
     private Set<ConnectionPropertyDTO> properties;
     private String type;
     private UserDTO serviceUser;
@@ -31,7 +33,6 @@ public class RemoteSystemDTO {
         rsDTO.setDescription(rs.getDescription());
         rsDTO.setActive(rs.isActive());
         rsDTO.setType(rs.getType());
-        
 
         if (rs.getAttributes() != null) {
             rsDTO.attributes = new HashSet<>();
@@ -47,6 +48,13 @@ public class RemoteSystemDTO {
             }
         }
 
+        if (rs.getReadMappings() != null) {
+            rsDTO.readMappings = new HashSet<>();
+            for (Attribute a : rs.getReadMappings()) {
+                rsDTO.readMappings.add(AttributeDTO.toDTO(a));
+            }
+        }
+
         if (rs.getProperties() != null) {
             rsDTO.properties = new HashSet<>();
             for (ConnectionProperty cp : rs.getProperties()) {
@@ -56,8 +64,25 @@ public class RemoteSystemDTO {
 
         rsDTO.setServiceUser(UserDTO.toDTO(rs.getServiceUser()));
         rsDTO.setWriteNameId(AttributeDTO.toDTO(rs.getWriteNameId()));
+        rsDTO.setReadNameId(AttributeDTO.toDTO(rs.getReadNameId()));
 
         return rsDTO;
+    }
+
+    public Set<AttributeDTO> getReadMappings() {
+        return readMappings;
+    }
+
+    public void setReadMappings(Set<AttributeDTO> readMappings) {
+        this.readMappings = readMappings;
+    }
+
+    public AttributeDTO getReadNameId() {
+        return readNameId;
+    }
+
+    public void setReadNameId(AttributeDTO readNameId) {
+        this.readNameId = readNameId;
     }
 
     public AttributeDTO getWriteNameId() {
@@ -103,6 +128,12 @@ public class RemoteSystemDTO {
                 rs.addWriteMapping(a.fromDTO());
             }
         }
+
+        if (getReadMappings() != null) {
+            for (AttributeDTO a : getReadMappings()) {
+                rs.addReadMapping(a.fromDTO());
+            }
+        }
         
         if (getProperties() != null) {
             for (ConnectionPropertyDTO cp : getProperties()) {
@@ -116,6 +147,10 @@ public class RemoteSystemDTO {
 
         if (getWriteNameId() != null) {
             rs.setWriteNameId(getWriteNameId().fromDTO());
+        }
+
+        if (getReadNameId() != null) {
+            rs.setReadNameId(getReadNameId().fromDTO());
         }
         
         return rs;
