@@ -30,10 +30,12 @@ public class RemoteSystemDTOTest {
         rsDTO.setActive(true);
         rsDTO.setAttributes(null);
         rsDTO.setWriteMappings(null);
+        rsDTO.setReadMappings(null);
         rsDTO.setProperties(null);
         rsDTO.setType("testtype");
         rsDTO.setServiceUser(null);
         rsDTO.setWriteNameId(null);
+        rsDTO.setReadNameId(null);
 
         RemoteSystem rs = rsDTO.fromDTO();
 
@@ -43,10 +45,12 @@ public class RemoteSystemDTOTest {
         assertEquals(true, rs.isActive());
         assertNull(rs.getAttributes());
         assertNull(rs.getWriteMappings());
+        assertNull(rs.getReadMappings());
         assertNull(rs.getProperties());
         assertEquals("testtype", rs.getType());
         assertNull(rs.getServiceUser());
         assertNull(rs.getWriteNameId());
+        assertNull(rs.getReadNameId());
 
         UserDTO su = new UserDTO();
         su.setUserName("testusername");
@@ -64,13 +68,16 @@ public class RemoteSystemDTOTest {
         rsDTO.setAttributes(attrDTO);
         rsDTO.setServiceUser(su);
         rsDTO.setWriteMappings(attrDTO);
+        rsDTO.setReadMappings(attrDTO);
         rsDTO.setProperties(cpDTO);
         rsDTO.setWriteNameId(aDTO);
+        rsDTO.setReadNameId(aDTO);
 
         rs = rsDTO.fromDTO();
         assertEquals("testusername", rs.getServiceUser().getUserName());
         assertEquals(1, rs.getAttributes().size());
         assertEquals(1, rs.getWriteMappings().size());
+        assertEquals(1, rs.getReadMappings().size());
     }
 
     @Test
@@ -85,6 +92,9 @@ public class RemoteSystemDTOTest {
         rs.setProperties(null);
         rs.setType("testtype");
         rs.setServiceUser(null);
+        rs.setReadMappings(null);
+        rs.setWriteNameId(null);
+        rs.setReadNameId(null);
 
         RemoteSystemDTO rsDTO = RemoteSystemDTO.toDTO(rs);
         assertEquals("testid", rsDTO.getId());
@@ -96,6 +106,9 @@ public class RemoteSystemDTOTest {
         assertNull(rsDTO.getProperties());
         assertEquals("testtype", rsDTO.getType());
         assertNull(rsDTO.getServiceUser());
+        assertNull(rsDTO.getReadNameId());
+        assertNull(rsDTO.getReadMappings());
+        assertNull(rsDTO.getWriteNameId());
 
         User su = new User();
         su.setUserName("testusername");
@@ -114,6 +127,7 @@ public class RemoteSystemDTOTest {
         rs.setAttributes(attr);
         rs.setServiceUser(su);
         rs.setWriteMappings(attr);
+        rs.setReadMappings(attr);
         rs.setProperties(cp);
 
         rsDTO = RemoteSystemDTO.toDTO(rs);

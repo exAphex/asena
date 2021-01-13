@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
@@ -51,6 +53,7 @@ public class SCIMProcessorTest {
         rs.addWriteMapping(c);
         rs.setType("NOOP");
         rs.setWriteNameId(new Attribute("", "noop", ""));
+        rs.setReadNameId(new Attribute("", "noop", ""));
     }
 
     @Test
@@ -68,7 +71,6 @@ public class SCIMProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void deleteUserTest() throws Exception {
         boolean deleted = SCIMProcessor.deleteUser(this.rs, "testuser");
         assertTrue(deleted); 
@@ -77,10 +79,22 @@ public class SCIMProcessorTest {
     @Test
     void noWriteNameIdTest() {
         rs.setWriteNameId(null);
-        
+        rs.setReadNameId(null);
         
         assertThrows(InternalErrorException.class, () -> {
             SCIMProcessor.createUser(this.rs, data);
+        });
+
+        assertThrows(InternalErrorException.class, () -> {
+            SCIMProcessor.updateUser(this.rs, "testuser", data);
+        });
+
+        assertThrows(InternalErrorException.class, () -> {
+            SCIMProcessor.deleteUser(this.rs, "testuser");
+        });
+
+        assertThrows(InternalErrorException.class, () -> {
+            SCIMProcessor.getUsers(this.rs);
         });
 
         Attribute a = new Attribute();
@@ -88,6 +102,12 @@ public class SCIMProcessorTest {
         assertThrows(InternalErrorException.class, () -> {
             SCIMProcessor.createUser(this.rs, data);
         });
+    }
+
+    @Test
+    void readUserTest() throws Exception {
+        List<HashMap<String, Object>> users = SCIMProcessor.getUsers(rs);
+        assertEquals(0, users.size());
     }
 
     @Test

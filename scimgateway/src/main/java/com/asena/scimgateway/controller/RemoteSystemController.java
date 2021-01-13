@@ -79,6 +79,11 @@ public class RemoteSystemController {
         return RemoteSystemDTO.toDTO(remoteSystemService.addWriteMapping(attrDTO.fromDTO(), id));
     }
 
+    @PostMapping("/{id}/read")
+    public RemoteSystemDTO addReadMapping(@RequestBody AttributeDTO attrDTO, @PathVariable String id) {
+        return RemoteSystemDTO.toDTO(remoteSystemService.addReadMapping(attrDTO.fromDTO(), id));
+    }
+
     @PostMapping("/{id}/connection")
     public RemoteSystemDTO addConnectionProperty(@RequestBody ConnectionPropertyDTO cpDTO, @PathVariable String id) {
         return RemoteSystemDTO.toDTO(remoteSystemService.addConnectionProperty(cpDTO.fromDTO(), id));

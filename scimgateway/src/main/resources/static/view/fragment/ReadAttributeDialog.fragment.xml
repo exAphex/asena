@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:t="sap.ui.table">
+    <Dialog draggable="true" resizable="true" title="{i18n>AttributeDialog.title}">
+        <content>
+            <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
+                <f:content>
+                    <Label text="{i18n>AttributeDialog.lblSource}" />
+                    <ComboBox
+                        id="cmbSourceAttribute"
+                        value="{mdlReadAttributeDialog>/source}"
+                        items="{
+                            path: 'mdlTargetSuggestions>/attributes',
+                            sorter: { path: 'destination' }
+                        }">
+                        <core:Item key="{mdlTargetSuggestions>destination}" text="{mdlTargetSuggestions>destination}" />
+                    </ComboBox>
+                    <Label text="{i18n>AttributeDialog.lblDestination}" />
+                    <ComboBox
+                        id="cmdDestinationAttribute"
+                        value="{mdlReadAttributeDialog>/destination}"
+                        items="{
+                            path: 'mdlSourceSuggestions>/scim',
+                            sorter: { path: 'name' }
+                        }">
+                        <core:Item key="{mdlSourceSuggestions>name}" text="{mdlSourceSuggestions>name}" />
+                    </ComboBox>
+                    <Label text="{i18n>AttributeDialog.lblTransformation}" />
+                    <Select
+                        id="selectScript"
+                        selectedKey="{mdlReadAttributeDialog>/transformation/id}"
+                        forceSelection="false"
+                        items="{
+                            path: 'mdlScriptSuggestions>/',
+                            sorter: { path: 'name' }
+                        }">
+                        <items>
+                            <core:ListItem key="{mdlScriptSuggestions>id}" text="{mdlScriptSuggestions>name}" />
+                        </items>
+                    </Select>
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="{i18n>btnSave}" type="Emphasized" press="_onSaveReadAttribute" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="_onCloseDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

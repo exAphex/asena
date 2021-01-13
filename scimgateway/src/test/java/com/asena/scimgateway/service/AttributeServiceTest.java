@@ -138,6 +138,8 @@ public class AttributeServiceTest {
             attributeService.deleteById(0);
         });
 
+        attributeService.deleteAll();
+        
         List<Attribute> attrs = attributeService.list();
         assertEquals(0, attrs.size());
     }
