@@ -29,18 +29,18 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 ### Supported SCIM operations
 | Operation  | Support?  |
 | -----------|:---------:| 
-| GET        | YES        |
-| POST       | YES       |
-| PUT        | YES       |
-| PATCH      | NO        |
-| DELETE     | YES       |
+| GET        | :white_check_mark:        |
+| POST       | :white_check_mark:       |
+| PUT        | :white_check_mark:       |
+| PATCH      | :x:        |
+| DELETE     | :white_check_mark:       |
 
 ### Supported target systems
 Currently only hardcoded connectors are supported by asena. In the next releases we want to give users to the functionality to create own connectors.
 
 | System type  | Create  | Update  | Delete  |
 | -----------|:---------:|:---------:| :---------:|  
-| LDAP        | YES        |YES        |YES        |
+| LDAP        | :white_check_mark:        |:white_check_mark:        |:white_check_mark:        |
 
 
 ### Supported client systems
@@ -48,14 +48,16 @@ Currently only hardcoded connectors are supported by asena. In the next releases
 
 ## ToDo
 * Group Handling
-* Reading entities
 * Authorization 
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 
 ## Getting started
-### 1. Create a new target system
-Click on "System" -> Add System -> Provide a system name -> Provide a description -> Select type of system -> Save
+### 1. Installation
+Use installer.jar to launch the installation routine:
+```
+$ java -jar installer.jar
+```
 
 ### 2. Configure Connection properties
 Change the suggested connection properties depending on the system type you chose. 
