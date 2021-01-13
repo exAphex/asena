@@ -29,7 +29,7 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 ### Supported SCIM operations
 | Operation  | Support?  |
 | -----------|:---------:| 
-| GET        | NO        |
+| GET        | YES        |
 | POST       | YES       |
 | PUT        | YES       |
 | PATCH      | NO        |
