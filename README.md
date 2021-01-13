@@ -59,11 +59,9 @@ Use installer.jar to launch the installation routine:
 $ java -jar installer.jar
 ```
 
-### 2. Configure Connection properties
-Change the suggested connection properties depending on the system type you chose. 
-
-### 3. Change mapping
-Change the mapping between the SCIM attributes received by Asena and your target system. If you need to transform the attributes, select a script providing the functionality.
-
-### 4. Activate System
-Activate the system. A communication user will be provided. Use this user for basic auth to communicate with Asena. Also a URL for the SCIM communication will be provided.
+### 2. Login
+After the installation and startup of the server you will be greeted with a login form. Default credentials:
+```
+Username: admin
+Password: admin
+``` 
