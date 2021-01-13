@@ -59,7 +59,18 @@ public class LDAPConnector implements IConnector {
         retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
         retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
 
+        retSystem.addWriteMapping(new Attribute("$.userName", "cn", ""));
+        retSystem.addWriteMapping(new Attribute("$.userName", "uid", ""));
+        retSystem.addWriteMapping(new Attribute("$.name.familyName", "sn", ""));
+        retSystem.addWriteMapping(new Attribute("$.userName", "homeDirectory", ""));
+        retSystem.addWriteMapping(new Attribute("", "gidNumber", ""));
+        retSystem.addWriteMapping(new Attribute("", "objectClass", ""));
+
+        retSystem.addReadMapping(new Attribute("cn", "$.userName", ""));
+        retSystem.addReadMapping(new Attribute("sn", "$.name.familyName", "")); 
+
         retSystem.setWriteNameId(new Attribute("", "dn", ""));
+        retSystem.setReadNameId(new Attribute("", "dn", ""));
         return retSystem;
     }
 

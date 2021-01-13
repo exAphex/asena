@@ -182,6 +182,10 @@ public class RemoteSystem {
         writeMappings.remove(a);
     }
 
+    public void deleteReadMapping(Attribute a) {
+        readMappings.remove(a);
+    }
+
     public void deleteProperty(ConnectionProperty cp) {
         properties.remove(cp);
     }

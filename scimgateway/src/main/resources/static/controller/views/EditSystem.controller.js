@@ -37,6 +37,18 @@ sap.ui.define([
             this.loadFragment("AttributeDialog");
         },
 
+        _onAddReadMapping: function() {
+            var mdl = new JSONModel({transformation:{}});
+            this.getView().setModel(mdl, "mdlReadAttributeDialog");
+
+            this.isEdit = false;
+
+            this.loadRemoteSystemSuggestions(this.id);
+            this.loadScriptSuggestions();
+            this.loadSCIMSuggestions();
+            this.loadFragment("ReadAttributeDialog");
+        },
+
         _onAddConnectionProperty: function() {
             var mdl = new JSONModel({});
             this.getView().setModel(mdl, "mdlConnectionProperty");
@@ -66,6 +78,16 @@ sap.ui.define([
             }
         },
 
+        _onSaveReadAttribute: function() {
+            var mdl = this.getView().getModel("mdlReadAttributeDialog");
+            var obj = mdl.getProperty("/");
+            if (this.isEdit) {
+                this.updateMapping(obj);
+            } else {
+                this.addReadMapping(this.id, obj);
+            }
+        },
+
         _onWriteMappingEdit: function(oEvent) {
             var rowItem = oEvent.getSource();
             var ctx = rowItem.getBindingContext();
@@ -82,6 +104,24 @@ sap.ui.define([
             this.loadSCIMSuggestions();
             this.loadScriptSuggestions();
             this.loadFragment("AttributeDialog");
+        },
+
+        _onReadMappingEdit: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
+
+            var mdl = new JSONModel(obj);
+            if (!obj.transformation) {
+                mdl.setProperty("/transformation", {});
+            }
+            this.getView().setModel(mdl, "mdlReadAttributeDialog");
+
+            this.isEdit = true;
+            this.loadRemoteSystemSuggestions(this.id);
+            this.loadSCIMSuggestions();
+            this.loadScriptSuggestions();
+            this.loadFragment("ReadAttributeDialog");
         },
 
         _onConnectionPropertyEdit: function(oEvent) {
@@ -102,7 +142,7 @@ sap.ui.define([
             var ctx = rowItem.getBindingContext();
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
-            MessageBox.warning("Are you sure you want to delete the selected write mapping?", {
+            MessageBox.warning("Are you sure you want to delete the selected mapping?", {
 				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
 				emphasizedAction: MessageBox.Action.OK,
 				onClose: function (sAction) {
@@ -210,6 +250,14 @@ sap.ui.define([
             };
             this.loadJsonWithAjaxP(sQuery, mParameters)
                 .then(function (oData) {
+                    if (!oData.readNameId) {
+                        oData.readNameId = {};
+                    }
+
+                    if (!oData.writeNameId) {
+                        oData.writeNameId = {};
+                    }
+
                     var oMainModel = new JSONModel(oData);
                     this.getView().setModel(oMainModel);
                 }.bind(this))
@@ -230,6 +278,25 @@ sap.ui.define([
                 .then(function () {
                     this.genericDialog.close();
                     this.messageBoxGenerator("Write mapping added!", true);
+                    this.loadRemoteSystem(this.id);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
+
+        addReadMapping: function(id, obj) {
+            var sQuery = "/api/v1/remotesystem/" + id + "/read";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            if ((obj.transformation) && ((!obj.transformation.id) || (!(obj.transformation.id >= 0)))) {
+                obj.transformation = null;
+            }
+            this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("Read mapping added!", true);
                     this.loadRemoteSystem(this.id);
                 }.bind(this))
                 .catch(function (oError) {

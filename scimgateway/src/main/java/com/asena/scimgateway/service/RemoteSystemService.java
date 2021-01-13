@@ -41,7 +41,10 @@ public class RemoteSystemService {
         rs.setActive(false);
         rs.setProperties(connector.getProperties());
         rs.setServiceUser(userService.createServiceUser(rs.getName()));
-        rs.setWriteNameId(new Attribute("", "", ""));
+        rs.setWriteMappings(connector.getWriteMappings());
+        rs.setReadMappings(connector.getReadMappings());
+        rs.setWriteNameId(connector.getWriteNameId());
+        rs.setReadNameId(connector.getReadNameId());
 
         return remoteSystemRepository.save(rs);
     }
@@ -61,12 +64,12 @@ public class RemoteSystemService {
             }
 
             if (rs.getWriteNameId() != null) {
-                if (r.getWriteNameId() != null) {
-                    r.getWriteNameId().setDestination(rs.getWriteNameId().getDestination());
-                } else {
-                    r.setWriteNameId(new Attribute("", rs.getWriteNameId().getDestination(), ""));
-                }
+                r.setWriteNameId(rs.getWriteNameId()); 
             }
+
+            if (rs.getReadNameId() != null) {
+                r.setReadNameId(rs.getReadNameId());
+            } 
 
             return remoteSystemRepository.save(r);
         })
@@ -86,6 +89,12 @@ public class RemoteSystemService {
     public RemoteSystem addWriteMapping(Attribute a, String id) {
         RemoteSystem rs = findById(id).orElseThrow(() -> new NotFoundException(id));
         rs.addWriteMapping(a);
+        return remoteSystemRepository.save(rs);
+    }
+
+    public RemoteSystem addReadMapping(Attribute a, String id) {
+        RemoteSystem rs = findById(id).orElseThrow(() -> new NotFoundException(id));
+        rs.addReadMapping(a);
         return remoteSystemRepository.save(rs);
     }
    

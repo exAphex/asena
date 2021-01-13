@@ -1,5 +1,6 @@
 package com.asena.scimgateway.processor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,7 +10,9 @@ import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 public class SCIMProcessor {
 
@@ -57,6 +60,7 @@ public class SCIMProcessor {
         Attribute nameIdAttr = rs.getReadNameId();
         String nameId = nameIdAttr.getDestination();
         List<HashMap<String, Object>> data = transferGetUsersToConnector("User", rs, nameId); 
+        data = prepareListDataFromRemoteSystem(rs, data);
         return data;
     }
 
@@ -68,6 +72,44 @@ public class SCIMProcessor {
                      
         }
         return retObj;
+    }
+
+    private static void create(DocumentContext context, String path, Object value) {
+        int pos = path.lastIndexOf('.');
+        String parent = path.substring(0, pos);
+        String child = path.substring(pos + 1);
+        try {
+          context.read(parent); // EX if parent missing
+        } catch (PathNotFoundException e) {
+          create(context, parent, new LinkedHashMap<>()); // (recursively) Create missing parent
+        }
+        context.put(parent, child, value);
+      }
+
+    private static List<HashMap<String, Object>> prepareListDataFromRemoteSystem(RemoteSystem rs, List<HashMap<String, Object>> obj) {
+        Set<Attribute> attrs = rs.getReadMappings();
+        Attribute nameIdAttr = rs.getWriteNameId();
+        List<HashMap<String, Object>> retList = new ArrayList<>();
+        
+
+        if ((nameIdAttr == null) || (nameIdAttr.getDestination() == null)) {
+            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
+        }
+
+        for (HashMap<String, Object> d : obj) {
+            DocumentContext jsonContext = JsonPath.parse("{}");
+            for (Attribute a : attrs) {
+                Object attrObj = d.get(a.getSource());
+                if (a.getTransformation() != null) {
+                    attrObj = ScriptProcessor.processTransformation(a, attrObj);
+                }
+                create(jsonContext, a.getDestination(), attrObj);
+            } 
+            HashMap<String, Object> tmpObj = jsonContext.read("$");
+            retList.add(tmpObj);
+        } 
+
+        return retList;
     }
 
     private static HashMap<String, Object> prepareDataToRemoteSystem(RemoteSystem rs, Object obj) {
