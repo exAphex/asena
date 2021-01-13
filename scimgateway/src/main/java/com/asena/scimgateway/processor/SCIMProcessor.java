@@ -21,9 +21,13 @@ public class SCIMProcessor {
     @SuppressWarnings("unchecked")
     public static Object createUser(RemoteSystem rs, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();
+        if (nameIdAttr == null) {
+            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
+        }
+
         String nameId = null;
         HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj); 
-        
+
         nameId = nameIdAttr.getDestination();
         String id = transferCreateToConnector("User", rs, nameId, data);
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
@@ -34,6 +38,10 @@ public class SCIMProcessor {
     @SuppressWarnings("unchecked")
     public static Object updateUser(RemoteSystem rs, String userId, Object obj) throws Exception {
         Attribute nameIdAttr = rs.getWriteNameId();
+        if (nameIdAttr == null) {
+            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
+        }
+
         String nameId = null;
         HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj); 
 
@@ -50,6 +58,11 @@ public class SCIMProcessor {
         Attribute nameIdAttr = rs.getWriteNameId();
         String nameId = null;
         HashMap<String, Object> data = new HashMap<>();
+
+        if (nameIdAttr == null) {
+            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
+        }
+
         nameId = nameIdAttr.getDestination();
         data.put(nameId, userId);
 
@@ -58,6 +71,10 @@ public class SCIMProcessor {
 
     public static List<HashMap<String, Object>> getUsers(RemoteSystem rs) throws Exception {
         Attribute nameIdAttr = rs.getReadNameId();
+        if (nameIdAttr == null) {
+            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
+        }
+
         String nameId = nameIdAttr.getDestination();
         List<HashMap<String, Object>> data = transferGetUsersToConnector("User", rs, nameId); 
         data = prepareListDataFromRemoteSystem(rs, data);

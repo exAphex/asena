@@ -384,6 +384,15 @@ sap.ui.define([
             var oFilter = this.getWriteMappingFilters(sQuery);
             var oTable = this.getView().byId("tblWriteMapping");
             oTable.getBinding("rows").filter(oFilter, "Application");
+        },
+
+        _onSearchReadMappings: function(oEvent) {
+            var sQuery = oEvent.getParameter("query");
+
+            var oFilter = this.getWriteMappingFilters(sQuery);
+            var oTable = this.getView().byId("tblReadMapping");
+            oTable.getBinding("rows").filter(oFilter, "Application");
+
         }
     });
 });

@@ -127,6 +127,7 @@ public class RemoteSystemDTOTest {
         rs.setAttributes(attr);
         rs.setServiceUser(su);
         rs.setWriteMappings(attr);
+        rs.setReadMappings(attr);
         rs.setProperties(cp);
 
         rsDTO = RemoteSystemDTO.toDTO(rs);

@@ -1,5 +1,6 @@
 package com.asena.scimgateway.connector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,8 +49,8 @@ public class NoOpConnector implements IConnector {
 
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        List<HashMap<String,Object>> ret = new ArrayList<>();
+        return ret;
     }
     
 }

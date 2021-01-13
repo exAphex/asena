@@ -31,6 +31,7 @@ public class RemoteSystemServiceTest {
     @BeforeEach
     void prepareDb() {
         remoteSystemService.deleteAll();
+        attributeService.deleteAll();
     }
 
     @Test
@@ -55,14 +56,15 @@ public class RemoteSystemServiceTest {
 
         assertEquals(false, rs.isActive());
         assertEquals(conn.getProperties().size(), rs.getProperties().size());
-        assertNull(rs.getWriteMappings());
+        assertNotNull(rs.getWriteMappings());
+        assertNotNull(rs.getReadMappings());
         assertNull(rs.getAttributes());
         assertEquals("Testdesc", rs.getDescription());
         assertEquals("Testname", rs.getName());
         assertEquals("LDAP", rs.getType());
         assertNotNull(rs.getServiceUser());
         assertNotNull(rs.getWriteNameId());
-        assertNotNull(rs.getWriteNameId());
+        assertNotNull(rs.getReadNameId());
 
         List<RemoteSystem> rss = remoteSystemService.list();
         assertEquals(1, rss.size());
@@ -109,6 +111,7 @@ public class RemoteSystemServiceTest {
 
         rs.setServiceUser(null);
         rs.setWriteNameId(null);
+        rs.setReadNameId(null);
         rs = remoteSystemService.update(rs, rs.getId());
 
         assertEquals("password", rs.getServiceUser().getPassword());
@@ -154,6 +157,8 @@ public class RemoteSystemServiceTest {
         
         rs = remoteSystemService.create(rs);
 
+        attributeService.deleteAll();
+
         rs = remoteSystemService.addWriteMapping(new Attribute("src", "dest", "desc"), rs.getId());
         
         Attribute[] a = new Attribute[rs.getWriteMappings().size()];
@@ -167,6 +172,33 @@ public class RemoteSystemServiceTest {
 
         assertThrows(NotFoundException.class, () -> {
             remoteSystemService.addWriteMapping(null, "");
+        }); 
+    }
+
+    @Test
+    void addReadMappingTest() {
+        RemoteSystem rs = new RemoteSystem();
+        rs.setActive(true);
+        rs.setDescription("Testdesc");
+        rs.setName("Testname");
+        rs.setType("LDAP");
+        
+        rs = remoteSystemService.create(rs);
+        attributeService.deleteAll();
+
+        rs = remoteSystemService.addReadMapping(new Attribute("src", "dest", "desc"), rs.getId());
+        
+        Attribute[] a = new Attribute[rs.getReadMappings().size()];
+        rs.getReadMappings().toArray(a);
+
+        assertEquals(1, rs.getReadMappings().size());
+       
+        assertEquals("src", a[0].getSource());
+        assertEquals("dest", a[0].getDestination());
+        assertEquals("desc", a[0].getDescription());
+
+        assertThrows(NotFoundException.class, () -> {
+            remoteSystemService.addReadMapping(null, "");
         }); 
     }
 
