@@ -1,6 +1,4 @@
-DROP SCHEMA IF EXISTS asena CASCADE;
 
-CREATE SCHEMA asena;
 
 CREATE TABLE asena.users
 (
