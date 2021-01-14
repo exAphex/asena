@@ -7,6 +7,7 @@ import com.asena.scimgateway.service.LogService;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +17,29 @@ public final class Logger {
     private LogService logService;
 
     private LogType logLevel = LogType.ERROR;
+
+    public Logger(@Value("${com.asena.scimgateway.logger.level}") String level) throws Exception {
+        setLogLevel(level);
+    }
+
+    private void setLogLevel(String level) {
+        switch (level) {
+            case "ERROR":
+                logLevel = LogType.ERROR;
+                break;
+            case "DEBUG":
+                logLevel = LogType.DEBUG;
+                break;
+            case "INFO":
+                logLevel = LogType.INFO;
+                break;
+            case "WARNING":
+                logLevel = LogType.WARNING;
+                break;
+            default:
+                logLevel = LogType.NONE;
+        }
+    }
 
     public void info(String info) {
         if ((logLevel == LogType.INFO)) {

@@ -78,6 +78,7 @@ public class SCIMProcessor {
         String nameId = nameIdAttr.getDestination();
         List<HashMap<String, Object>> data = transferGetUsersToConnector("User", rs, nameId); 
         data = prepareListDataFromRemoteSystem(rs, data);
+
         return data;
     }
 

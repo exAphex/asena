@@ -25,20 +25,20 @@
 					</Toolbar>
 				</t:toolbar>
 				<t:columns>
-					<t:Column sortProperty="timestamp" width="10em">
+					<t:Column sortProperty="timestamp" width="12em">
 						<Label text="{i18n>Logs.colTime}" />
 						<t:template>
 							<Text text="{timestamp}" wrapping="false" />
 						</t:template>
 					</t:Column>
-					<t:Column sortProperty="type" hAlign="Center" width="5em">
+					<t:Column sortProperty="type" hAlign="Center" width="7em">
 						<Label text="{i18n>Logs.colType}" />
 						<t:template>
 							<ObjectStatus
-								text="Error"
+								text="{type}"
 								inverted="true"
-								state="Error" 
-								icon="sap-icon://message-error"/>
+								state="{path: 'type',formatter: '.formatter.convertLogState'}" 
+								icon="{path: 'type',formatter: '.formatter.convertLogIcon'}"/>
 						</t:template>
 					</t:Column>
 					<t:Column sortProperty="message" width="auto">
