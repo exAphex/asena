@@ -31,3 +31,4 @@ target/
 test.sh
 release.properties
 *.releaseBackup
+build/
