@@ -14,6 +14,7 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Getting started](#getting-started)
 - [Connect a remote system](#connect-a-remote-system)
 - [Scripting](#scripting)
+- [Logging](#logging)
 
 ## Functionality
 * Administrative UI for configuration
