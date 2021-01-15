@@ -83,8 +83,12 @@ public class App {
     }
 
     public static HashMap<String, String> postProcessSteps(HashMap<String, String> stepValues) throws NoSuchAlgorithmException {
-        stepValues.put("spring.jpa.hibernate.ddl-auto", "update");
+        stepValues.put("spring.jpa.hibernate.ddl-auto", "validate");
         stepValues.put("com.asena.scimgateway.security.key", SecurityUtils.generateKey());
+        stepValues.put("com.asena.scimgateway.logger.level", "ERROR");
+        stepValues.put("spring.jpa.properties.hibernate.default_schema", "asena");
+        stepValues.put("spring.flyway.schemas", "asena");
+
         return stepValues;
     }
 }
