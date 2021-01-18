@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.IConnector;
@@ -31,7 +32,7 @@ public class SCIMProcessor {
         nameId = nameIdAttr.getDestination();
         String id = transferCreateToConnector("User", rs, nameId, data);
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
-        retObj.put("id", id);
+        addMetaDataCreate(retObj, rs, id);
         return retObj;
     }
 
@@ -124,6 +125,8 @@ public class SCIMProcessor {
                 create(jsonContext, a.getDestination(), attrObj);
             } 
             HashMap<String, Object> tmpObj = jsonContext.read("$");
+            addMetaDataList(tmpObj, d, rs, nameIdAttr);
+
             retList.add(tmpObj);
         } 
 
@@ -179,5 +182,36 @@ public class SCIMProcessor {
         conn.setupConnector(rs);
         conn.setNameId(nameId);
         return conn.getEntities(type);
+    }
+
+    private static void addMetaDataCreate(LinkedHashMap<Object, Object> obj, RemoteSystem rs, String id) {
+        Map<String, Object> meta = new HashMap<>();
+        meta.put("resourceType", "User");
+        meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/Users/" + id));
+        obj.put("meta", meta);
+
+        List<String> schemas = new ArrayList<>();
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        obj.put("schemas", schemas);
+        
+        obj.put("id", id); 
+    }
+    
+    private static void addMetaDataList(HashMap<String, Object> resultEntry, HashMap<String, Object> sourceEntry, RemoteSystem rs, Attribute nameIdAttr) {
+        if ((nameIdAttr == null) || (nameIdAttr.getDestination().length() < 1)) {
+            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
+        }
+
+        Object nameIdObj = sourceEntry.get(nameIdAttr.getDestination());
+        resultEntry.put("id", nameIdObj);
+
+        Map<String, Object> meta = new HashMap<>();
+        meta.put("resourceType", "User");
+        meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/Users/" + nameIdObj));
+        resultEntry.put("meta", meta);
+
+        List<String> schemas = new ArrayList<>();
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        resultEntry.put("schemas", schemas);
     }
 }
