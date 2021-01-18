@@ -18,6 +18,7 @@ sap.ui.define([
             this.id = oEvent.getParameter("arguments").id; 
             this.loadRemoteSystemSuggestions(this.id);
             this.loadRemoteSystem(this.id);
+            this.setEndpointURL(this.id);
     	},
 
         _onDisplay: function () {
@@ -393,6 +394,12 @@ sap.ui.define([
             var oTable = this.getView().byId("tblReadMapping");
             oTable.getBinding("rows").filter(oFilter, "Application");
 
+        },
+
+        setEndpointURL: function(id) {
+            var loc = window.location;
+            var endpoint = loc.protocol + "//" + loc.host + "/gateway/" + id + "/scim/v2/Users";
+            this.getView().byId("inptEndpoint").setValue(endpoint);
         }
     });
 });
