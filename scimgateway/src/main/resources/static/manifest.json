@@ -74,6 +74,11 @@
                     "target": "EditSystem" 
                 },
                 {
+                    "pattern": "Settings", 
+                    "name": "settings", 
+                    "target": "Settings" 
+                },
+                {
                     "pattern": "Scripts", 
                     "name": "scripts", 
                     "target": "Scripts" 
@@ -100,6 +105,11 @@
                 { 
                     "viewName": "NotFound", 
                     "transition": "show", 
+                    "viewLevel": 2 
+                },
+                "Settings": 
+                { 
+                    "viewName": "Settings",
                     "viewLevel": 2 
                 },
                 "Systems": 
