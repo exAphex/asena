@@ -1,3 +1,6 @@
 theme: jekyll-theme-slate
 title: Asena SCIM Gateway
 show_downloads: true
+github:
+  zip_url: https://github.com/exAphex/asena/releases
+  tar_url: https://github.com/exAphex/asena/releases
