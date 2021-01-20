@@ -10,11 +10,8 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Functionality](#functionality)
 - [Prerequisites](#prerequisites)
 - [Compatibility](#compatibility)
-    - [Supported SCIM operations](#supported-scim-operations)
-    - [Supported target systems](#supported-target-systems)
-    - [Supported client systems](#supported-client-systems)
 - [ToDo](#todo)
-- [Getting started](#getting-started)
+- [Installation](#installation)
 - [Connect a remote system](#connect-a-remote-system)
 - [Scripting](#scripting)
 - [Logging](#logging)
@@ -32,47 +29,15 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 * Postgresql Datbase
 
 ## Compatibility
-### Supported SCIM operations
-| Operation  | Support?  |
-| -----------|:---------:| 
-| GET        | :white_check_mark:        |
-| POST       | :white_check_mark:       |
-| PUT        | :white_check_mark:       |
-| PATCH      | :x:        |
-| DELETE     | :white_check_mark:       |
-
-### Supported target systems
-Currently only hardcoded connectors are supported by asena. In the next releases we want to give users to the functionality to create own connectors.
-
-| System type  | Create  | Update  | Delete  |
-| -----------|:---------:|:---------:| :---------:|  
-| LDAP        | :white_check_mark:        |:white_check_mark:        |:white_check_mark:        |
-
-
-### Supported client systems
-* SAP Identity Management
+You can find the list of supported SCIM operations/target systems/client systems [here](https://github.com/exAphex/asena/wiki/Compatibility).
 
 ## ToDo
 * Group Handling
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 
-## Getting started
-### 1. Installation
-Use installer.jar to launch the installation routine:
-```
-$ java -jar installer.jar
-```
-
-### 2. Login
-After the installation and startup of the server you will be greeted with a login form. Default credentials:
-```
-Username: admin
-Password: admin
-``` 
-
-### 3. Next steps
-Depending on your use case you can create a new remote system or create scripts
+## Installation
+Installation is described step-by-step in the [installation wiki page](https://github.com/exAphex/asena/wiki/Installation)
 
 ## Connect a remote system
 ### Create a connection
