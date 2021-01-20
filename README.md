@@ -13,7 +13,6 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Getting started](#getting-started)
 - [ToDo](#todo)
 - [Scripting](#scripting)
-- [Logging](#logging)
 
 ## Functionality
 * Administrative UI for configuration
@@ -58,21 +57,3 @@ function getADDN(param) {
 ```
 
 You can now use this script as a transformation rule on the write mapping of your remote system.
-
-## Logging
-Asena has a logging mechanism with different kinds of logging levels. These are the supported ones:
-* INFO
-* DEBUG
-* WARNING
-* ERROR
-* NONE
-
-The default logging level is ERROR. If no valid logging level is set, NONE will be used. It is not recommended to use INFO/DEBUG/WARNING on a productive instance, because it might slow down the performance and fill up your database.
-
-To set the loglevel change the following line in application.properties in the installation folder of Asena:
-```
-com.asena.scimgateway.logger.level=NONE
-```
-Restart the server to take the changes in effect.
-
-Logs can be reviewed in "Logs". Cleaning up the logs periodically can improve the performance of Asena.
