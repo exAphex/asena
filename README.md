@@ -11,8 +11,7 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Prerequisites](#prerequisites)
 - [Compatibility](#compatibility)
 - [ToDo](#todo)
-- [Installation](#installation)
-- [Connect a remote system](#connect-a-remote-system)
+- [Getting started](#getting-started)
 - [Scripting](#scripting)
 - [Logging](#logging)
 
@@ -36,43 +35,8 @@ You can find the list of supported SCIM operations/target systems/client systems
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 
-## Installation
-Installation is described step-by-step in the [installation wiki page](https://github.com/exAphex/asena/wiki/Installation)
-
-## Connect a remote system
-### Create a connection
-To connect a remote system to asena go to "Systems" -> Add system (Plus icon) 
-- Select a system type
-- Provide a name (must be unique)
-- Provide a description of the system (optional)
-
-### Setup connection parameters
-Asena provides a standard set of connection parameters for different systems. You will need to customize them according to your server.
-
-Go to "Systems" -> "Edit System" (pencil icon) -> "Connection Properties". Change the parameters according to your setup. 
-
-### Set read mapping
-For reading entities from remote systems you will need to provide a mapping of the remote system attributes to the scim scheme. Asena will provide you a set of pre-set mappings. You can customize the attributes to your needs. Setting a transformation in the read mapping will use the attribute of the remote system and execute the transformation before mapping it to the scim attribute.
-
-Go to "Systems" -> "Edit System" (pencil icon) -> "Read mapping".
-Either create a new mapping (plus icon), edit an existing mapping (pencil icon) or delete one (bin icon). 
-
-On creation or on edit the following fields can be set:
-* Source attribute is the attribute of the remote system. Asena will provide you a set of attributes, but you can extend it depending on the functionality of the connector.
-* Destination attribute is the SCIM attribute to whom the source attribute will be mapped into.
-* Transformation script can be used to modify the source attribute before being mapped.
-
-### Set write mapping
-When writing entities to a remote system you will need to provide a mapping of the SCIM attributes to the remote system attributes. Asena will provide you a set of pre-set mappings. You can customize the attributes to your needs. Setting a transformation in the write mapping will use the SCIM attribute and execute the transformation before mapping it to the remote system attribute.
-
-Go to "Systems" -> "Edit System" (pencil icon) -> "Write mapping".
-Either create a new mapping (plus icon), edit an existing mapping (pencil icon) or delete one (bin icon). 
-
-On creation or on edit the following fields can be set:
-* Source attribute is the SCIM attribute. 
-* Destination attribute is the remote system attribute to whom the source attribute will be mapped into. Asena will provide you a set of attributes, but you can extend it depending on the functionality of the connector.
-* Transformation script can be used to modify the source attribute before being mapped.
-
+## Getting started
+A step-by-step documentation of setting up Asena and using it can be found in the [wiki page](https://github.com/exAphex/asena/wiki/Getting-started)
 
 ## Scripting
 Asena supports scripting for attribute transformation. A use case might be the automatic population of the distinguished name or the generation of a mail-address.
