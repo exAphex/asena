@@ -46,7 +46,6 @@ public class App {
         List<Step> steps = new ArrayList<>();
         
         steps.add(new Step("com.asena.scimgateway.installationpath", "Provide an absolute path for the installation folder", "", new DirectoryValidator()));
-        steps.add(new Step("com.asena.scimgateway.jdbc", "Provide the absolute path to the jdbc driver", "", new FilePathValidator()));
         steps.add(new Step("spring.datasource.url", "Provide a jdbc url to your database",
                 "jdbc:postgresql://localhost:5431/postgres", new StringValidator()));
         steps.add(new Step("spring.datasource.username", "Provide the name of the databaseuser", "postgres",
