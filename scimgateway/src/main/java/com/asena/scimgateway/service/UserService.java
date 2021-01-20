@@ -68,4 +68,13 @@ public class UserService {
         })
         .orElseThrow(() -> new NotFoundException(id)); 
     }
+
+    public User updateAdminUser(User usr, long id) {
+        return findById(id)
+        .map(u -> {
+            u.setPassword(usr.getPassword());
+            return userRepository.save(u);
+        })
+        .orElseThrow(() -> new NotFoundException(id));
+    }
 }

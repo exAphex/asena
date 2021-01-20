@@ -13,6 +13,7 @@ import com.asena.scimgateway.processor.ConnectorProcessor;
 import com.asena.scimgateway.service.RemoteSystemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +34,7 @@ public class RemoteSystemController {
     @Autowired
     private RemoteSystemService remoteSystemService;
 
+    @PreAuthorize("isAdmin()")
     @GetMapping("/templates")
 	public Set<RemoteSystemDTO> getRemoteSystemTemplates() {
         Set<RemoteSystemDTO> retDTO = new HashSet<>();
@@ -45,6 +47,7 @@ public class RemoteSystemController {
 		return retDTO; 
     } 
 
+    @PreAuthorize("isAdmin()")
     @GetMapping("{id}/template")
     public RemoteSystemDTO getRemoteSystemTemplate(@PathVariable String id) {
         RemoteSystem rs = remoteSystemService.findById(id).orElseThrow(() -> new NotFoundException(id));
@@ -52,6 +55,7 @@ public class RemoteSystemController {
         return RemoteSystemDTO.toDTO(rsSuggestions);
     }
 
+    @PreAuthorize("isAdmin()")
     @GetMapping("")
     public Set<RemoteSystemDTO> getAllRemoteSystems() {
         Set<RemoteSystemDTO> retDTO = new HashSet<>();
@@ -62,39 +66,46 @@ public class RemoteSystemController {
         return retDTO;
     }
 
+    @PreAuthorize("isAdmin()")
     @GetMapping("/{id}")
     public RemoteSystemDTO getRemoteSystem(@PathVariable String id) {
         RemoteSystem rs = remoteSystemService.findById(id).orElseThrow(() -> new NotFoundException(id));
         return RemoteSystemDTO.toDTO(rs);
     }
 
+    @PreAuthorize("isAdmin()")
     @PostMapping("")
     public RemoteSystemDTO createSystem(@RequestBody RemoteSystemDTO rsDTO) {
         RemoteSystem system = rsDTO.fromDTO();
         return RemoteSystemDTO.toDTO(remoteSystemService.create(system));
     }
 
+    @PreAuthorize("isAdmin()")
     @PostMapping("/{id}/write")
     public RemoteSystemDTO addWriteMapping(@RequestBody AttributeDTO attrDTO, @PathVariable String id) {
         return RemoteSystemDTO.toDTO(remoteSystemService.addWriteMapping(attrDTO.fromDTO(), id));
     }
 
+    @PreAuthorize("isAdmin()")
     @PostMapping("/{id}/read")
     public RemoteSystemDTO addReadMapping(@RequestBody AttributeDTO attrDTO, @PathVariable String id) {
         return RemoteSystemDTO.toDTO(remoteSystemService.addReadMapping(attrDTO.fromDTO(), id));
     }
 
+    @PreAuthorize("isAdmin()")
     @PostMapping("/{id}/connection")
     public RemoteSystemDTO addConnectionProperty(@RequestBody ConnectionPropertyDTO cpDTO, @PathVariable String id) {
         return RemoteSystemDTO.toDTO(remoteSystemService.addConnectionProperty(cpDTO.fromDTO(), id));
     }
 
+    @PreAuthorize("isAdmin()")
     @PutMapping("/{id}")
     public RemoteSystemDTO updateSystem(@RequestBody RemoteSystemDTO rsDTO, @PathVariable String id) {
         RemoteSystem system = rsDTO.fromDTO();
         return RemoteSystemDTO.toDTO(remoteSystemService.update(system, id));
     }
 
+    @PreAuthorize("isAdmin()")
     @DeleteMapping("/{id}")
     public void deleteSystem(@PathVariable String id) {
         remoteSystemService.deleteById(id);

@@ -10,6 +10,7 @@ import com.asena.scimgateway.model.dto.ScriptDTO;
 import com.asena.scimgateway.service.ScriptService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +31,7 @@ public class ScriptController {
     @Autowired
     private ScriptService scriptService;
 
+    @PreAuthorize("isAdmin()")
     @GetMapping("")
     public Set<ScriptDTO> getAllScripts() {
         Set<ScriptDTO> retDTO = new HashSet<>();
@@ -40,24 +42,28 @@ public class ScriptController {
         return retDTO;
     }
 
+    @PreAuthorize("isAdmin()")
     @GetMapping("/{id}")
     public ScriptDTO getScript(@PathVariable long id) {
         Script sc = scriptService.findById(id).orElseThrow(() -> new NotFoundException(id));
         return ScriptDTO.toDTO(sc);
     }
 
+    @PreAuthorize("isAdmin()")
     @PostMapping("") 
     public ScriptDTO createScript(@RequestBody ScriptDTO scDTO) {
         Script s = scDTO.fromDTO();
         return ScriptDTO.toDTO(scriptService.create(s));
     }
 
+    @PreAuthorize("isAdmin()")
     @PutMapping("/{id}")
     public ScriptDTO updateScript(@RequestBody ScriptDTO scDTO, @PathVariable long id) {
         Script s = scDTO.fromDTO();
         return ScriptDTO.toDTO(scriptService.update(s, id));
     }
 
+    @PreAuthorize("isAdmin()")
     @DeleteMapping("/{id}")
     public void deleteScript(@PathVariable long id) {
         scriptService.deleteById(id);

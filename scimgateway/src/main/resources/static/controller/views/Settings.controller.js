@@ -29,10 +29,24 @@ sap.ui.define([
             var obj = mdl.getProperty("/");
             try {
                 this.validatePassword(obj);
-                console.log(obj);
+                this.updateUser(obj);
             } catch (e) {
                 this.messageBoxGenerator(e, false);
             }
+        },
+
+        updateUser: function(obj) {
+            var sQuery = "/api/v1/user";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.messageBoxGenerator("Settings saved!", true);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
         },
 
         validatePassword: function(obj) {
