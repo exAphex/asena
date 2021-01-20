@@ -10,8 +10,8 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Functionality](#functionality)
 - [Prerequisites](#prerequisites)
 - [Compatibility](#compatibility)
-- [ToDo](#todo)
 - [Getting started](#getting-started)
+- [ToDo](#todo)
 - [Scripting](#scripting)
 - [Logging](#logging)
 
@@ -30,13 +30,14 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 ## Compatibility
 You can find the list of supported SCIM operations/target systems/client systems [here](https://github.com/exAphex/asena/wiki/Compatibility).
 
+## Getting started
+A step-by-step documentation of setting up Asena and using it can be found in the [wiki page](https://github.com/exAphex/asena/wiki/Getting-started)
+
+
 ## ToDo
 * Group Handling
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
-
-## Getting started
-A step-by-step documentation of setting up Asena and using it can be found in the [wiki page](https://github.com/exAphex/asena/wiki/Getting-started)
 
 ## Scripting
 Asena supports scripting for attribute transformation. A use case might be the automatic population of the distinguished name or the generation of a mail-address.
