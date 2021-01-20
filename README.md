@@ -10,9 +10,6 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Functionality](#functionality)
 - [Prerequisites](#prerequisites)
 - [Compatibility](#compatibility)
-    - [Supported SCIM operations](#supported-scim-operations)
-    - [Supported target systems](#supported-target-systems)
-    - [Supported client systems](#supported-client-systems)
 - [ToDo](#todo)
 - [Getting started](#getting-started)
 - [Connect a remote system](#connect-a-remote-system)
@@ -32,25 +29,7 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 * Postgresql Datbase
 
 ## Compatibility
-### Supported SCIM operations
-| Operation  | Support?  |
-| -----------|:---------:| 
-| GET        | :white_check_mark:        |
-| POST       | :white_check_mark:       |
-| PUT        | :white_check_mark:       |
-| PATCH      | :x:        |
-| DELETE     | :white_check_mark:       |
-
-### Supported target systems
-Currently only hardcoded connectors are supported by asena. In the next releases we want to give users to the functionality to create own connectors.
-
-| System type  | Create  | Update  | Delete  |
-| -----------|:---------:|:---------:| :---------:|  
-| LDAP        | :white_check_mark:        |:white_check_mark:        |:white_check_mark:        |
-
-
-### Supported client systems
-* SAP Identity Management
+You can find the list of supported SCIM operations/target systems/client systems [here](https://github.com/exAphex/asena/wiki/Compatibility).
 
 ## ToDo
 * Group Handling
