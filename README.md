@@ -54,7 +54,6 @@ Currently only hardcoded connectors are supported by asena. In the next releases
 
 ## ToDo
 * Group Handling
-* Authorization 
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 

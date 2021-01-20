@@ -14,6 +14,7 @@ import com.asena.scimgateway.logger.Logger;
 import com.asena.scimgateway.logger.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +39,7 @@ public class SCIMUserController {
     @Autowired
     private RemoteSystemService remoteSystemService;
 
+    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @GetMapping("")
     public @ResponseBody HashMap<String, Object> scimUserList(@PathVariable String systemid, @RequestParam Map<String, String> params) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
@@ -50,6 +52,7 @@ public class SCIMUserController {
         return retUsers;
     }
 
+    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @PostMapping("") 
     public @ResponseBody Object scimUserCreate(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response)
             throws Exception {
@@ -64,6 +67,7 @@ public class SCIMUserController {
         return o;
     }
 
+    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @PutMapping("/{id}")
     public @ResponseBody Object scimUserUpdate(@PathVariable String systemid, @PathVariable String id, @RequestBody Object params, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
@@ -77,6 +81,7 @@ public class SCIMUserController {
         return o;
     }
     
+    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @DeleteMapping("/{id}")
     public void scimUserDelete(@PathVariable String systemid, @PathVariable String id, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));

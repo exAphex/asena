@@ -6,6 +6,7 @@ import com.asena.scimgateway.security.stereotypes.CurrentUser;
 import com.asena.scimgateway.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("isAdmin()")
     @PutMapping("")
     public UserDTO updateScript(@CurrentUser User currUser, @RequestBody UserDTO userDTO) {
         User usr = userDTO.fromDTO();
