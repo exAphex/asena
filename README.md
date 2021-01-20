@@ -11,7 +11,7 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 - [Prerequisites](#prerequisites)
 - [Compatibility](#compatibility)
 - [ToDo](#todo)
-- [Getting started](#getting-started)
+- [Installation](#installation)
 - [Connect a remote system](#connect-a-remote-system)
 - [Scripting](#scripting)
 - [Logging](#logging)
@@ -36,22 +36,8 @@ You can find the list of supported SCIM operations/target systems/client systems
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 
-## Getting started
-### 1. Installation
-Use installer.jar to launch the installation routine:
-```
-$ java -jar installer.jar
-```
-
-### 2. Login
-After the installation and startup of the server you will be greeted with a login form. Default credentials:
-```
-Username: admin
-Password: admin
-``` 
-
-### 3. Next steps
-Depending on your use case you can create a new remote system or create scripts
+## Installation
+Installation is described step-by-step in the [installation wiki page](https://github.com/exAphex/asena/wiki/Installation)
 
 ## Connect a remote system
 ### Create a connection
