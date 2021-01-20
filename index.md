@@ -4,3 +4,6 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 
 ## Architecture
 ![image](https://raw.githubusercontent.com/exAphex/asena/master/assets/architecture.png)
+
+## Compatibility
+You can find a list of supported target and client systems [here](https://github.com/exAphex/asena/wiki/Compatibility)
