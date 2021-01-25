@@ -10,7 +10,7 @@ import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 
 public class NoOpConnector implements IConnector {
-    private String nameId;
+    private String nameId = "noop";
 
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
@@ -19,17 +19,11 @@ public class NoOpConnector implements IConnector {
                 new ConnectionProperty("noop", "noop.com", "noopdesc", false, ConnectionPropertyType.STRING));
         retSystem.setType("NOOP");
         retSystem.addAttribute(new Attribute("noop", "noop", "noop desc"));
-        retSystem.setWriteNameId(new Attribute("", "noop", ""));
         return retSystem;
     }
 
     @Override
     public void setupConnector(RemoteSystem rs) {
-    }
-
-    @Override
-    public void setNameId(String nameId) {
-        this.nameId = nameId;
     }
 
     @Override
@@ -51,6 +45,17 @@ public class NoOpConnector implements IConnector {
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
         List<HashMap<String,Object>> ret = new ArrayList<>();
         return ret;
+    }
+
+    @Override
+    public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getNameId() {
+        return nameId;
     }
     
 }

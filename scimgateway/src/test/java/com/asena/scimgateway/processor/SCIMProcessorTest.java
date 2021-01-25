@@ -52,8 +52,6 @@ public class SCIMProcessorTest {
         rs.addWriteMapping(b);
         rs.addWriteMapping(c);
         rs.setType("NOOP");
-        rs.setWriteNameId(new Attribute("", "noop", ""));
-        rs.setReadNameId(new Attribute("", "noop", ""));
     }
 
     @Test
@@ -78,8 +76,6 @@ public class SCIMProcessorTest {
 
     @Test
     void noWriteNameIdTest() {
-        rs.setWriteNameId(null);
-        rs.setReadNameId(null);
         
         assertThrows(InternalErrorException.class, () -> {
             SCIMProcessor.createUser(this.rs, data);
@@ -97,8 +93,6 @@ public class SCIMProcessorTest {
             SCIMProcessor.getUsers(this.rs);
         });
 
-        Attribute a = new Attribute();
-        rs.setWriteNameId(a);
         assertThrows(InternalErrorException.class, () -> {
             SCIMProcessor.createUser(this.rs, data);
         });

@@ -16,80 +16,64 @@ import com.jayway.jsonpath.PathNotFoundException;
 
 public class SCIMProcessor {
 
-    private SCIMProcessor() {}
+    private SCIMProcessor() {
+    }
+
+    public static HashMap<String, Object> getUser(RemoteSystem rs, String userId) throws Exception {
+        IConnector conn = getConnector(rs);
+
+        HashMap<String, Object> data = postPrepareDataToRemoteSystem(conn, rs, userId, new HashMap<>());
+        data = transferGetUserToConnector(conn, "User", rs, data);
+        data = prepareDataFromRemoteSystem(rs, data);
+        return data;
+    }
 
     @SuppressWarnings("unchecked")
     public static Object createUser(RemoteSystem rs, Object obj) throws Exception {
-        Attribute nameIdAttr = rs.getWriteNameId();
-        if (nameIdAttr == null) {
-            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
-        }
+        IConnector conn = getConnector(rs);
+        HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj);
 
-        String nameId = null;
-        HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj); 
+        String id = transferCreateToConnector(conn, "User", rs, data);
+        id = processReturningId(id, getReadMappingNameId(rs, conn));
 
-        nameId = nameIdAttr.getDestination();
-        String id = transferCreateToConnector("User", rs, nameId, data);
-        LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
+        LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>) obj;
         SCIMResultProcessor.addMetaDataCreate(retObj, rs, id);
         return retObj;
     }
 
     @SuppressWarnings("unchecked")
     public static Object updateUser(RemoteSystem rs, String userId, Object obj) throws Exception {
-        Attribute nameIdAttr = rs.getWriteNameId();
-        if (nameIdAttr == null) {
-            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
-        }
+        IConnector conn = getConnector(rs);
+        HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj);
+        data = postPrepareDataToRemoteSystem(conn, rs, userId, data);
 
-        String nameId = null;
-        HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj); 
+        String id = transferUpdateToConnector(conn, "User", rs, data);
+        id = processReturningId(id, getReadMappingNameId(rs, conn));
 
-        nameId = nameIdAttr.getDestination();
-        data.replace(nameIdAttr.getDestination(), userId);
-
-        String id = transferUpdateToConnector("User", rs, nameId, data);
-        LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>)obj;
-        retObj.put("id", id);
+        LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>) obj;
+        SCIMResultProcessor.addMetaDataCreate(retObj, rs, id);;
         return retObj;
     }
 
     public static boolean deleteUser(RemoteSystem rs, String userId) throws Exception {
-        Attribute nameIdAttr = rs.getWriteNameId();
-        String nameId = null;
+        IConnector conn = getConnector(rs);
         HashMap<String, Object> data = new HashMap<>();
+        data = postPrepareDataToRemoteSystem(conn, rs, userId, data);
 
-        if (nameIdAttr == null) {
-            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
-        }
-
-        nameId = nameIdAttr.getDestination();
-        data.put(nameId, userId);
-
-        return transferDeleteToConnector("User", rs, nameId, data);
+        return transferDeleteToConnector(conn, "User", rs, data);
     }
 
     public static HashMap<String, Object> getUsers(RemoteSystem rs) throws Exception {
-        Attribute nameIdAttr = rs.getReadNameId();
-        if (nameIdAttr == null) {
-            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
-        }
-
-        String nameId = nameIdAttr.getDestination();
-        List<HashMap<String, Object>> data = transferGetUsersToConnector("User", rs, nameId); 
+        IConnector conn = getConnector(rs);
+        List<HashMap<String, Object>> data = transferGetUsersToConnector(conn, "User", rs);
         data = prepareListDataFromRemoteSystem(rs, data);
-        
+
         HashMap<String, Object> scimResult = SCIMResultProcessor.createSCIMResult(data);
         return scimResult;
     }
 
     private static Object getObjectFromPath(Object obj, String path) {
-        Object retObj = null;
-        try {
-            retObj = JsonPath.parse(obj).read(path);
-        } catch (Exception e) {
-                     
-        }
+        Object retObj = JsonPath.parse(obj).read(path);
         return retObj;
     }
 
@@ -98,91 +82,168 @@ public class SCIMProcessor {
         String parent = path.substring(0, pos);
         String child = path.substring(pos + 1);
         try {
-          context.read(parent); // EX if parent missing
+            context.read(parent); // EX if parent missing
         } catch (PathNotFoundException e) {
-          create(context, parent, new LinkedHashMap<>()); // (recursively) Create missing parent
+            create(context, parent, new LinkedHashMap<>()); // (recursively) Create missing parent
         }
         context.put(parent, child, value);
-      }
+    }
 
-    private static List<HashMap<String, Object>> prepareListDataFromRemoteSystem(RemoteSystem rs, List<HashMap<String, Object>> obj) {
-        Set<Attribute> attrs = rs.getReadMappings();
-        Attribute nameIdAttr = rs.getWriteNameId();
+    private static List<HashMap<String, Object>> prepareListDataFromRemoteSystem(RemoteSystem rs,
+            List<HashMap<String, Object>> obj) {
         List<HashMap<String, Object>> retList = new ArrayList<>();
-        
-
-        if ((nameIdAttr == null) || (nameIdAttr.getDestination() == null)) {
-            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
-        }
 
         for (HashMap<String, Object> d : obj) {
-            DocumentContext jsonContext = JsonPath.parse("{}");
-            for (Attribute a : attrs) {
-                Object attrObj = d.get(a.getSource());
-                if (a.getTransformation() != null) {
-                    attrObj = ScriptProcessor.processTransformation(a, attrObj);
-                }
-                create(jsonContext, a.getDestination(), attrObj);
-            } 
-            HashMap<String, Object> tmpObj = jsonContext.read("$");
-            SCIMResultProcessor.addMetaDataList(tmpObj, d, rs, nameIdAttr);
-
+            HashMap<String, Object> tmpObj = prepareDataFromRemoteSystem(rs, d);
             retList.add(tmpObj);
-        } 
+        }
 
         return retList;
     }
 
+    private static HashMap<String, Object> prepareDataFromRemoteSystem(RemoteSystem rs, HashMap<String, Object> entry) {
+        Set<Attribute> attrs = rs.getReadMappings();
+        DocumentContext jsonContext = JsonPath.parse("{}");
+        for (Attribute a : attrs) {
+            Object attrObj = entry.get(a.getSource());
+            if (a.getTransformation() != null) {
+                attrObj = ScriptProcessor.processTransformation(a, attrObj);
+            }
+            create(jsonContext, a.getDestination(), attrObj);
+        }
+        HashMap<String, Object> tmpObj = jsonContext.read("$");
+        SCIMResultProcessor.addMetaDataList(tmpObj, entry, rs, (String)tmpObj.get("id"));
+        return tmpObj;
+    }
+
     private static HashMap<String, Object> prepareDataToRemoteSystem(RemoteSystem rs, Object obj) {
         Set<Attribute> attrs = rs.getWriteMappings();
-        Attribute nameIdAttr = rs.getWriteNameId();
         HashMap<String, Object> data = new HashMap<>();
 
-        if ((nameIdAttr == null) || (nameIdAttr.getDestination() == null)) {
-            throw new InternalErrorException("No nameId set on remote system " + rs.getName());
-        }
-
         for (Attribute a : attrs) {
-            Object o = getObjectFromPath(obj, a.getSource());
-            if (a.getTransformation() != null) {
-                o = ScriptProcessor.processTransformation(a, o);
+            Object o = null;
+            try {
+                if (((a.getSource() == null) || (a.getSource().length() < 1)) && (a.getDestination() != null)) {
+                    o = null;
+                } else {
+                    o = getObjectFromPath(obj, a.getSource());
+                }
+                if (a.getTransformation() != null) {
+                    o = ScriptProcessor.processTransformation(a, o);
+                }
+                data.put(a.getDestination(), o);
+            } catch (Exception e) {
+                continue;
             }
-            data.put(a.getDestination(), o);
-        } 
+        }
 
         return data;
     }
 
-    private static String transferCreateToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+    private static HashMap<String, Object> postPrepareDataToRemoteSystem(IConnector conn, RemoteSystem rs, String id, HashMap<String, Object> data) {
+        String nameId = conn.getNameId();
+        String newId = processWritingId(id, getWriteMappingNameId(rs, conn));
+        if (data.containsKey(nameId)) {
+            data.replace(nameId, newId);
+        } else {
+            data.put(nameId, newId);
+        }
+        return data;
+    }
+
+    private static String transferCreateToConnector(IConnector conn, String type, RemoteSystem rs, HashMap<String, Object> data)
             throws Exception {
-        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
+       
         conn.setupConnector(rs);
-        conn.setNameId(nameId);
         return conn.createEntity(type, data);
     }
 
-    private static String transferUpdateToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+    private static String transferUpdateToConnector(IConnector conn, String type, RemoteSystem rs, HashMap<String, Object> data)
             throws Exception {
-        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.setupConnector(rs);
-        conn.setNameId(nameId);
         return conn.updateEntity(type, data);
     }
 
-    private static boolean transferDeleteToConnector(String type, RemoteSystem rs, String nameId, HashMap<String, Object> data)
+    private static boolean transferDeleteToConnector(IConnector conn, String type, RemoteSystem rs, HashMap<String, Object> data)
             throws Exception {
-        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
         conn.setupConnector(rs);
-        conn.setNameId(nameId);
         return conn.deleteEntity(type, data);
     }
 
-    private static List<HashMap<String, Object>> transferGetUsersToConnector(String type, RemoteSystem rs, String nameId) throws Exception {
-        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
+    private static List<HashMap<String, Object>> transferGetUsersToConnector(IConnector conn, String type, RemoteSystem rs)
+            throws Exception {
         conn.setupConnector(rs);
-        conn.setNameId(nameId);
         return conn.getEntities(type);
     }
 
-    
+    private static HashMap<String, Object> transferGetUserToConnector(IConnector conn, String type, RemoteSystem rs, HashMap<String, Object> data)
+            throws Exception {
+        conn.setupConnector(rs);
+        return conn.getEntity(type, data);
+    }
+
+    private static void checkNameId(RemoteSystem rs, IConnector conn) {
+        if ((rs.getReadMappings() == null) || (rs.getReadMappings().size() < 1)) {
+            throw new InternalErrorException("No read mappings configured!");
+        }
+
+        if ((rs.getWriteMappings() == null) || (rs.getWriteMappings().size() < 1)) {
+            throw new InternalErrorException("No write mappings configured!");
+        }
+
+        getReadMappingNameId(rs, conn);
+        getWriteMappingNameId(rs, conn);
+    }
+
+    private static Attribute getReadMappingNameId(RemoteSystem rs, IConnector conn) {
+        String readNameId = "$.id";
+
+        Set<Attribute> readMappings = rs.getReadMappings();
+        for (Attribute a : readMappings) {
+            if (readNameId.equals(a.getDestination())) {
+                return a;
+            }
+        }
+
+        throw new InternalErrorException("No read mapping with nameId " + readNameId + " found!");
+    }
+
+    private static Attribute getWriteMappingNameId(RemoteSystem rs, IConnector conn) {
+        String writeNameId = conn.getNameId();
+        Set<Attribute> writeMappings = rs.getWriteMappings();
+        for (Attribute a : writeMappings) {
+            if (writeNameId.equals(a.getDestination())) {
+                return a;
+            }
+        }
+
+        throw new InternalErrorException("No write mapping with nameId " + writeNameId + " found!");
+    }
+
+    private static IConnector getConnector(RemoteSystem rs) {
+        IConnector conn = ConnectorProcessor.getConnectorByType(rs.getType());
+        if (conn == null) {
+            throw new InternalErrorException("No matching connector with type " + rs.getType() + " found!");
+        }
+        checkNameId(rs, conn);
+
+        return conn;
+    }
+
+    private static String processReturningId(String o, Attribute a) {
+        if (a.getTransformation() != null) {
+            o = (String) ScriptProcessor.processTransformation(a, o);
+        }
+
+        return o;
+    }
+
+    private static String processWritingId(String id, Attribute a) {
+        if (a.getTransformation() != null) {
+            id = (String) ScriptProcessor.processTransformation(a, id);
+        }
+
+        return id;
+    }
+
 }

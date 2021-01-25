@@ -3,6 +3,7 @@ package com.asena.scimgateway.config;
 import com.asena.scimgateway.security.service.AUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

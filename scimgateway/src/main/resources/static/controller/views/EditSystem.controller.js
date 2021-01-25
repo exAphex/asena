@@ -251,14 +251,6 @@ sap.ui.define([
             };
             this.loadJsonWithAjaxP(sQuery, mParameters)
                 .then(function (oData) {
-                    if (!oData.readNameId) {
-                        oData.readNameId = {};
-                    }
-
-                    if (!oData.writeNameId) {
-                        oData.writeNameId = {};
-                    }
-
                     var oMainModel = new JSONModel(oData);
                     this.getView().setModel(oMainModel);
                 }.bind(this))

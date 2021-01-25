@@ -16,6 +16,4 @@ public interface RemoteSystemRepository extends JpaRepository<RemoteSystem, Long
     List<RemoteSystem> findByReadMappingsId(long id);
     List<RemoteSystem> findByPropertiesId(long id);
     List<RemoteSystem> findByServiceUserId(long id);
-    List<RemoteSystem> findByWriteNameIdId(long id);
-    List<RemoteSystem> findByReadNameIdId(long id);
 }

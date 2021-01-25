@@ -57,21 +57,10 @@ public class AttributeService {
             remoteSystemRepository.save(r);
         }
 
-        rs = remoteSystemRepository.findByWriteNameIdId(a.getId());
-        for (RemoteSystem r : rs) {
-            r.setWriteNameId(null);
-            remoteSystemRepository.save(r);
-        }
 
         rs = remoteSystemRepository.findByReadMappingsId(a.getId());
         for (RemoteSystem r : rs) {
             r.deleteReadMapping(a);
-            remoteSystemRepository.save(r);
-        }
-
-        rs = remoteSystemRepository.findByReadNameIdId(a.getId());
-        for (RemoteSystem r : rs) {
-            r.setReadNameId(null);
             remoteSystemRepository.save(r);
         }
 
