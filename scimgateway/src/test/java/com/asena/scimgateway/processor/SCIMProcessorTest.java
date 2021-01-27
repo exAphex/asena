@@ -47,10 +47,15 @@ public class SCIMProcessorTest {
         c.setSource("$.lastName");
         c.setDescription("testdest1");
 
+        Attribute d = new Attribute();
+        d.setSource("noop");
+        d.setDestination("$.id");
+
         rs = new RemoteSystem();
         rs.addWriteMapping(a);
         rs.addWriteMapping(b);
         rs.addWriteMapping(c);
+        rs.addReadMapping(d);
         rs.setType("NOOP");
     }
 
@@ -77,6 +82,7 @@ public class SCIMProcessorTest {
     @Test
     void noWriteNameIdTest() {
         
+        this.rs.setWriteMappings(null);
         assertThrows(InternalErrorException.class, () -> {
             SCIMProcessor.createUser(this.rs, data);
         });
