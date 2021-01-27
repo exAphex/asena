@@ -37,7 +37,7 @@ public class LDAPConnector implements IConnector {
     private int port;
     private String user;
     private String password;
-    private String nameId;
+    private String nameId = "dn";
     private String searchDN;
     private String searchFilter;
 
@@ -69,8 +69,6 @@ public class LDAPConnector implements IConnector {
         retSystem.addReadMapping(new Attribute("cn", "$.userName", ""));
         retSystem.addReadMapping(new Attribute("sn", "$.name.familyName", "")); 
 
-        retSystem.setWriteNameId(new Attribute("", "dn", ""));
-        retSystem.setReadNameId(new Attribute("", "dn", ""));
         return retSystem;
     }
 
@@ -226,14 +224,6 @@ public class LDAPConnector implements IConnector {
     }
 
     @Override
-    public void setNameId(String nameId) {
-        if ((nameId == null) || (nameId.length() == 0)) {
-            throw new InternalErrorException("NameId is not valid!");
-        }
-        this.nameId = nameId;
-    }
-
-    @Override
     public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
         return updateEntity(data);
     }
@@ -311,6 +301,53 @@ public class LDAPConnector implements IConnector {
         } else {
             throw new InternalErrorException("LDAP Error with cause: " + ldap.getMessage());
         }
+    }
+
+    @Override
+    public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+        LdapConnection connection = null;
+        HashMap<String, Object> retObj = new HashMap<>();
+        try {
+            connection = ldapConnect();
+            String dn = (String)ConnectorUtil.getAttributeValue(nameId, data);
+            Entry e = connection.lookup(dn);
+            if (e == null) {
+                throw new InternalErrorException("No LDAP entry found on " + dn);
+            }
+            
+            Collection<org.apache.directory.api.ldap.model.entry.Attribute> col = e.getAttributes();
+
+            
+            retObj.put("dn", e.getDn().toString());
+            
+            for (org.apache.directory.api.ldap.model.entry.Attribute a : col) {
+                if (a.size() == 1) {
+                    retObj.put(a.getId(), a.getString());
+                } else {
+                    List<String> tmpStringArr = new ArrayList<>();
+                    for (Iterator<Value> iterator = a.iterator(); iterator.hasNext();) {
+                        Value tmpVal = iterator.next();
+                        tmpStringArr.add(tmpVal.getString());
+                    }
+                    retObj.put(a.getId(), tmpStringArr);
+                }
+                
+            }
+        } catch (LdapException ldap) {
+            parseLDAPException(ldap, "");
+        } finally {
+
+            closeLDAPConnection(connection);
+        } 
+
+
+        // TODO Auto-generated method stub
+        return retObj;
+    }
+
+    @Override
+    public String getNameId() {
+        return nameId;
     }
     
 }

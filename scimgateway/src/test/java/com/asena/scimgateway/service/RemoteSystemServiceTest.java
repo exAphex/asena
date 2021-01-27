@@ -63,8 +63,6 @@ public class RemoteSystemServiceTest {
         assertEquals("Testname", rs.getName());
         assertEquals("LDAP", rs.getType());
         assertNotNull(rs.getServiceUser());
-        assertNotNull(rs.getWriteNameId());
-        assertNotNull(rs.getReadNameId());
 
         List<RemoteSystem> rss = remoteSystemService.list();
         assertEquals(1, rss.size());
@@ -100,29 +98,20 @@ public class RemoteSystemServiceTest {
         rs.setActive(true);
         rs.setDescription("Testdesc1");
         rs.getServiceUser().setPassword("password");
-        rs.getWriteNameId().setDestination("testdest");
 
         rs = remoteSystemService.update(rs, rs.getId());
 
         assertEquals(true, rs.isActive());
         assertEquals("Testdesc1", rs.getDescription());
         assertEquals("password", rs.getServiceUser().getPassword());
-        assertEquals("testdest", rs.getWriteNameId().getDestination());
 
         rs.setServiceUser(null);
-        rs.setWriteNameId(null);
-        rs.setReadNameId(null);
         rs = remoteSystemService.update(rs, rs.getId());
 
         assertEquals("password", rs.getServiceUser().getPassword());
-        assertEquals("testdest", rs.getWriteNameId().getDestination());
 
-        attributeService.deleteById(rs.getWriteNameId().getId());
-        rs.getWriteNameId().setDestination("testdest1"); 
         rs = remoteSystemService.update(rs, rs.getId());
         
-        assertEquals("testdest1", rs.getWriteNameId().getDestination()); 
-
         assertThrows(NotFoundException.class, () -> {
             remoteSystemService.update(null, "");
         }); 

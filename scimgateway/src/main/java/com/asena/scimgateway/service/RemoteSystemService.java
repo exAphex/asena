@@ -43,8 +43,6 @@ public class RemoteSystemService {
         rs.setServiceUser(userService.createServiceUser(rs.getName()));
         rs.setWriteMappings(connector.getWriteMappings());
         rs.setReadMappings(connector.getReadMappings());
-        rs.setWriteNameId(connector.getWriteNameId());
-        rs.setReadNameId(connector.getReadNameId());
 
         return remoteSystemRepository.save(rs);
     }
@@ -62,14 +60,6 @@ public class RemoteSystemService {
             if (rs.getServiceUser() != null) {
                 r.getServiceUser().setPassword(rs.getServiceUser().getPassword());
             }
-
-            if (rs.getWriteNameId() != null) {
-                r.setWriteNameId(rs.getWriteNameId()); 
-            }
-
-            if (rs.getReadNameId() != null) {
-                r.setReadNameId(rs.getReadNameId());
-            } 
 
             return remoteSystemRepository.save(r);
         })

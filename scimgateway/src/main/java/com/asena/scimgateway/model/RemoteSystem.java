@@ -34,14 +34,6 @@ public class RemoteSystem {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attribute> writeMappings;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "writenameid_id", referencedColumnName = "id")
-    private Attribute writeNameId;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "readnameid_id", referencedColumnName = "id")
-    private Attribute readNameId;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attribute> readMappings;
 
@@ -64,22 +56,6 @@ public class RemoteSystem {
 
     public void setReadMappings(Set<Attribute> readMappings) {
         this.readMappings = readMappings;
-    }
-
-    public Attribute getReadNameId() {
-        return readNameId;
-    }
-
-    public void setReadNameId(Attribute readNameId) {
-        this.readNameId = readNameId;
-    }
-
-    public Attribute getWriteNameId() {
-        return writeNameId;
-    }
-
-    public void setWriteNameId(Attribute writeNameId) {
-        this.writeNameId = writeNameId;
     }
 
     public User getServiceUser() {

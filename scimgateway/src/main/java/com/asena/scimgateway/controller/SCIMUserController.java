@@ -53,6 +53,19 @@ public class SCIMUserController {
     }
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
+    @GetMapping("/{id}")
+    public @ResponseBody HashMap<String, Object> scimUserGet(@PathVariable String systemid, @PathVariable String id, @RequestParam Map<String, String> params) {
+        RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
+        HashMap<String, Object> retUsers = new HashMap<>();
+        try {
+            retUsers = SCIMProcessor.getUser(rs, id);
+        } catch (Exception e) {
+            handleControllerError(e, params);
+        }
+        return retUsers;
+    }
+
+    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @PostMapping("") 
     public @ResponseBody Object scimUserCreate(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response)
             throws Exception {

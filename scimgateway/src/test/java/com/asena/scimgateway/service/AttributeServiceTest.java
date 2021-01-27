@@ -132,8 +132,6 @@ public class AttributeServiceTest {
 
         attributeService.deleteById(a.getId());
 
-        attributeService.deleteById(rs.getWriteNameId().getId());
-
         assertThrows(NotFoundException.class, () -> {
             attributeService.deleteById(0);
         });
