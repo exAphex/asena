@@ -1,13 +1,16 @@
 package com.asena.scimgateway.connector;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.http.HTTPClient;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SACConnector implements IConnector {
 
@@ -92,8 +95,17 @@ public class SACConnector implements IConnector {
 
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        HTTPClient hc = new HTTPClient();
+        hc.setOAuth(true);
+        hc.setoAuthURL(this.oauthURL);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+
+        String result = hc.get(this.sacURL + "/Users");
+        ObjectMapper mapper = new ObjectMapper();
+            // convert JSON string to Map
+        HashMap<String, Object> map = mapper.readValue(result, HashMap.class);
+        return (List<HashMap<String, Object>>) map.get("Resources");
     }
 
     @Override
