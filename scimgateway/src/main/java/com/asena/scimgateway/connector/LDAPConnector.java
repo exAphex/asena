@@ -56,8 +56,10 @@ public class LDAPConnector implements IConnector {
         retSystem.addProperty(new ConnectionProperty("searchfilter", "(objectclass=*)", "Search filter for users", false, ConnectionPropertyType.STRING));
         retSystem.setType("LDAP");
 
+        retSystem.addAttribute(new Attribute("cn", "cn", "common name"));
         retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
         retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
+        retSystem.addAttribute(new Attribute("objectClass", "objectClass", "object class"));
 
         retSystem.addWriteMapping(new Attribute("$.userName", "cn", ""));
         retSystem.addWriteMapping(new Attribute("$.userName", "uid", ""));
