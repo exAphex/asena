@@ -47,7 +47,7 @@ public class ConnectorProcessor {
         switch (type) {
             case "LDAP":
                 return csv;
-            case "SAP Analyitcs Cloud":
+            case "SAP Analytics Cloud":
                 return sac;
             case "NOOP":
                 return noop;

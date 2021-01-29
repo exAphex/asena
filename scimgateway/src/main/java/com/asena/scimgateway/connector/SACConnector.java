@@ -29,22 +29,34 @@ public class SACConnector implements IConnector {
         retSystem.addProperty(new ConnectionProperty("oauth.user", "x-xxxxxx-xxxx-xxxx-xxxx-xxxxxxxx!xxxxxxx|client!b3650",
                 "OAuth user name", true, ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("oauth.password", "adminpassword", "Oauth user password", false, ConnectionPropertyType.STRING));
-        retSystem.setType("SAP Analyitcs Cloud");
+        retSystem.setType("SAP Analytics Cloud");
 
-        retSystem.addAttribute(new Attribute("cn", "cn", "common name"));
-        retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
-        retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
-        retSystem.addAttribute(new Attribute("objectClass", "objectClass", "object class"));
+        retSystem.addAttribute(new Attribute("userName", "userName", "User name"));
+        retSystem.addAttribute(new Attribute("id", "id", "User Id"));
+        retSystem.addAttribute(new Attribute("preferredLanguage", "preferredLanguage", "Prefered language")); 
+        retSystem.addAttribute(new Attribute("givenName", "givenName", "First name"));
+        retSystem.addAttribute(new Attribute("familyName", "familyName", "Last name"));
+        retSystem.addAttribute(new Attribute("displayName", "displayName", "Displayname"));
+        retSystem.addAttribute(new Attribute("active", "active", "is active"));
+        retSystem.addAttribute(new Attribute("emails", "emails", "Email adress"));
+        retSystem.addAttribute(new Attribute("roles", "roles", "User roles"));
+        retSystem.addAttribute(new Attribute("groups", "groups", "User groups"));
 
-        retSystem.addWriteMapping(new Attribute("$.userName", "cn", ""));
-        retSystem.addWriteMapping(new Attribute("$.userName", "uid", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.familyName", "sn", ""));
-        retSystem.addWriteMapping(new Attribute("$.userName", "homeDirectory", ""));
-        retSystem.addWriteMapping(new Attribute("", "gidNumber", ""));
-        retSystem.addWriteMapping(new Attribute("", "objectClass", ""));
+        retSystem.addWriteMapping(new Attribute("$.userName", "id", ""));
+        retSystem.addWriteMapping(new Attribute("$.userName", "userName", ""));
+        retSystem.addWriteMapping(new Attribute("$.preferredLanguage", "preferredLanguage", ""));
+        retSystem.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
+        retSystem.addWriteMapping(new Attribute("$.name.familyName", "familyName", ""));
+        retSystem.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
+        retSystem.addWriteMapping(new Attribute("$.active", "active", ""));
 
-        retSystem.addReadMapping(new Attribute("cn", "$.userName", ""));
-        retSystem.addReadMapping(new Attribute("sn", "$.name.familyName", "")); 
+        retSystem.addReadMapping(new Attribute("id", "$.id", ""));
+        retSystem.addReadMapping(new Attribute("userName", "$.userName", "")); 
+        retSystem.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
+        retSystem.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
+        retSystem.addReadMapping(new Attribute("familyName", "$.name.familyName", ""));
+        retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
+        retSystem.addReadMapping(new Attribute("active", "$.active", ""));
 
         return retSystem;
     }
@@ -72,7 +84,7 @@ public class SACConnector implements IConnector {
 
     @Override
     public String getNameId() {
-        return "$.id";
+        return "id";
     }
 
     @Override
@@ -103,7 +115,7 @@ public class SACConnector implements IConnector {
 
         String result = hc.get(this.sacURL + "/Users");
         ObjectMapper mapper = new ObjectMapper();
-            // convert JSON string to Map
+        
         HashMap<String, Object> map = mapper.readValue(result, HashMap.class);
         return (List<HashMap<String, Object>>) map.get("Resources");
     }
