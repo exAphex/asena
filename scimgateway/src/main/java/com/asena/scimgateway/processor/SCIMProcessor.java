@@ -10,6 +10,7 @@ import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.utils.JSONUtil;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -72,10 +73,7 @@ public class SCIMProcessor {
         return scimResult;
     }
 
-    private static Object getObjectFromPath(Object obj, String path) {
-        Object retObj = JsonPath.parse(obj).read(path);
-        return retObj;
-    }
+    
 
     private static void create(DocumentContext context, String path, Object value) {
         int pos = path.lastIndexOf('.');
@@ -126,7 +124,7 @@ public class SCIMProcessor {
                 if (((a.getSource() == null) || (a.getSource().length() < 1)) && (a.getDestination() != null)) {
                     o = null;
                 } else {
-                    o = getObjectFromPath(obj, a.getSource());
+                    o = JSONUtil.getObjectFromPath(obj, a.getSource());
                 }
                 if (a.getTransformation() != null) {
                     o = ScriptProcessor.processTransformation(a, o);

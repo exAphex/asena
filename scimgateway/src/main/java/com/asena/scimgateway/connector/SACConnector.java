@@ -1,15 +1,17 @@
 package com.asena.scimgateway.connector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.http.HTTPClient;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
+import com.asena.scimgateway.utils.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SACConnector implements IConnector {
@@ -105,6 +107,7 @@ public class SACConnector implements IConnector {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
         HTTPClient hc = new HTTPClient();
@@ -115,15 +118,49 @@ public class SACConnector implements IConnector {
 
         String result = hc.get(this.sacURL + "/Users");
         ObjectMapper mapper = new ObjectMapper();
-        
-        HashMap<String, Object> map = mapper.readValue(result, HashMap.class);
-        return (List<HashMap<String, Object>>) map.get("Resources");
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(result, map.getClass());
+
+
+        return transformEntityFrom((List<HashMap<String, Object>>) map.get("Resources"));
     }
 
     @Override
     public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    private List<HashMap<String,Object>> transformEntityFrom(List<HashMap<String,Object>> entities) {
+        List<HashMap<String,Object>> retList = new ArrayList<>();
+        if (entities == null) {
+            throw new InternalErrorException("No entity returned!");
+        }
+
+        for (HashMap<String,Object> e : entities) {
+            HashMap<String,Object> tmpEntity = new HashMap<>();
+            tmpEntity.put("id", getFromJSONPath("$.id", e));
+            tmpEntity.put("userName", getFromJSONPath("$.userName", e));
+            tmpEntity.put("preferredLanguage", getFromJSONPath("$.preferredLanguage", e));
+            tmpEntity.put("givenName",getFromJSONPath("$.name.givenName", e));
+            tmpEntity.put("familyName",getFromJSONPath("$.name.familyName", e));
+            tmpEntity.put("displayName",getFromJSONPath("$.displayName", e));
+            tmpEntity.put("active",getFromJSONPath("$.active", e));
+            retList.add(tmpEntity);
+        }
+
+        return retList;
+    }
+
+    private Object getFromJSONPath(String path, Object obj) {
+        Object retObj = null;
+        try {
+            retObj = JSONUtil.getObjectFromPath(obj, path);
+        } catch (Exception e) {
+            retObj = null;
+        }
+        return retObj;
     }
     
 }
