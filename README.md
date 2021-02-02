@@ -52,7 +52,7 @@ Example script:
 */
 
 function getADDN(param) {
-	return "cn=" + param + ",ou=example,ou=com";
+	return "cn=" + param + ",dc=example,dc=com";
 }
 ```
 
