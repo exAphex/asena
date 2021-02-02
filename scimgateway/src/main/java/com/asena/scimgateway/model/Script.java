@@ -26,6 +26,12 @@ public class Script {
     @Column(length = 8192)
     private String content;
 
+    public Script() {}
+
+    public Script(String name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }
