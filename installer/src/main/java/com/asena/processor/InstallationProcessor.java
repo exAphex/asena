@@ -13,12 +13,12 @@ public class InstallationProcessor {
     public static void processInstallation(HashMap<String, String> settings) throws IOException {
         String installationFolder = com.asena.utils.FileUtils
                 .addTrailingBackslash(settings.get("com.asena.scimgateway.installationpath"));
-        String jdbcPath = settings.get("com.asena.scimgateway.jdbc");
+        //String jdbcPath = settings.get("com.asena.scimgateway.jdbc");
         String currentDirectory = com.asena.utils.FileUtils.addTrailingBackslash(System.getProperty("user.dir"));
         String appJarDirectory = currentDirectory + "asena.jar";
         String propertiesPath = installationFolder + "application.properties";
 
-        FileUtils.copyFileToDirectory(new File(jdbcPath), new File(installationFolder));
+        //FileUtils.copyFileToDirectory(new File(jdbcPath), new File(installationFolder));
         FileUtils.copyFileToDirectory(new File(appJarDirectory), new File(installationFolder));
 
         writePropertiesToFile(propertiesPath, settings);
