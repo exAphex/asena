@@ -44,6 +44,12 @@ public class Attribute {
         this.description = description;
     }
 
+    public Attribute(String source, String destination, Script transformation) {
+        this.source = source;
+        this.destination = destination;
+        this.transformation = transformation;
+    }
+
     public Attribute() {}
 
     @Override

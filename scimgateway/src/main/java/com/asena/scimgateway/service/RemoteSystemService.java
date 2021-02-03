@@ -1,7 +1,9 @@
 package com.asena.scimgateway.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -26,6 +28,9 @@ public class RemoteSystemService {
     @Autowired
     private UserService userService;
 
+    @Autowired 
+    private AttributeService attributeService;
+
     public List<RemoteSystem> list() {
         return remoteSystemRepository.findAll();
     }
@@ -41,8 +46,24 @@ public class RemoteSystemService {
         rs.setActive(false);
         rs.setProperties(connector.getProperties());
         rs.setServiceUser(userService.createServiceUser(rs.getName()));
-        rs.setWriteMappings(connector.getWriteMappings());
-        rs.setReadMappings(connector.getReadMappings());
+
+        Set<Attribute> writeMappings = connector.getWriteMappings();
+        Set<Attribute> newWriteMappings = new HashSet<>();
+        if (writeMappings != null) {
+            for (Attribute a : writeMappings) {
+                newWriteMappings.add(attributeService.create(a));
+            }
+        }
+        rs.setWriteMappings(newWriteMappings);
+
+        Set<Attribute> readMappings = connector.getReadMappings();
+        Set<Attribute> newReadMappings = new HashSet<>();
+        if (readMappings != null) {
+            for (Attribute a : readMappings) {
+                newReadMappings.add(attributeService.create(a));
+            }
+        }
+        rs.setReadMappings(newReadMappings);
 
         return remoteSystemRepository.save(rs);
     }

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ScriptRepository extends JpaRepository<Script, Long> {
-    
+    public Script findByName(String name);
 }

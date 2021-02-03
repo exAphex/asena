@@ -8,8 +8,10 @@ import javax.transaction.Transactional;
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.repository.AttributeRepository;
 import com.asena.scimgateway.repository.RemoteSystemRepository;
+import com.asena.scimgateway.repository.ScriptRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,27 @@ public class AttributeService {
     @Autowired
     private RemoteSystemRepository remoteSystemRepository;
 
+    @Autowired 
+    private ScriptRepository scriptRepository;
+
     public Optional<Attribute> findById(long id) {
         return attributeRepository.findById(id);
     }
 
     public Attribute create(Attribute a) {
-        return attributeRepository.save(a);
+        if (a != null) {
+            if ((a.getTransformation() != null) && (a.getTransformation().getId() == 0)) {
+                Script s = scriptRepository.findByName(a.getTransformation().getName());
+                if (s == null) {
+                    a.setTransformation(null);
+                } else {
+                    a.setTransformation(s);
+                }
+            }
+            return attributeRepository.save(a);
+        } else {
+            return null;
+        }
     }
 
     public List<Attribute> list() {
