@@ -131,16 +131,53 @@ public class SACConnector implements IConnector {
         return (String) getFromJSONPath("$.id", map);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        String s = transformEntityTo(data);
+        HTTPClient hc = new HTTPClient();
+        hc.setOAuth(true);
+        hc.setCSRF(true);
+        hc.setCsrfURL(this.csrfURL);
+        hc.setMediaType("application/scim+json");
+        hc.setoAuthURL(this.oauthURL);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(200);
+
+        String retUser = hc.put(this.sacURL + "/Users/" + userId, s);
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(retUser, map.getClass());
+
+        return (String) getFromJSONPath("$.id", map);
     }
 
     @Override
     public boolean deleteEntity(String entity, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-        return false;
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        HTTPClient hc = new HTTPClient();
+        hc.setOAuth(true);
+        hc.setCSRF(true);
+        hc.setCsrfURL(this.csrfURL);
+        hc.setMediaType("application/scim+json");
+        hc.setoAuthURL(this.oauthURL);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(204);
+
+        hc.delete(this.sacURL + "/Users/" + userId);
+        return true;
     }
 
     @SuppressWarnings("unchecked")
