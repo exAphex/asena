@@ -16,12 +16,6 @@ public class LoggerService {
     @Autowired
     private LogRepository logRepository;
 
-    @Value("${logging.file.path}")
-    private String logPath;
-
-    @Value("${logging.file.name}")
-    private String logFileName;
-
     public void deleteLogs() {
         logRepository.deleteAll();
     }

@@ -9,5 +9,6 @@ public class ScimgatewayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ScimgatewayApplication.class, args);
 	}
+	
 
 }
