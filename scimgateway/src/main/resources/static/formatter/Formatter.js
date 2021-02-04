@@ -7,7 +7,7 @@ sap.ui.define(function() {
         switch (state) {
           case "ERROR":
             return "sap-icon://message-error";
-          case "WARNING":
+          case "WARN":
             return "sap-icon://message-warning";
           case "INFO":
             return "sap-icon://message-information";
@@ -21,7 +21,7 @@ sap.ui.define(function() {
         switch (state) {
           case "ERROR":
             return "Error";
-          case "WARNING":
+          case "WARN":
             return "Indication03";
           case "INFO":
             return "Information";
@@ -60,6 +60,22 @@ sap.ui.define(function() {
         } else {
           return "sap-icon://activate";
         }
+      },
+
+      convertTimestamp: function(timestamp) {
+        var date = new Date(timestamp);
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+
+        month = (month < 10 ? "0" : "") + month;
+        day = (day < 10 ? "0" : "") + day;
+        hour = (hour < 10 ? "0" : "") + hour;
+        min = (min < 10 ? "0" : "") + min;
+        sec = (sec < 10 ? "0" : "") + sec;
+        return hour + ":" + min + ":" + sec + ' ' + day + "-" + month + "-" + date.getFullYear();
       }
     };
     return Formatter;

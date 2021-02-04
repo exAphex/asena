@@ -28,7 +28,7 @@
 					<t:Column sortProperty="timestamp" width="12em">
 						<Label text="{i18n>Logs.colTime}" />
 						<t:template>
-							<Text text="{timestamp}" wrapping="false" />
+							<Text text="{path:'timestamp', formatter: '.formatter.convertTimestamp'}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					<t:Column sortProperty="type" hAlign="Center" width="7em">

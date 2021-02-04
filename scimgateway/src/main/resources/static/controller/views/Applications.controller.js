@@ -61,7 +61,7 @@ sap.ui.define([
             };
             this.loadJsonWithAjaxP(sQuery, mParameters)
                 .then(function (oData, rawData) {
-                    var oMainModel = new JSONModel({count:rawData});
+                    var oMainModel = new JSONModel({count:oData});
                     this.getView().setModel(oMainModel, "mdlLogs"); 
                 }.bind(this))
                 .catch(function (oError) {
@@ -78,6 +78,12 @@ sap.ui.define([
         _onScriptsPressed: function(oEvent) {
             sap.ui.core.UIComponent.getRouterFor(this).navTo("scripts", {
                     app: "scripts"
+            }, false);
+        },
+
+        _onLogsPressed: function(oEvent) {
+            sap.ui.core.UIComponent.getRouterFor(this).navTo("logs", {
+                    app: "logs"
             }, false);
         }
 

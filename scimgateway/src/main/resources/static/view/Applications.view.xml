@@ -19,7 +19,7 @@
 						}" icon="sap-icon://syntax" withMargin="false" />
 					</m:TileContent>
 				</m:GenericTile>
-				<m:GenericTile tooltip="{i18n>Applications.toolLogs}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleLogs}" press="_onScriptsPressed">
+				<m:GenericTile tooltip="{i18n>Applications.toolLogs}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleLogs}" press="_onLogsPressed">
 					<m:TileContent >
 						<m:NumericContent value="{mdlLogs>/count}" icon="sap-icon://order-status" withMargin="false" />
 					</m:TileContent>
