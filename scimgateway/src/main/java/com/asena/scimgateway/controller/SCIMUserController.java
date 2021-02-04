@@ -10,9 +10,9 @@ import com.asena.scimgateway.processor.SCIMProcessor;
 import com.asena.scimgateway.service.RemoteSystemService;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.exception.NotFoundException;
-import com.asena.scimgateway.logger.Logger;
-import com.asena.scimgateway.logger.LoggerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/gateway/{systemid}/scim/v2/Users")
 public class SCIMUserController {
 
-    private Logger logger = LoggerFactory.getLogger();
+    Logger logger = LoggerFactory.getLogger(SCIMUserController.class);
     
     @Autowired
     private RemoteSystemService remoteSystemService;
@@ -112,7 +112,7 @@ public class SCIMUserController {
     }
 
     private void handleControllerError(Exception e, Object params) {
-        logger.error(e);
+        logger.error("SCIM Endpoint error", e);
         if (e instanceof NotFoundException) {
             throw new NotFoundException(e.getMessage());
         } else {

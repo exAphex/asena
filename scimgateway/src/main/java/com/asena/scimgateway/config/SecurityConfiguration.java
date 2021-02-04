@@ -65,13 +65,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
-    @Bean
-public CommonsRequestLoggingFilter requestLoggingFilter() {
-    CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
-    loggingFilter.setIncludeClientInfo(true);
-    loggingFilter.setIncludeQueryString(true);
-    loggingFilter.setIncludePayload(true);
-    loggingFilter.setIncludeHeaders(false);
-    return loggingFilter;
-}
 }
