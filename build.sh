@@ -1,5 +1,5 @@
 #!/bin/sh
-mvn clean package
+mvn clean package -DskipTests
 rm -rf ./build
 mkdir build
 cp ./scimgateway/target/scimgateway.jar ./build/asena.jar

@@ -14,7 +14,6 @@ import com.asena.processor.StepProcessor;
 import com.asena.security.SecurityUtils;
 import com.asena.validator.DatabaseTypeValidator;
 import com.asena.validator.DirectoryValidator;
-import com.asena.validator.FilePathValidator;
 import com.asena.validator.IntegerValidator;
 import com.asena.validator.StringValidator;
 
@@ -46,6 +45,8 @@ public class App {
         List<Step> steps = new ArrayList<>();
         
         steps.add(new Step("com.asena.scimgateway.installationpath", "Provide an absolute path for the installation folder", "", new DirectoryValidator()));
+        steps.add(new Step("spring.datasource.driverClassName", "Provide the classname of the driver", "org.postgresql.Driver",
+                new StringValidator()));
         steps.add(new Step("spring.datasource.url", "Provide a jdbc url to your database",
                 "jdbc:postgresql://localhost:5431/postgres", new StringValidator()));
         steps.add(new Step("spring.datasource.username", "Provide the name of the databaseuser", "postgres",
@@ -84,7 +85,7 @@ public class App {
     public static HashMap<String, String> postProcessSteps(HashMap<String, String> stepValues) throws NoSuchAlgorithmException {
         stepValues.put("spring.jpa.hibernate.ddl-auto", "validate");
         stepValues.put("com.asena.scimgateway.security.key", SecurityUtils.generateKey());
-        stepValues.put("com.asena.scimgateway.logger.level", "ERROR");
+        stepValues.put("logging.level.root", "ERROR");
         stepValues.put("spring.jpa.properties.hibernate.default_schema", "asena");
         stepValues.put("spring.flyway.schemas", "asena");
 
