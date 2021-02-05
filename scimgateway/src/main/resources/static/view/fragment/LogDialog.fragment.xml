@@ -5,7 +5,7 @@
             <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
                 <f:content>
                     <Label text="{i18n>LogDialog.lblTime}" />
-                    <Text text="{mdlLogDialog>/timestamp}" />
+                    <Text text="{path:'mdlLogDialog>/timestamp', formatter: '.formatter.convertTimestamp'}" />
                     <Label text="{i18n>LogDialog.lblType}" />
                     <ObjectStatus
                         text="{mdlLogDialog>/type}"
@@ -13,9 +13,10 @@
                         state="{path: 'mdlLogDialog>/type',formatter: '.formatter.convertLogState'}" 
                         icon="{path: 'mdlLogDialog>/type',formatter: '.formatter.convertLogIcon'}"/>
                     <Label text="{i18n>LogDialog.lblMessage}" />
-                    <TextArea growing="true" growingMaxLines="8" wrapping="Off" editable="false" value="{mdlLogDialog>/message}" width="100%" />
+                    <TextArea growing="true" wrapping="Off" editable="false" value="{mdlLogDialog>/eventmessage}" width="100%" />
                 </f:content>
             </f:SimpleForm>
+            
         </content>
         <endButton>
             <Button text="{i18n>btnClose}" press="_onCloseDialog" />

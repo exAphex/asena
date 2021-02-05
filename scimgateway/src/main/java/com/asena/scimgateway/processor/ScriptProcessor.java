@@ -1,12 +1,13 @@
 package com.asena.scimgateway.processor;
 
-import com.asena.scimgateway.logger.Logger;
-import com.asena.scimgateway.logger.LoggerFactory;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.script.ScriptRunner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ScriptProcessor {
-    private static Logger logger = LoggerFactory.getLogger();
+    private static Logger logger = LoggerFactory.getLogger(ScriptProcessor.class);
 
     public static Object processTransformation(Attribute a, Object o) {
         ScriptRunner sr = new ScriptRunner();

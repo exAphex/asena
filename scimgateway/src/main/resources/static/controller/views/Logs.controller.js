@@ -78,10 +78,34 @@ sap.ui.define([
             var ctx = rowItem.getBindingContext();
             var objLog = ctx.getModel().getProperty(ctx.getPath());
 
+            objLog.eventmessage = this.parseEvents(objLog.event);
             var mdl = new JSONModel(objLog);
             this.getView().setModel(mdl, "mdlLogDialog");
 
             this.loadFragment("LogDialog");
+        },
+
+        parseEvents : function(obj) {
+            function compare( a, b ) {
+                if ( a.i < b.i ){
+                    return -1;
+                }
+                if ( a.i > b.i ){
+                    return 1;
+                }
+                return 0;
+            }
+
+            if ((obj) && (obj.length > 0)) {
+                obj.sort(compare);
+                var eventMessage = "";
+                for (var i = 0; i < obj.length; i++) {
+                    eventMessage += obj[i].message + "\n";
+                }
+                return eventMessage;
+            } else {
+                return "";
+            }
         }
     });
 });

@@ -15,12 +15,15 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.AttributeConverter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AttributeEncrypter implements AttributeConverter<String, String> {
 
+    private Logger logger = LoggerFactory.getLogger(AttributeEncrypter.class);
     private static final String AES = "AES/CBC/PKCS5Padding";
     private final Key key;
     private final Cipher cipher;
@@ -45,7 +48,8 @@ public class AttributeEncrypter implements AttributeConverter<String, String> {
             return Base64.getEncoder().encodeToString(concat);
         } catch (IllegalBlockSizeException | InvalidParameterSpecException | BadPaddingException
                 | InvalidKeyException e) {
-            throw new IllegalStateException(e);
+            logger.error("Encryption error", e);
+            return null;
         }
     }
 
@@ -61,7 +65,8 @@ public class AttributeEncrypter implements AttributeConverter<String, String> {
             return new String(cipher.doFinal(dec));
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException
                 | InvalidAlgorithmParameterException e) {
-            throw new IllegalStateException(e);
+            logger.error("Encryption error", e);
+            return null;
         }
     }
 }

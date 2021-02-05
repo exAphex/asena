@@ -1,5 +1,6 @@
 package com.asena.scimgateway.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.asena.scimgateway.model.Log;
@@ -9,24 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LogService {
+public class LoggerService {
 
     @Autowired
     private LogRepository logRepository;
 
-    public Log create(Log l) {
-        return logRepository.save(l);
-    }
-    
-    public List<Log> list() {
-        return logRepository.findAll();
-    }
-
-    public void deleteAll() {
+    public void deleteLogs() {
         logRepository.deleteAll();
     }
 
-    public long getCount() {
+    public long getLogCount() throws IOException {
         return logRepository.count();
+    }
+
+    public List<Log> getLogs() {
+        return logRepository.findAll();
     }
 }
