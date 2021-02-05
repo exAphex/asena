@@ -3,7 +3,8 @@ Description=Asena SCIM Gateway service
 After=syslog.target
 
 [Service]
-ExecStart=%s
+WorkingDirectory=%s
+ExecStart=/usr/bin/java -jar %s
 SuccessExitStatus=143
 
 [Install]

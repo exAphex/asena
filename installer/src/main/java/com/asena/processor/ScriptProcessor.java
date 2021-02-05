@@ -25,7 +25,7 @@ public class ScriptProcessor {
     private static void copySystemdScript(String installationPath, String scriptPath) throws IOException {
         String script = getResourceFileAsString("scripts/asena.service");
         String fullPath = FileUtils.addTrailingBackslash(installationPath) + "asena.jar";
-        String formattedScript = String.format(script, fullPath);
+        String formattedScript = String.format(script, installationPath, fullPath);
         scriptPath = FileUtils.addTrailingBackslash(scriptPath) + "asena.service";
         org.apache.commons.io.FileUtils.writeStringToFile(new File(scriptPath), formattedScript, StandardCharsets.UTF_8);
     }
