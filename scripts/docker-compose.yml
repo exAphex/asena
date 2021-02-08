@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  app:
+    image: 'asena:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+        
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=asena
+      - POSTGRES_PASSWORD=test
+    volumes:
+      - asena-data:/var/lib/postgresql/data
+     
+volumes:
+  asena-data:
