@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  app:
+    image: 'asena:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    expose:
+      - ${ASENA_PORT}
+    ports:
+      - ${ASENA_PORT}:${ASENA_PORT}
+    environment:
+      - ASENA_DRIVER=${ASENA_DRIVER}
+      - ASENA_JDBC_URL=${ASENA_JDBC_URL}
+      - ASENA_JDBC_USER=${ASENA_JDBC_USER}
+      - ASENA_JDBC_PASSWORD=${ASENA_JDBC_PASSWORD}
+      - ASENA_LOGLEVEL=${ASENA_LOGLEVEL}
+      - ASENA_JDBC_DIALECT=${ASENA_JDBC_DIALECT}
+      - ASENA_VALIDATE=${ASENA_VALIDATE}
+      - ASENA_SCHEMA=${ASENA_SCHEMA}
+      - ASENA_KEY=${ASENA_KEY}
+      - ASENA_PORT=${ASENA_PORT}
+        
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=${ASENA_JDBC_USER}
+      - POSTGRES_PASSWORD=${ASENA_JDBC_PASSWORD}
+    volumes:
+      - asena-data:/var/lib/postgresql/data
+
+volumes:
+  asena-data:
