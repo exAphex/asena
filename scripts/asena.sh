@@ -154,12 +154,15 @@ case $1 in
         installationComplete
         ;;
     "start" | "restart")
+        cd $DIR
         $RUNSCRIPT start
         ;;
     "stop")
+        cd $DIR
         $RUNSCRIPT stop
         ;;
     "uninstall")
+        cd $DIR
         $RUNSCRIPT stop
         rm -rf $DIR
         ;;
