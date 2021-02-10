@@ -30,7 +30,7 @@ public class SACConnector implements IConnector {
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
         RemoteSystem retSystem = new RemoteSystem();
-        retSystem.addProperty(new ConnectionProperty("sac.url", "https://example.eu10.hcs.cloud.sap/api/v1/scim/",
+        retSystem.addProperty(new ConnectionProperty("sac.url", "https://example.eu10.hcs.cloud.sap/api/v1/scim",
                 "URL to SAC", false, ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("sac.tokenurl", "https://example.eu10.hcs.cloud.sap/api/v1/scim/Users?count=1",
                 "URL for CSRF-Token", false, ConnectionPropertyType.STRING));
