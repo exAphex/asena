@@ -22,9 +22,16 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 * Segregation of duties by creating different communication users for each system
 
 ## Prerequisites
-* JDK 8
+* Java Runtime Environment
+	* Oracle JRE >= 8
+	* AdoptOpenJDK >= 8
 * Linux operating system
-* Postgresql Datbase
+	* Oracle Linux >= 7
+	* Debian
+	* Ubuntu
+	* SLES
+* Postgresql Database
+	* Version 9.5 or newer
 
 ## Compatibility
 You can find the list of supported SCIM operations/target systems/client systems [here](https://github.com/exAphex/asena/wiki/Compatibility).
