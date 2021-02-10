@@ -30,7 +30,15 @@ Asena is a SCIM Gateway to systems which do not have native SCIM interfaces. It 
 You can find the list of supported SCIM operations/target systems/client systems [here](https://github.com/exAphex/asena/wiki/Compatibility).
 
 ## Getting started
-A step-by-step documentation of setting up Asena and using it can be found in the [wiki page](https://github.com/exAphex/asena/wiki/Getting-started)
+The easiest way to install asena is to run it on a docker container. You will need docker and docker-compose for the installation script to work.
+
+```
+curl -s -o asena.sh https://raw.githubusercontent.com/exAphex/asena/master/scripts/asena.sh && chmod +x asena.sh
+./asena.sh install
+./asena.sh start
+```
+
+A step-by-step documentation of setting up Asena manually and using it can be found in the [wiki page](https://github.com/exAphex/asena/wiki/Getting-started)
 
 
 ## ToDo
