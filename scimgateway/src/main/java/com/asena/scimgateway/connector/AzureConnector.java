@@ -58,13 +58,13 @@ public class AzureConnector implements IConnector {
         retSystem.addWriteMapping(new Attribute("$.active", "active", ""));
 
         retSystem.addReadMapping(new Attribute("id", "$.id", ""));
+        retSystem.addWriteMapping(new Attribute("userPrincipalName", "$.userName", ""));
         retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
         retSystem.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
         retSystem.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
         retSystem.addReadMapping(new Attribute("surname", "$.name.familyName", ""));
         retSystem.addReadMapping(new Attribute("mail", "$.emails", "")); 
-        retSystem.addReadMapping(new Attribute("groups", "$.groups", ""));
-        retSystem.addReadMapping(new Attribute("roles", "$.roles", ""));
+        
 
         return retSystem;
     }
