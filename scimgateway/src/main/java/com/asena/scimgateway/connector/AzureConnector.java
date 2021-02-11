@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.http.HTTPClient;
+import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AzureConnector implements IConnector {
     private String baseURL;
@@ -55,13 +58,11 @@ public class AzureConnector implements IConnector {
         retSystem.addWriteMapping(new Attribute("$.active", "active", ""));
 
         retSystem.addReadMapping(new Attribute("id", "$.id", ""));
-        retSystem.addReadMapping(new Attribute("userName", "$.userName", ""));
+        retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
         retSystem.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
         retSystem.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
-        retSystem.addReadMapping(new Attribute("familyName", "$.name.familyName", ""));
-        retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
-        retSystem.addReadMapping(new Attribute("active", "$.active", ""));
-        retSystem.addReadMapping(new Attribute("emails", "$.emails", "")); 
+        retSystem.addReadMapping(new Attribute("surname", "$.name.familyName", ""));
+        retSystem.addReadMapping(new Attribute("mail", "$.emails", "")); 
         retSystem.addReadMapping(new Attribute("groups", "$.groups", ""));
         retSystem.addReadMapping(new Attribute("roles", "$.roles", ""));
 
@@ -115,10 +116,23 @@ public class AzureConnector implements IConnector {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        String result = hc.get(this.baseURL + "/v1.0/Users");
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(result, map.getClass());
+
+        return (List<HashMap<String, Object>>) map.get("value");
     }
 
     @Override

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
+import com.asena.scimgateway.http.CSRFInterceptor;
 import com.asena.scimgateway.http.HTTPClient;
+import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
@@ -112,12 +114,13 @@ public class SACConnector implements IConnector {
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
         String s = transformEntityTo(data);
 
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        CSRFInterceptor ci = new CSRFInterceptor(this.csrfURL);
+
         HTTPClient hc = new HTTPClient();
-        hc.setOAuth(true);
-        hc.setCSRF(true);
-        hc.setCsrfURL(this.csrfURL);
+        hc.addInterceptor(oi);
+        hc.addInterceptor(ci);
         hc.setMediaType("application/scim+json");
-        hc.setoAuthURL(this.oauthURL);
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
         hc.setExpectedResponseCode(201);
@@ -139,13 +142,14 @@ public class SACConnector implements IConnector {
             throw new InternalErrorException("UserID not found in read mapping!");
         }
 
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        CSRFInterceptor ci = new CSRFInterceptor(this.csrfURL);
+
         String s = transformEntityTo(data);
         HTTPClient hc = new HTTPClient();
-        hc.setOAuth(true);
-        hc.setCSRF(true);
-        hc.setCsrfURL(this.csrfURL);
+        hc.addInterceptor(oi);
+        hc.addInterceptor(ci);
         hc.setMediaType("application/scim+json");
-        hc.setoAuthURL(this.oauthURL);
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
         hc.setExpectedResponseCode(200);
@@ -166,12 +170,13 @@ public class SACConnector implements IConnector {
             throw new InternalErrorException("UserID not found in read mapping!");
         }
 
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        CSRFInterceptor ci = new CSRFInterceptor(this.csrfURL);
+
         HTTPClient hc = new HTTPClient();
-        hc.setOAuth(true);
-        hc.setCSRF(true);
-        hc.setCsrfURL(this.csrfURL);
+        hc.addInterceptor(oi);
+        hc.addInterceptor(ci);
         hc.setMediaType("application/scim+json");
-        hc.setoAuthURL(this.oauthURL);
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
         hc.setExpectedResponseCode(204);
@@ -183,9 +188,10 @@ public class SACConnector implements IConnector {
     @SuppressWarnings("unchecked")
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+
         HTTPClient hc = new HTTPClient();
-        hc.setOAuth(true);
-        hc.setoAuthURL(this.oauthURL);
+        hc.addInterceptor(oi);
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
 
@@ -206,9 +212,10 @@ public class SACConnector implements IConnector {
             throw new InternalErrorException("UserID not found in read mapping!");
         }
 
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+
         HTTPClient hc = new HTTPClient();
-        hc.setOAuth(true);
-        hc.setoAuthURL(this.oauthURL);
+        hc.addInterceptor(oi);
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
 
