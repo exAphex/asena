@@ -110,6 +110,7 @@ public class AzureConnector implements IConnector {
         return "id";
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
         OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
