@@ -10,9 +10,13 @@ import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
+import com.asena.scimgateway.utils.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 public class AzureConnector implements IConnector {
     private String baseURL;
@@ -50,17 +54,23 @@ public class AzureConnector implements IConnector {
         retSystem.addAttribute(new Attribute("id", "id", "id"));
         retSystem.addAttribute(new Attribute("memberOf", "memberOf", "memberOf"));
         retSystem.addAttribute(new Attribute("businessPhones", "businessPhones", "businessPhones"));
+        retSystem.addAttribute(new Attribute("passwordProfile", "passwordProfile", "passwordProfile"));
+        retSystem.addAttribute(new Attribute("accountEnabled", "accountEnabled", "accountEnabled"));
+        retSystem.addAttribute(new Attribute("mailNickname", "mailNickname", "mailNickname"));
+        
+        
 
-        retSystem.addWriteMapping(new Attribute("$.userName", "id", ""));
-        retSystem.addWriteMapping(new Attribute("$.preferredLanguage", "preferredLanguage", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.familyName", "familyName", ""));
-        retSystem.addWriteMapping(new Attribute("$.emails", "emails", "")); 
+        retSystem.addWriteMapping(new Attribute("$.active", "accountEnabled", ""));
         retSystem.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
-        retSystem.addWriteMapping(new Attribute("$.active", "active", ""));
+        retSystem.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
+        retSystem.addWriteMapping(new Attribute("$.name.familyName", "surname", ""));
+        retSystem.addWriteMapping(new Attribute("$.id", "id", ""));
+        retSystem.addWriteMapping(new Attribute("$.userName", "mailNickname", "")); 
+        retSystem.addWriteMapping(new Attribute("$.password", "passwordProfile", new Script("getAzurePassword")));
+        retSystem.addWriteMapping(new Attribute("$.userName", "userPrincipalName", new Script("getAzureDomain")));
 
         retSystem.addReadMapping(new Attribute("id", "$.id", ""));
-        retSystem.addWriteMapping(new Attribute("userPrincipalName", "$.userName", ""));
+        retSystem.addReadMapping(new Attribute("userPrincipalName", "$.userName", ""));
         retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
         retSystem.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
         retSystem.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
@@ -102,8 +112,24 @@ public class AzureConnector implements IConnector {
 
     @Override
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(201);
+
+        DocumentContext jsonContext = JsonPath.parse(data);
+
+        String retUser = hc.post(this.baseURL + "/v1.0/Users", jsonContext.jsonString());
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(retUser, map.getClass());
+
+        return (String) JSONUtil.getFromJSONPath("$.id", map);
     }
 
     @Override
@@ -138,6 +164,7 @@ public class AzureConnector implements IConnector {
         return (List<HashMap<String, Object>>) map.get("value");
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
         String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
@@ -159,7 +186,7 @@ public class AzureConnector implements IConnector {
         HashMap<String, Object> map = new HashMap<>();
         map = mapper.readValue(result, map.getClass());
 
-        return null; 
+        return map; 
     }
     
 }

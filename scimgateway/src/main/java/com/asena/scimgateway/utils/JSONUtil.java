@@ -1,5 +1,6 @@
 package com.asena.scimgateway.utils;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import com.jayway.jsonpath.DocumentContext;
@@ -22,5 +23,22 @@ public class JSONUtil {
             create(context, parent, new LinkedHashMap<>()); // (recursively) Create missing parent
         }
         context.put(parent, child, value);
+    }
+
+    public static Object getFromJSONPath(String path, Object obj) {
+        Object retObj = null;
+        try {
+            retObj = JSONUtil.getObjectFromPath(obj, path);
+        } catch (Exception e) {
+            retObj = null;
+        }
+        return retObj;
+    }
+
+    public static void addPropertyToJSON(DocumentContext jsonContext, String src, String dest, HashMap<String,Object> entity) {
+        if (entity.containsKey(src)) {
+            Object o = entity.get(src);
+            JSONUtil.create(jsonContext, dest, o);
+        }
     }
 }

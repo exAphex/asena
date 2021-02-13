@@ -131,7 +131,7 @@ public class SACConnector implements IConnector {
         HashMap<String, Object> map = new HashMap<>();
         map = mapper.readValue(retUser, map.getClass());
 
-        return (String) getFromJSONPath("$.id", map);
+        return (String) JSONUtil.getFromJSONPath("$.id", map);
     }
 
     @SuppressWarnings("unchecked")
@@ -160,7 +160,7 @@ public class SACConnector implements IConnector {
         HashMap<String, Object> map = new HashMap<>();
         map = mapper.readValue(retUser, map.getClass());
 
-        return (String) getFromJSONPath("$.id", map);
+        return (String) JSONUtil.getFromJSONPath("$.id", map);
     }
 
     @Override
@@ -243,16 +243,16 @@ public class SACConnector implements IConnector {
 
     private HashMap<String, Object> transformEntityFrom(HashMap<String, Object> entity) {
         HashMap<String, Object> tmpEntity = new HashMap<>();
-        tmpEntity.put("id", getFromJSONPath("$.id", entity));
-        tmpEntity.put("userName", getFromJSONPath("$.userName", entity));
-        tmpEntity.put("preferredLanguage", getFromJSONPath("$.preferredLanguage", entity));
-        tmpEntity.put("givenName", getFromJSONPath("$.name.givenName", entity));
-        tmpEntity.put("familyName", getFromJSONPath("$.name.familyName", entity));
-        tmpEntity.put("displayName", getFromJSONPath("$.displayName", entity));
-        tmpEntity.put("active", getFromJSONPath("$.active", entity));
-        tmpEntity.put("emails", getFromJSONPath("$.emails", entity));
-        tmpEntity.put("roles", getFromJSONPath("$.roles", entity));
-        tmpEntity.put("groups", getFromJSONPath("$.groups", entity)); 
+        tmpEntity.put("id", JSONUtil.getFromJSONPath("$.id", entity));
+        tmpEntity.put("userName", JSONUtil.getFromJSONPath("$.userName", entity));
+        tmpEntity.put("preferredLanguage", JSONUtil.getFromJSONPath("$.preferredLanguage", entity));
+        tmpEntity.put("givenName", JSONUtil.getFromJSONPath("$.name.givenName", entity));
+        tmpEntity.put("familyName", JSONUtil.getFromJSONPath("$.name.familyName", entity));
+        tmpEntity.put("displayName", JSONUtil.getFromJSONPath("$.displayName", entity));
+        tmpEntity.put("active", JSONUtil.getFromJSONPath("$.active", entity));
+        tmpEntity.put("emails", JSONUtil.getFromJSONPath("$.emails", entity));
+        tmpEntity.put("roles", JSONUtil.getFromJSONPath("$.roles", entity));
+        tmpEntity.put("groups", JSONUtil.getFromJSONPath("$.groups", entity)); 
 
         return tmpEntity;
     }
@@ -260,32 +260,19 @@ public class SACConnector implements IConnector {
     private String transformEntityTo(HashMap<String, Object> entity) throws JsonProcessingException {
         DocumentContext jsonContext = JsonPath.parse("{}");
 
-        addPropertyToJSON(jsonContext, "id", "$.id", entity);
-        addPropertyToJSON(jsonContext, "userName", "$.userName", entity);
-        addPropertyToJSON(jsonContext, "preferredLanguage", "$.preferredLanguage", entity); 
-        addPropertyToJSON(jsonContext, "givenName", "$.name.givenName", entity);
-        addPropertyToJSON(jsonContext, "familyName", "$.name.familyName", entity);
-        addPropertyToJSON(jsonContext, "displayName", "$.displayName", entity);
-        addPropertyToJSON(jsonContext, "active", "$.active", entity);
-        addPropertyToJSON(jsonContext, "emails", "$.emails", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "id", "$.id", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "userName", "$.userName", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "preferredLanguage", "$.preferredLanguage", entity); 
+        JSONUtil.addPropertyToJSON(jsonContext, "givenName", "$.name.givenName", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "familyName", "$.name.familyName", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "displayName", "$.displayName", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "active", "$.active", entity);
+        JSONUtil.addPropertyToJSON(jsonContext, "emails", "$.emails", entity);
         return jsonContext.jsonString();
     }
 
-    private void addPropertyToJSON(DocumentContext jsonContext, String src, String dest, HashMap<String,Object> entity) {
-        if (entity.containsKey(src)) {
-            Object o = entity.get(src);
-            JSONUtil.create(jsonContext, dest, o);
-        }
-    }
+    
 
-    private Object getFromJSONPath(String path, Object obj) {
-        Object retObj = null;
-        try {
-            retObj = JSONUtil.getObjectFromPath(obj, path);
-        } catch (Exception e) {
-            retObj = null;
-        }
-        return retObj;
-    }
+    
     
 }
