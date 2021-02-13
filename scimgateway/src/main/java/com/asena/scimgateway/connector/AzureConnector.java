@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.http.HTTPClient;
 import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
+import com.asena.scimgateway.utils.ConnectorUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AzureConnector implements IConnector {
@@ -138,9 +140,26 @@ public class AzureConnector implements IConnector {
 
     @Override
     public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
         
-        // TODO Auto-generated method stub
-        return null;
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+
+        String result = hc.get(this.baseURL + "/v1.0/Users/" + userId);
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(result, map.getClass());
+
+        return null; 
     }
     
 }
