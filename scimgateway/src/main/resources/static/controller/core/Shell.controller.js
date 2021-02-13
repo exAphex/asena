@@ -11,8 +11,10 @@ sap.ui.define([
 
 		onInit: function () {
             jQuery.ajaxSetup({ cache: false }); // This will prevent all future AJAX calls from being cached!
-			
+
 			this.getView().setModel(sap.ui.getCore().getModel("mainModel"), "mainModel");
+
+			this.loadVersion();
 		},
 
 		onPressHeaderUserItem: function (oEvent) {
@@ -22,6 +24,21 @@ sap.ui.define([
 		// TODO this is not working correctly
 		onPressLogOff: function () {
 		},
+
+		loadVersion: function() {
+            var sQuery = "/api/v1/version";
+            var mParameters = {
+                bShowBusyIndicator: false
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlVersion"); 
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+        },
 
 		onBackPressed: function () {
 			if (History.getInstance().getPreviousHash() !== undefined) {

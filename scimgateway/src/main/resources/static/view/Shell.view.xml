@@ -7,7 +7,7 @@
     controllerName = "com.asena.ui5.controller.core.Shell">
     <tnt:ToolPage id="tpMain">
         <tnt:header>
-            <f:ShellBar showMenuButton="true" title="Asena SCIM Gateway" secondTitle="1.0.0"
+            <f:ShellBar showMenuButton="true" title="Asena SCIM Gateway" secondTitle="{mdlVersion>/version}"
                 showNavButton="{mainModel>/showNavButton}"
                 navButtonPressed="onBackPressed"
                 menuButtonPressed="onMenuPressed">

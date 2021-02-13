@@ -126,6 +126,7 @@ public class AzureConnector implements IConnector {
         hc.addInterceptor(oi);
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
+
         String result = hc.get(this.baseURL + "/v1.0/Users");
         ObjectMapper mapper = new ObjectMapper();
 
@@ -137,6 +138,7 @@ public class AzureConnector implements IConnector {
 
     @Override
     public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+        
         // TODO Auto-generated method stub
         return null;
     }

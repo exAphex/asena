@@ -1,6 +1,7 @@
 package com.asena.scimgateway.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.asena.scimgateway.model.Log;
@@ -39,7 +40,9 @@ public class LogController {
 
     @PreAuthorize("isAdmin()")
     @GetMapping("/count")
-    public long getLogCount() throws IOException {
-        return loggerService.getLogCount();
+    public HashMap<String, String> getLogCount() throws IOException {
+        HashMap<String, String> retVar = new HashMap<>();
+        retVar.put("count", loggerService.getLogCount() + "");
+        return retVar;
     }
 }
