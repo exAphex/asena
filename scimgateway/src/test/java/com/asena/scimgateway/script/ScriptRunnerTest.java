@@ -14,7 +14,7 @@ public class ScriptRunnerTest {
     
     @Test
     void scriptRunnerTest() {
-        ScriptRunner sr = new ScriptRunner();
+        ScriptRunner sr = new ScriptRunner(null);
         Script s = new Script();
         String param = "Test";
         s.setName("warning");
@@ -27,7 +27,7 @@ public class ScriptRunnerTest {
 
     @Test
     void scriptRunnerFailTest() {
-        ScriptRunner sr = new ScriptRunner();
+        ScriptRunner sr = new ScriptRunner(null);
         String param = "Test";
         Script s = new Script();
         String retStr = (String)sr.execute(null, param);

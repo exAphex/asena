@@ -1,11 +1,11 @@
 package com.asena.scimgateway.script;
 
 import com.asena.scimgateway.exception.InternalErrorException;
+import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,9 @@ public class ScriptRunner {
 
     private Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
     
-    public ScriptRunner() {
+    public ScriptRunner(RemoteSystem rs) {
         this.context = Context.enter();
-        this.scope = this.context.initStandardObjects(new ImporterTopLevel(this.context));
+        this.scope = this.context.initStandardObjects(new GlobalScripts(this.context, rs));
     }
 
     public void addScriptFunction(Script s) {

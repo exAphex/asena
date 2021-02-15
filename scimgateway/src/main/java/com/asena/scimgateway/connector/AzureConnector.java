@@ -67,7 +67,7 @@ public class AzureConnector implements IConnector {
         retSystem.addWriteMapping(new Attribute("$.id", "id", ""));
         retSystem.addWriteMapping(new Attribute("$.userName", "mailNickname", "")); 
         retSystem.addWriteMapping(new Attribute("$.password", "passwordProfile", new Script("getAzurePassword")));
-        retSystem.addWriteMapping(new Attribute("$.userName", "userPrincipalName", new Script("getAzureDomain")));
+        retSystem.addWriteMapping(new Attribute("$.userName", "userPrincipalName", new Script("getMailSuffixFromAzureDomain")));
 
         retSystem.addReadMapping(new Attribute("id", "$.id", ""));
         retSystem.addReadMapping(new Attribute("userPrincipalName", "$.userName", ""));
