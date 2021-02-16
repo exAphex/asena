@@ -31,11 +31,19 @@ function stop() {
     dockerComposeDown
 }
 
+function build() {
+    dockerComposeDown
+    docker-compose build
+}
+
 case $1 in
     "start" | "restart")
         restart
         ;;
     "stop")
         stop
+        ;;
+    "build")
+        build
         ;;
 esac

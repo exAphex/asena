@@ -133,6 +133,11 @@ function downloadDockerFiles() {
     echo "Download successfull!"
 }
 
+function buildDockerImages() {
+    cd $DIR
+    $RUNSCRIPT build
+}
+
 function installationComplete() {
     echo "=================================="
     echo "INSTALLATION COMPLETE"
@@ -145,12 +150,14 @@ case $1 in
         prepareInstallationFolder
         writeConfigFile
         downloadLatestVersion
+        buildDockerImages
         installationComplete
         ;;
     "build")
         prepareInstallationFolder
         writeConfigFile
         copyLocalArtifact
+        buildDockerImages
         installationComplete
         ;;
     "start" | "restart")
