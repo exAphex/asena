@@ -12,6 +12,7 @@ import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
@@ -61,15 +62,17 @@ public class LDAPConnector implements IConnector {
         retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
         retSystem.addAttribute(new Attribute("objectClass", "objectClass", "object class"));
 
-        retSystem.addWriteMapping(new Attribute("$.userName", "cn", ""));
-        retSystem.addWriteMapping(new Attribute("$.userName", "uid", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.familyName", "sn", ""));
-        retSystem.addWriteMapping(new Attribute("$.userName", "homeDirectory", ""));
-        retSystem.addWriteMapping(new Attribute("", "gidNumber", ""));
-        retSystem.addWriteMapping(new Attribute("", "objectClass", ""));
+        EntryTypeMapping emUser = new EntryTypeMapping("User");
+        emUser.addWriteMapping(new Attribute("$.userName", "cn", ""));
+        emUser.addWriteMapping(new Attribute("$.userName", "uid", ""));
+        emUser.addWriteMapping(new Attribute("$.name.familyName", "sn", ""));
+        emUser.addWriteMapping(new Attribute("$.userName", "homeDirectory", ""));
+        emUser.addWriteMapping(new Attribute("", "gidNumber", ""));
+        emUser.addWriteMapping(new Attribute("", "objectClass", ""));
 
-        retSystem.addReadMapping(new Attribute("cn", "$.userName", ""));
-        retSystem.addReadMapping(new Attribute("sn", "$.name.familyName", "")); 
+        emUser.addReadMapping(new Attribute("cn", "$.userName", ""));
+        emUser.addReadMapping(new Attribute("sn", "$.name.familyName", "")); 
+        retSystem.addEntryTypeMapping(emUser);
 
         return retSystem;
     }

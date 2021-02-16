@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class RemoteSystemDTO {
@@ -13,9 +14,8 @@ public class RemoteSystemDTO {
     private String description;
     private boolean active;
     private Set<AttributeDTO> attributes;
-    private Set<AttributeDTO> writeMappings;
-    private Set<AttributeDTO> readMappings;
     private Set<ConnectionPropertyDTO> properties;
+    private Set<EntryTypeMappingDTO> entryTypeMappings; 
     private String type;
     private UserDTO serviceUser;
 
@@ -39,24 +39,17 @@ public class RemoteSystemDTO {
             }
         }
 
-        if (rs.getWriteMappings() != null) {
-            rsDTO.writeMappings = new HashSet<>();
-            for (Attribute a : rs.getWriteMappings()) {
-                rsDTO.writeMappings.add(AttributeDTO.toDTO(a));
-            }
-        }
-
-        if (rs.getReadMappings() != null) {
-            rsDTO.readMappings = new HashSet<>();
-            for (Attribute a : rs.getReadMappings()) {
-                rsDTO.readMappings.add(AttributeDTO.toDTO(a));
-            }
-        }
-
         if (rs.getProperties() != null) {
             rsDTO.properties = new HashSet<>();
             for (ConnectionProperty cp : rs.getProperties()) {
                 rsDTO.properties.add(ConnectionPropertyDTO.toDTO(cp));
+            }
+        }
+
+        if (rs.getEntryTypeMappings() != null) {
+            rsDTO.entryTypeMappings = new HashSet<>();
+            for (EntryTypeMapping em : rs.getEntryTypeMappings()) {
+                rsDTO.entryTypeMappings.add(EntryTypeMappingDTO.toDTO(em));
             }
         }
 
@@ -65,28 +58,12 @@ public class RemoteSystemDTO {
         return rsDTO;
     }
 
-    public Set<AttributeDTO> getReadMappings() {
-        return readMappings;
-    }
-
-    public void setReadMappings(Set<AttributeDTO> readMappings) {
-        this.readMappings = readMappings;
-    }
-
     public UserDTO getServiceUser() {
         return serviceUser;
     }
 
     public void setServiceUser(UserDTO serviceUser) {
         this.serviceUser = serviceUser;
-    }
-
-    public Set<AttributeDTO> getWriteMappings() {
-        return writeMappings;
-    }
-
-    public void setWriteMappings(Set<AttributeDTO> writeMappings) {
-        this.writeMappings = writeMappings;
     }
 
     public RemoteSystem fromDTO() {
@@ -103,21 +80,15 @@ public class RemoteSystemDTO {
             }
         }
 
-        if (getWriteMappings() != null) {
-            for (AttributeDTO a : getWriteMappings()) {
-                rs.addWriteMapping(a.fromDTO());
-            }
-        }
-
-        if (getReadMappings() != null) {
-            for (AttributeDTO a : getReadMappings()) {
-                rs.addReadMapping(a.fromDTO());
-            }
-        }
-        
         if (getProperties() != null) {
             for (ConnectionPropertyDTO cp : getProperties()) {
                 rs.addProperty(cp.fromDTO());
+            }
+        }
+
+        if (getEntryTypeMappings() != null) {
+            for (EntryTypeMappingDTO em : getEntryTypeMappings()) {
+                rs.addEntryTypeMapping(em.fromDTO());
             }
         }
 
@@ -184,4 +155,11 @@ public class RemoteSystemDTO {
         this.id = id;
     }
 
+    public Set<EntryTypeMappingDTO> getEntryTypeMappings() {
+        return entryTypeMappings;
+    }
+
+    public void setEntryTypeMappings(Set<EntryTypeMappingDTO> entryTypeMappingDTOs) {
+        this.entryTypeMappings = entryTypeMappingDTOs;
+    }
 }

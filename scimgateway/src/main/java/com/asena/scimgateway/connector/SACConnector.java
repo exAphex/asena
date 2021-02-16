@@ -11,6 +11,7 @@ import com.asena.scimgateway.http.HTTPClient;
 import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
@@ -57,26 +58,28 @@ public class SACConnector implements IConnector {
         retSystem.addAttribute(new Attribute("roles", "roles", "User roles"));
         retSystem.addAttribute(new Attribute("groups", "groups", "User groups"));
 
-        retSystem.addWriteMapping(new Attribute("$.userName", "id", ""));
-        retSystem.addWriteMapping(new Attribute("$.emails", "userName", new Script("sacGetUserNameFromMail")));
-        retSystem.addWriteMapping(new Attribute("$.preferredLanguage", "preferredLanguage", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.familyName", "familyName", ""));
-        retSystem.addWriteMapping(new Attribute("$.emails", "emails", "")); 
-        retSystem.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
-        retSystem.addWriteMapping(new Attribute("$.active", "active", ""));
+        EntryTypeMapping emUser = new EntryTypeMapping("User");
+        emUser.addWriteMapping(new Attribute("$.userName", "id", ""));
+        emUser.addWriteMapping(new Attribute("$.emails", "userName", new Script("sacGetUserNameFromMail")));
+        emUser.addWriteMapping(new Attribute("$.preferredLanguage", "preferredLanguage", ""));
+        emUser.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
+        emUser.addWriteMapping(new Attribute("$.name.familyName", "familyName", ""));
+        emUser.addWriteMapping(new Attribute("$.emails", "emails", "")); 
+        emUser.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
+        emUser.addWriteMapping(new Attribute("$.active", "active", ""));
 
-        retSystem.addReadMapping(new Attribute("id", "$.id", ""));
-        retSystem.addReadMapping(new Attribute("userName", "$.userName", ""));
-        retSystem.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
-        retSystem.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
-        retSystem.addReadMapping(new Attribute("familyName", "$.name.familyName", ""));
-        retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
-        retSystem.addReadMapping(new Attribute("active", "$.active", ""));
-        retSystem.addReadMapping(new Attribute("emails", "$.emails", "")); 
-        retSystem.addReadMapping(new Attribute("groups", "$.groups", ""));
-        retSystem.addReadMapping(new Attribute("roles", "$.roles", ""));
-
+        emUser.addReadMapping(new Attribute("id", "$.id", ""));
+        emUser.addReadMapping(new Attribute("userName", "$.userName", ""));
+        emUser.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
+        emUser.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
+        emUser.addReadMapping(new Attribute("familyName", "$.name.familyName", ""));
+        emUser.addReadMapping(new Attribute("displayName", "$.displayName", ""));
+        emUser.addReadMapping(new Attribute("active", "$.active", ""));
+        emUser.addReadMapping(new Attribute("emails", "$.emails", "")); 
+        emUser.addReadMapping(new Attribute("groups", "$.groups", ""));
+        emUser.addReadMapping(new Attribute("roles", "$.roles", ""));
+        retSystem.addEntryTypeMapping(emUser);
+        
         return retSystem;
     }
 
