@@ -2,14 +2,13 @@ package com.asena.scimgateway.processor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class SCIMResultProcessor {
-    public static void addMetaDataCreate(LinkedHashMap<Object, Object> obj, RemoteSystem rs, String id) {
+    public static void addMetaDataCreate(HashMap<String, Object> obj, RemoteSystem rs, String id) {
         Map<String, Object> meta = new HashMap<>();
         meta.put("resourceType", "User");
         meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/Users/" + id));
