@@ -11,8 +11,8 @@ function getMailSuffixFromAzureDomain(param) {
 }', 'getMailSuffixFromAzureDomain' where (not 'getMailSuffixFromAzureDomain' in (select name from asena.scripts));
 
 INSERT INTO asena.scripts (id, content, name) SELECT NEXTVAL('asena.scripts_sequence'), '/*
- * Author: 
- * Description: 
+ * Author: Aydin Tekin 
+ * Description: Parses azure password to a adequate format
  * Created on: 2021-02-13
 */
 
