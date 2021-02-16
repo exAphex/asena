@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient.Builder;
 public class HTTPClient {
 
     private enum HTTP_OPERATION {
-        POST, PUT
+        POST, PUT, PATCH
     }
 
 
@@ -91,6 +91,9 @@ public class HTTPClient {
             case PUT:
                 b.put(body);
                 break;
+            case PATCH:
+                b.patch(body);
+                break;
         }
 
         Request request = b.build();
@@ -112,6 +115,10 @@ public class HTTPClient {
         if (response.code() != expectedResponseCode) {
             throw new IOException("Unexpected http code: " + response.code() + " - " + response.body().string());
         }
+    }
+
+    public String patch(String url, String obj) throws IOException {
+        return write(url, obj, HTTP_OPERATION.PATCH);
     }
 
     public int getExpectedResponseCode() {

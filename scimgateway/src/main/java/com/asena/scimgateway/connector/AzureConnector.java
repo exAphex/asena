@@ -135,14 +135,45 @@ public class AzureConnector implements IConnector {
 
     @Override
     public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(204);
+
+        DocumentContext jsonContext = JsonPath.parse(data);
+
+        hc.patch(this.baseURL + "/v1.0/Users/" + userId, jsonContext.jsonString());
+
+        return userId;
     }
 
     @Override
     public boolean deleteEntity(String entity, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-        return false;
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(204);
+
+        hc.delete(this.baseURL + "/v1.0/Users/" + userId);
+        return true;
     }
 
     @SuppressWarnings("unchecked")
