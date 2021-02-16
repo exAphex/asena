@@ -1,5 +1,6 @@
 {
     "scim": [
+        {"name" : "$.id"},
         {"name" : "$.userName"},
         {"name" : "$.emails"},
         {"name" : "$.name"},

@@ -1,6 +1,7 @@
 package com.asena.scimgateway.http.oauth;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.asena.scimgateway.http.BasicAuthInterceptor;
 import com.google.gson.Gson;
@@ -17,11 +18,16 @@ public class OAuthAuthenticator {
     private String userName;
     private String password;
     private String tokenURL;
+    private HashMap<String, String> additionalBody = new HashMap<>();
 
     public OAuthAuthenticator(String userName, String password, String tokenURL) {
         this.userName = userName;
         this.password = password;
         this.tokenURL = tokenURL;
+    }
+
+    public void addBody(String name, String value) {
+        this.additionalBody.put(name, value);
     }
 
     public OAuthResponse authenticate() throws IOException {
@@ -30,9 +36,15 @@ public class OAuthAuthenticator {
         .addInterceptor(new BasicAuthInterceptor(userName, password))
         .build();
         
-        RequestBody formBody = new FormBody.Builder()
-        .add("grant_type", "client_credentials")
-        .build();
+        FormBody.Builder b = new FormBody.Builder()
+        .add("grant_type", "client_credentials");
+        
+
+        for (String bodyItem : additionalBody.keySet()) {
+            b.add(bodyItem, additionalBody.get(bodyItem));
+        }
+
+        RequestBody formBody = b.build();
 
         Request request = new Request.Builder()
         .url(tokenURL)

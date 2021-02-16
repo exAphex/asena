@@ -34,7 +34,7 @@ public class SCIMProcessor {
         HashMap<String, Object> data = prepareDataToRemoteSystem(rs, obj);
 
         String id = transferCreateToConnector(conn, "User", rs, data);
-        id = processReturningId(id, getReadMappingNameId(rs, conn));
+        id = processReturningId(id, getReadMappingNameId(rs, conn), rs);
 
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>) obj;
         SCIMResultProcessor.addMetaDataCreate(retObj, rs, id);
@@ -48,7 +48,7 @@ public class SCIMProcessor {
         data = postPrepareDataToRemoteSystem(conn, rs, userId, data);
 
         String id = transferUpdateToConnector(conn, "User", rs, data);
-        id = processReturningId(id, getReadMappingNameId(rs, conn));
+        id = processReturningId(id, getReadMappingNameId(rs, conn), rs);
 
         LinkedHashMap<Object, Object> retObj = (LinkedHashMap<Object, Object>) obj;
         SCIMResultProcessor.addMetaDataCreate(retObj, rs, id);;
@@ -90,7 +90,7 @@ public class SCIMProcessor {
         for (Attribute a : attrs) {
             Object attrObj = entry.get(a.getSource());
             if (a.getTransformation() != null) {
-                attrObj = ScriptProcessor.processTransformation(a, attrObj);
+                attrObj = ScriptProcessor.processTransformation(a, attrObj, rs);
             }
             JSONUtil.create(jsonContext, a.getDestination(), attrObj);
         }
@@ -116,7 +116,7 @@ public class SCIMProcessor {
                     }
                 }
                 if (a.getTransformation() != null) {
-                    o = ScriptProcessor.processTransformation(a, o);
+                    o = ScriptProcessor.processTransformation(a, o, rs);
                 }
                 data.put(a.getDestination(), o);
             
@@ -127,7 +127,7 @@ public class SCIMProcessor {
 
     private static HashMap<String, Object> postPrepareDataToRemoteSystem(IConnector conn, RemoteSystem rs, String id, HashMap<String, Object> data) {
         String nameId = conn.getNameId();
-        String newId = processWritingId(id, getWriteMappingNameId(rs, conn));
+        String newId = processWritingId(id, getWriteMappingNameId(rs, conn), rs);
         if (data.containsKey(nameId)) {
             data.replace(nameId, newId);
         } else {
@@ -215,17 +215,17 @@ public class SCIMProcessor {
         return conn;
     }
 
-    private static String processReturningId(String o, Attribute a) {
+    private static String processReturningId(String o, Attribute a, RemoteSystem rs) {
         if (a.getTransformation() != null) {
-            o = (String) ScriptProcessor.processTransformation(a, o);
+            o = (String) ScriptProcessor.processTransformation(a, o, rs);
         }
 
         return o;
     }
 
-    private static String processWritingId(String id, Attribute a) {
+    private static String processWritingId(String id, Attribute a, RemoteSystem rs) {
         if (a.getTransformation() != null) {
-            id = (String) ScriptProcessor.processTransformation(a, id);
+            id = (String) ScriptProcessor.processTransformation(a, id, rs);
         }
 
         return id;
