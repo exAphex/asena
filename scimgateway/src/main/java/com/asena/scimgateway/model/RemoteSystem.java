@@ -72,7 +72,7 @@ public class RemoteSystem {
             this.entryTypeMappings = new HashSet<>();
         }
 
-        if (em != null) {
+        if ((em != null) && (!isEntryTypeMappingDuplicate(em))) {
             this.entryTypeMappings.add(em);
         }
 
@@ -88,6 +88,24 @@ public class RemoteSystem {
             attributes.add(a);
         }
         return this;
+    }
+
+    private boolean isEntryTypeMappingDuplicate(EntryTypeMapping em) {
+        if ((em == null) || (em.getName() == null)) {
+            return false;
+        }
+
+        if (this.entryTypeMappings == null) {
+            return false;
+        }
+
+        for (EntryTypeMapping e : this.entryTypeMappings) {
+            if (em.getName().equals(e.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void deleteProperty(ConnectionProperty cp) {

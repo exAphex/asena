@@ -9,24 +9,71 @@ import java.util.Set;
 import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.utils.JSONUtil;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 public class SCIMProcessor {
+    private String entity;
+    private RemoteSystem remoteSystem;
 
-    private SCIMProcessor() {
+    public SCIMProcessor(RemoteSystem rs, String entity) {
+        setEntity(entity);
+        setRemoteSystem(remoteSystem);
     }
 
-    public static HashMap<String, Object> getUser(RemoteSystem rs, String userId) throws Exception {
-        IConnector conn = getConnector(rs);
+    public HashMap<String, Object> getEntities() throws Exception {
+        IConnector conn = getConnector(remoteSystem);
+        List<HashMap<String, Object>> data = transferGetEntitiesToConnector(conn, entity, remoteSystem);
+        data = prepareListDataFromRemoteSystem(remoteSystem, entity, data);
 
-        HashMap<String, Object> data = postPrepareDataToRemoteSystem(conn, rs, userId, new HashMap<>());
-        data = transferGetUserToConnector(conn, "User", rs, data);
-        data = prepareDataFromRemoteSystem(rs, data);
+        HashMap<String, Object> scimResult = SCIMResultProcessor.createSCIMResult(data);
+        return scimResult;
+    }
+
+    public HashMap<String, Object> getEntity(String userId) throws Exception {
+        IConnector conn = getConnector(remoteSystem);
+
+        HashMap<String, Object> data = postPrepareDataToRemoteSystem(conn, remoteSystem, userId, new HashMap<>());
+        data = transferGetUserToConnector(conn, entity, remoteSystem, data);
+        data = prepareDataFromRemoteSystem(data);
         return data;
     }
+
+    private HashMap<String, Object> prepareDataFromRemoteSystem(HashMap<String, Object> entry) {
+        Set<Attribute> attrs = getReadMapping(remoteSystem, entity);
+        DocumentContext jsonContext = JsonPath.parse("{}");
+        for (Attribute a : attrs) {
+            Object attrObj = entry.get(a.getSource());
+            if (a.getTransformation() != null) {
+                attrObj = ScriptProcessor.processTransformation(a, attrObj, remoteSystem);
+            }
+            JSONUtil.create(jsonContext, a.getDestination(), attrObj);
+        }
+        HashMap<String, Object> tmpObj = jsonContext.read("$");
+        SCIMResultProcessor.addMetaDataList(tmpObj, entry, remoteSystem, (String)tmpObj.get("id"));
+        return tmpObj;
+    }
+
+    public RemoteSystem getRemoteSystem() {
+        return remoteSystem;
+    }
+
+    public void setRemoteSystem(RemoteSystem remoteSystem) {
+        this.remoteSystem = remoteSystem;
+    }
+
+    public String getEntity() {
+        return entity;
+    }
+
+    public void setEntity(String entity) {
+        this.entity = entity;
+    }
+
+    
 
     @SuppressWarnings("unchecked")
     public static Object createUser(RemoteSystem rs, Object obj) throws Exception {
@@ -63,41 +110,21 @@ public class SCIMProcessor {
         return transferDeleteToConnector(conn, "User", rs, data);
     }
 
-    public static HashMap<String, Object> getUsers(RemoteSystem rs) throws Exception {
-        IConnector conn = getConnector(rs);
-        List<HashMap<String, Object>> data = transferGetUsersToConnector(conn, "User", rs);
-        data = prepareListDataFromRemoteSystem(rs, data);
+    
 
-        HashMap<String, Object> scimResult = SCIMResultProcessor.createSCIMResult(data);
-        return scimResult;
-    }
-
-    private static List<HashMap<String, Object>> prepareListDataFromRemoteSystem(RemoteSystem rs,
+    private static List<HashMap<String, Object>> prepareListDataFromRemoteSystem(RemoteSystem rs, String entity,
             List<HashMap<String, Object>> obj) {
         List<HashMap<String, Object>> retList = new ArrayList<>();
 
         for (HashMap<String, Object> d : obj) {
-            HashMap<String, Object> tmpObj = prepareDataFromRemoteSystem(rs, d);
+            HashMap<String, Object> tmpObj = prepareDataFromRemoteSystem(rs, entity, d);
             retList.add(tmpObj);
         }
 
         return retList;
     }
 
-    private static HashMap<String, Object> prepareDataFromRemoteSystem(RemoteSystem rs, HashMap<String, Object> entry) {
-        Set<Attribute> attrs = rs.getReadMappings();
-        DocumentContext jsonContext = JsonPath.parse("{}");
-        for (Attribute a : attrs) {
-            Object attrObj = entry.get(a.getSource());
-            if (a.getTransformation() != null) {
-                attrObj = ScriptProcessor.processTransformation(a, attrObj, rs);
-            }
-            JSONUtil.create(jsonContext, a.getDestination(), attrObj);
-        }
-        HashMap<String, Object> tmpObj = jsonContext.read("$");
-        SCIMResultProcessor.addMetaDataList(tmpObj, entry, rs, (String)tmpObj.get("id"));
-        return tmpObj;
-    }
+    
 
     private static HashMap<String, Object> prepareDataToRemoteSystem(RemoteSystem rs, Object obj) {
         Set<Attribute> attrs = rs.getWriteMappings();
@@ -123,6 +150,24 @@ public class SCIMProcessor {
         }
 
         return data;
+    }
+
+    private static Set<Attribute> getReadMapping(RemoteSystem rs, String entity) {
+        if ((entity == null) || (entity.isEmpty())) {
+            throw new InternalErrorException("Entity is null or empty!");
+        }
+
+        if ((rs == null) || (rs.getEntryTypeMappings() == null)) {
+            throw new InternalErrorException("Cannot retrieve read mappings");
+        }
+
+        for (EntryTypeMapping em : rs.getEntryTypeMappings()) {
+            if (entity.equals(em.getName())) {
+                return em.getReadMappings();
+            }
+        }
+
+        throw new InternalErrorException("No read mapping found for entity: " + entity + " on target system: " + rs.getName());
     }
 
     private static HashMap<String, Object> postPrepareDataToRemoteSystem(IConnector conn, RemoteSystem rs, String id, HashMap<String, Object> data) {
@@ -155,7 +200,7 @@ public class SCIMProcessor {
         return conn.deleteEntity(type, data);
     }
 
-    private static List<HashMap<String, Object>> transferGetUsersToConnector(IConnector conn, String type, RemoteSystem rs)
+    private static List<HashMap<String, Object>> transferGetEntitiesToConnector(IConnector conn, String type, RemoteSystem rs)
             throws Exception {
         conn.setupConnector(rs);
         return conn.getEntities(type);

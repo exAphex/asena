@@ -7,10 +7,10 @@ import javax.transaction.Transactional;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
-import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.repository.AttributeRepository;
-import com.asena.scimgateway.repository.RemoteSystemRepository;
+import com.asena.scimgateway.repository.EntryTypeMappingRepository;
 import com.asena.scimgateway.repository.ScriptRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class AttributeService {
     private AttributeRepository attributeRepository;
 
     @Autowired
-    private RemoteSystemRepository remoteSystemRepository;
+    private EntryTypeMappingRepository entryTypeMappingRepository;
 
     @Autowired 
     private ScriptRepository scriptRepository;
@@ -68,17 +68,17 @@ public class AttributeService {
     }
 
     public void delete(Attribute a) {
-        List<RemoteSystem> rs = remoteSystemRepository.findByWriteMappingsId(a.getId());
-        for (RemoteSystem r : rs) {
-            r.deleteWriteMapping(a);
-            remoteSystemRepository.save(r);
+        List<EntryTypeMapping> em = entryTypeMappingRepository.findByWriteMappingsId(a.getId());
+        for (EntryTypeMapping e : em) {
+            e.deleteWriteMapping(a);
+            entryTypeMappingRepository.save(e);
         }
 
 
-        rs = remoteSystemRepository.findByReadMappingsId(a.getId());
-        for (RemoteSystem r : rs) {
-            r.deleteReadMapping(a);
-            remoteSystemRepository.save(r);
+        em = entryTypeMappingRepository.findByReadMappingsId(a.getId());
+        for (EntryTypeMapping e : em) {
+            e.deleteReadMapping(a);
+            entryTypeMappingRepository.save(e);
         }
 
         attributeRepository.delete(a);
