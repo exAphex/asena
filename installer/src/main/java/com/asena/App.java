@@ -88,7 +88,7 @@ public class App {
         stepValues.put("logging.level.root", "ERROR");
         stepValues.put("spring.jpa.properties.hibernate.default_schema", "asena");
         stepValues.put("spring.flyway.schemas", "asena");
-
+        stepValues.put("app.version", "@project.version@");
         return stepValues;
     }
 }
