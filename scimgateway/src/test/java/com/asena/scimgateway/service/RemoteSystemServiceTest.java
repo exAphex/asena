@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import com.asena.scimgateway.exception.NotFoundException;
-import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.processor.ConnectorProcessor;
@@ -56,8 +56,7 @@ public class RemoteSystemServiceTest {
 
         assertEquals(false, rs.isActive());
         assertEquals(conn.getProperties().size(), rs.getProperties().size());
-        assertNotNull(rs.getWriteMappings());
-        assertNotNull(rs.getReadMappings());
+        assertNotNull(rs.getEntryTypeMappings());
         assertNull(rs.getAttributes());
         assertEquals("Testdesc", rs.getDescription());
         assertEquals("Testname", rs.getName());
@@ -127,7 +126,7 @@ public class RemoteSystemServiceTest {
         
         rs = remoteSystemService.create(rs);
 
-        rs = remoteSystemService.addWriteMapping(new Attribute("src", "dest", "desc"), rs.getId());
+        rs = remoteSystemService.addEntryTypeMapping(new EntryTypeMapping("User"), rs.getId());
 
         remoteSystemService.deleteById(rs.getId());
 
@@ -137,7 +136,7 @@ public class RemoteSystemServiceTest {
     }
 
     @Test
-    void addWriteMappingTest() {
+    void addEntryTypeMappingTest() {
         RemoteSystem rs = new RemoteSystem();
         rs.setActive(true);
         rs.setDescription("Testdesc");
@@ -148,46 +147,17 @@ public class RemoteSystemServiceTest {
 
         attributeService.deleteAll();
 
-        rs = remoteSystemService.addWriteMapping(new Attribute("src", "dest", "desc"), rs.getId());
+        rs = remoteSystemService.addEntryTypeMapping(new EntryTypeMapping("User"), rs.getId());
         
-        Attribute[] a = new Attribute[rs.getWriteMappings().size()];
-        rs.getWriteMappings().toArray(a);
+        EntryTypeMapping[] e = new EntryTypeMapping[rs.getEntryTypeMappings().size()];
+        rs.getEntryTypeMappings().toArray(e);
 
-        assertEquals(1, rs.getWriteMappings().size());
+        assertEquals(1, e.length);
        
-        assertEquals("src", a[0].getSource());
-        assertEquals("dest", a[0].getDestination());
-        assertEquals("desc", a[0].getDescription());
+        assertEquals("User", e[0].getName());
 
         assertThrows(NotFoundException.class, () -> {
-            remoteSystemService.addWriteMapping(null, "");
-        }); 
-    }
-
-    @Test
-    void addReadMappingTest() {
-        RemoteSystem rs = new RemoteSystem();
-        rs.setActive(true);
-        rs.setDescription("Testdesc");
-        rs.setName("Testname");
-        rs.setType("LDAP");
-        
-        rs = remoteSystemService.create(rs);
-        attributeService.deleteAll();
-
-        rs = remoteSystemService.addReadMapping(new Attribute("src", "dest", "desc"), rs.getId());
-        
-        Attribute[] a = new Attribute[rs.getReadMappings().size()];
-        rs.getReadMappings().toArray(a);
-
-        assertEquals(1, rs.getReadMappings().size());
-       
-        assertEquals("src", a[0].getSource());
-        assertEquals("dest", a[0].getDestination());
-        assertEquals("desc", a[0].getDescription());
-
-        assertThrows(NotFoundException.class, () -> {
-            remoteSystemService.addReadMapping(null, "");
+            remoteSystemService.addEntryTypeMapping(null, "");
         }); 
     }
 

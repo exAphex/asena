@@ -44,6 +44,10 @@ public class GlobalScripts extends ImporterTopLevel {
     }
 
     public String getSystemProperty(String searchKey) {
+        if ((searchKey == null) || (remoteSystem == null)) {
+            return null;
+        }
+
         Set<ConnectionProperty> props = remoteSystem.getProperties();
         for (ConnectionProperty p : props) {
             if ((p.getKey() != null) && (p.getKey().equals(searchKey))) {

@@ -20,7 +20,7 @@ public class SCIMProcessor {
 
     public SCIMProcessor(RemoteSystem rs, String entity) {
         setEntity(entity);
-        setRemoteSystem(remoteSystem);
+        setRemoteSystem(rs);
     }
 
     public HashMap<String, Object> getEntities() throws Exception {
@@ -52,7 +52,7 @@ public class SCIMProcessor {
         return obj;
     }
 
-    public Object updateEntity(String entityId, HashMap<String, Object> obj) throws Exception {
+    public HashMap<String, Object> updateEntity(String entityId, HashMap<String, Object> obj) throws Exception {
         IConnector conn = getConnector();
         HashMap<String, Object> data = prepareDataToRemoteSystem(obj);
         data = postPrepareDataToRemoteSystem(conn, remoteSystem, entityId, data);
