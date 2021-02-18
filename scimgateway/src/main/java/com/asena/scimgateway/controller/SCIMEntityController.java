@@ -67,12 +67,12 @@ public class SCIMEntityController {
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @PostMapping("/{entity}") 
-    public @ResponseBody Object scimUserCreate(@PathVariable String systemid, @PathVariable String entity, @RequestBody Object params, HttpServletResponse response)
+    public @ResponseBody Object scimUserCreate(@PathVariable String systemid, @PathVariable String entity, @RequestBody HashMap<String, Object> params, HttpServletResponse response)
             throws Exception {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         Object o = null;
         try {
-            o = SCIMProcessor.createUser(rs, params);
+            o = new SCIMProcessor(rs, entity).createEntity(params);
             response.setStatus(201);
         } catch (Exception e) {
             handleControllerError(e, params);
@@ -82,11 +82,11 @@ public class SCIMEntityController {
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @PutMapping("/{entity}/{id}")
-    public @ResponseBody Object scimUserUpdate(@PathVariable String systemid, @PathVariable String entity, @PathVariable String id, @RequestBody Object params, HttpServletResponse response) {
+    public @ResponseBody Object scimUserUpdate(@PathVariable String systemid, @PathVariable String entity, @PathVariable String id, @RequestBody HashMap<String, Object> params, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         Object o = null;
         try {
-            o = SCIMProcessor.updateUser(rs, id, params);
+            o = new SCIMProcessor(rs, entity).updateEntity(id, params);
             response.setStatus(201);
         } catch (Exception e) {
             handleControllerError(e, params);
@@ -100,7 +100,7 @@ public class SCIMEntityController {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         boolean isDeleted = false;
         try {
-            isDeleted = SCIMProcessor.deleteUser(rs, id);
+            isDeleted = new SCIMProcessor(rs, entity).deleteEntity(id);
             response.setStatus(204);
         } catch (Exception e) {
             handleControllerError(e, null);

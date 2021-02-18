@@ -1,7 +1,7 @@
-CREATE SEQUENCE asena.logging_event_id_seq MINVALUE 1 START 1;
+CREATE SEQUENCE ${flyway:defaultSchema}.logging_event_id_seq MINVALUE 1 START 1;
 
 
-CREATE TABLE asena.logging_event 
+CREATE TABLE ${flyway:defaultSchema}.logging_event 
   (
     timestmp         BIGINT NOT NULL,
     formatted_message  TEXT NOT NULL,
@@ -17,23 +17,23 @@ CREATE TABLE asena.logging_event
     caller_class      VARCHAR(254) NOT NULL,
     caller_method     VARCHAR(254) NOT NULL,
     caller_line       CHAR(4) NOT NULL,
-    event_id          BIGINT DEFAULT nextval('asena.logging_event_id_seq') PRIMARY KEY
+    event_id          BIGINT DEFAULT nextval('${flyway:defaultSchema}.logging_event_id_seq') PRIMARY KEY
   );
 
-CREATE TABLE asena.logging_event_property
+CREATE TABLE ${flyway:defaultSchema}.logging_event_property
   (
     event_id	      BIGINT NOT NULL,
     mapped_key        VARCHAR(254) NOT NULL,
     mapped_value      VARCHAR(1024),
     PRIMARY KEY(event_id, mapped_key),
-    FOREIGN KEY (event_id) REFERENCES asena.logging_event(event_id)
+    FOREIGN KEY (event_id) REFERENCES ${flyway:defaultSchema}.logging_event(event_id)
   );
 
-CREATE TABLE asena.logging_event_exception
+CREATE TABLE ${flyway:defaultSchema}.logging_event_exception
   (
     event_id         BIGINT NOT NULL,
     i                SMALLINT NOT NULL,
     trace_line       VARCHAR(254) NOT NULL,
     PRIMARY KEY(event_id, i),
-    FOREIGN KEY (event_id) REFERENCES asena.logging_event(event_id)
+    FOREIGN KEY (event_id) REFERENCES ${flyway:defaultSchema}.logging_event(event_id)
   );
