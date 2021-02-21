@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:t="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="com.asena.ui5.controller.views.EditEntryType">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:t="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="com.asena.ui5.controller.views.EditSystem">
     <m:Page title="{/name}" titleAlignment="Center" showHeader="true">
         <m:content>
             <ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
@@ -6,20 +6,20 @@
                     <ObjectPageHeader objectTitle="{/name}" objectSubtitle="{/description}" />
                 </headerTitle>
                 <sections>
-                    <ObjectPageSection titleUppercase="false" title="{i18n>EditEntryType.titSystem}">
+                    <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titSystem}">
                         <subSections>
                             <ObjectPageSubSection >
                                 <blocks>
                                     <l:VerticalLayout class="sapUiContentPadding" width="100%">
                                         <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
                                             <f:content>
-                                                <m:Label text="{i18n>EditEntryType.lblSystemName}" />
+                                                <m:Label text="{i18n>EditSystem.lblSystemName}" />
                                                 <m:Input value="{/name}" editable="false" />
-                                                <m:Label text="{i18n>EditEntryType.lblType}" />
+                                                <m:Label text="{i18n>EditSystem.lblType}" />
                                                 <m:Input value="{/type}" editable="false" />
-                                                <m:Label text="{i18n>EditEntryType.lblDescription}" />
+                                                <m:Label text="{i18n>EditSystem.lblDescription}" />
                                                 <m:Input value="{/description}" />
-                                                <m:Label text="{i18n>EditEntryType.lblStatus}" />
+                                                <m:Label text="{i18n>EditSystem.lblStatus}" />
                                                 <m:Switch type="AcceptReject" state="{/active}" />
                                             </f:content>
                                         </f:SimpleForm>
@@ -27,11 +27,11 @@
                                             <m:content>
                                                 <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
                                                     <f:content>
-                                                        <m:Label text="{i18n>EditEntryType.lblURL}" />
+                                                        <m:Label text="{i18n>EditSystem.lblURL}" />
                                                         <m:Input id="inptEndpoint" value="" editable="false" />
-                                                        <m:Label text="{i18n>EditEntryType.lblUserName}" />
+                                                        <m:Label text="{i18n>EditSystem.lblUserName}" />
                                                         <m:Input value="{/serviceUser/userName}" editable="false" />
-                                                        <m:Label text="{i18n>EditEntryType.lblPassword}" />
+                                                        <m:Label text="{i18n>EditSystem.lblPassword}" />
                                                         <m:Input value="{/serviceUser/password}" />
                                                     </f:content>
                                                 </f:SimpleForm>
@@ -42,7 +42,7 @@
                             </ObjectPageSubSection>
                         </subSections>
                     </ObjectPageSection>
-                    <ObjectPageSection titleUppercase="false" title="{i18n>EditEntryType.titConnProperties}">
+                    <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titConnProperties}">
                         <subSections>
                             <ObjectPageSubSection titleUppercase="false">
                                 <blocks>
@@ -69,19 +69,19 @@
                                         </t:toolbar>
                                         <t:columns>
                                             <t:Column sortProperty="key" width="auto">
-                                                <m:Label text="{i18n>EditEntryType.colName}" />
+                                                <m:Label text="{i18n>EditSystem.colName}" />
                                                 <t:template>
                                                     <m:Text text="{key}" wrapping="false" />
                                                 </t:template>
                                             </t:Column>
                                             <t:Column sortProperty="value" width="auto">
-                                                <m:Label text="{i18n>EditEntryType.colValue}" />
+                                                <m:Label text="{i18n>EditSystem.colValue}" />
                                                 <t:template>
                                                     <m:Text text="{value}" wrapping="false" />
                                                 </t:template>
                                             </t:Column>
                                             <t:Column sortProperty="description" width="auto">
-                                                <m:Label text="{i18n>EditEntryType.colDescription}" />
+                                                <m:Label text="{i18n>EditSystem.colDescription}" />
                                                 <t:template>
                                                     <m:Text text="{description}" wrapping="false" />
                                                 </t:template>
@@ -92,7 +92,7 @@
                             </ObjectPageSubSection>
                         </subSections>
                     </ObjectPageSection>
-                    <ObjectPageSection titleUppercase="false" title="{i18n>EditEntryType.titEntryTypes}">
+                    <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titEntryTypes}">
                         <subSections>
                             <ObjectPageSubSection titleUppercase="false">
                                 <blocks>
@@ -119,7 +119,7 @@
                                         </t:toolbar>
                                         <t:columns>
                                             <t:Column sortProperty="name" width="auto">
-                                                <m:Label text="{i18n>EditEntryType.colName}" />
+                                                <m:Label text="{i18n>EditSystem.colName}" />
                                                 <t:template>
                                                     <m:Text text="{name}" wrapping="false" />
                                                 </t:template>
@@ -136,7 +136,7 @@
         <m:footer>
             <m:OverflowToolbar>
                 <m:ToolbarSpacer />
-                <m:Button type="Emphasized" press="_onSaveSystem" text="{i18n>EditEntryType.btnSave}" />
+                <m:Button type="Emphasized" press="_onSaveSystem" text="{i18n>EditSystem.btnSave}" />
             </m:OverflowToolbar>
         </m:footer>
     </m:Page>

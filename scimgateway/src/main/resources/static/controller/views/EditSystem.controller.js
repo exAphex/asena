@@ -26,6 +26,15 @@ sap.ui.define([
             mainModel.setProperty("/showNavButton", true);
         },
 
+        _onEntryTypeMappingEdit: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
+
+            this.loadFragment("EditEntryType", "editEntryType"); 
+            console.log(obj);
+        },
+
         _onAddWriteMapping: function() {
             var mdl = new JSONModel({transformation:{}});
             this.getView().setModel(mdl, "mdlAttributeDialog");
@@ -385,7 +394,10 @@ sap.ui.define([
             var oFilter = this.getWriteMappingFilters(sQuery);
             var oTable = this.getView().byId("tblReadMapping");
             oTable.getBinding("rows").filter(oFilter, "Application");
+        },
 
+        _onCloseEditEntryTypeDialog: function() {
+            this.closeFragment("editEntryType");
         },
 
         setEndpointURL: function(id) {

@@ -183,21 +183,27 @@ sap.ui.define([
             }
         },
 
-        loadFragment: function (sFragmentName) {
-            if (this.genericDialog) {
-                this.getView().removeDependent(this.genericDialog);
-                this.genericDialog.destroy();
+        loadFragment: function (sFragmentName, dialogName) {
+            var dialogName = (dialogName ? dialogName : "genericDialog");
+            if (this[dialogName]) {
+                this.getView().removeDependent(this[dialogName]);
+                this[dialogName].destroy();
             }
-            this.genericDialog = sap.ui.xmlfragment(
+            this[dialogName] = sap.ui.xmlfragment(
                 "com.asena.ui5.view.fragment." + sFragmentName,
                 this
             );
-            this.getView().addDependent(this.genericDialog);
-            this.genericDialog.open();
+            this.getView().addDependent(this[dialogName]);
+            this[dialogName].open();
+        },
+
+        closeFragment: function(dialogName) {
+            var dialogName = (dialogName ? dialogName : "genericDialog");
+            this[dialogName].close();
         },
 
         _onCloseDialog: function() {
-            this.genericDialog.close();
+            this.closeFragment(); 
         },
 
         getSystemFilters: function(sQuery) {
