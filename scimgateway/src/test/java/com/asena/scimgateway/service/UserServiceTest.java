@@ -68,5 +68,20 @@ public class UserServiceTest {
         }); 
     }
 
+    @Test
+    void updateAdminUserPasswordTest() {
+        User u = userService.createServiceUser("TEST");
+        u.setPassword("testpw");
+        u = userService.updateAdminUser(u, u.getId());
+
+        assertEquals("testpw", u.getPassword());
+
+        final User uTwo = userService.createServiceUser("TEST2");
+
+        assertThrows(NotFoundException.class, () -> {
+            userService.updateAdminUser(uTwo, 0);
+        }); 
+    }
+
 
 }

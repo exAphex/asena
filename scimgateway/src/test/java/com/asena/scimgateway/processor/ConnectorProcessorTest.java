@@ -10,9 +10,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 
+import com.asena.scimgateway.connector.AzureConnector;
 import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.connector.LDAPConnector;
 import com.asena.scimgateway.connector.NoOpConnector;
+import com.asena.scimgateway.connector.SACConnector;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.RemoteSystem;
 
@@ -48,6 +50,14 @@ public class ConnectorProcessorTest {
         conn = ConnectorProcessor.getConnectorByType("NOOP");
         assertNotNull(conn);
         assertTrue(conn instanceof NoOpConnector);
+
+        conn = ConnectorProcessor.getConnectorByType("Microsoft Azure Active Directory");
+        assertNotNull(conn);
+        assertTrue(conn instanceof AzureConnector);
+
+        conn = ConnectorProcessor.getConnectorByType("SAP Analytics Cloud");
+        assertNotNull(conn);
+        assertTrue(conn instanceof SACConnector);
 
         assertThrows(InternalErrorException.class, () -> {
             ConnectorProcessor.getConnectorByType(null);
