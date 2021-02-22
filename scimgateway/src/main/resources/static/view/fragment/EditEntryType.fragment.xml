@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:t="sap.ui.table">
-    <Dialog draggable="true" resizable="true" title="{i18n>EditEntryType.title}">
+    <Dialog draggable="true" resizable="true" title="{i18n>EditEntryType.title} - {mdlEntryTypeMapping>/name}">
         <content>
             <IconTabBar expandable="false" class="sapUiResponsiveContentPadding">
                 <items>
                     <IconTabFilter text="{i18n>EditEntryType.itfReadMappings}">
-                        <t:Table id="tblReadMapping" rows="{path: '/readMappings/',
+                        <t:Table id="tblReadMapping" rows="{path: 'mdlEntryTypeMapping>/readMappings/',
                             sorter : {
                                 path : 'destination' 
                              }
@@ -30,26 +30,26 @@
                                 <t:Column sortProperty="source" width="auto">
                                     <Label text="{i18n>EditEntryType.colSource}" />
                                     <t:template>
-                                        <Text text="{source}" wrapping="false" />
+                                        <Text text="{mdlEntryTypeMapping>source}" wrapping="false" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column sortProperty="destination" width="auto">
                                     <Label text="{i18n>EditEntryType.colDestination}" />
                                     <t:template>
-                                        <Text text="{destination}" wrapping="false" />
+                                        <Text text="{mdlEntryTypeMapping>destination}" wrapping="false" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column sortProperty="transformation/name" width="auto">
                                     <Label text="{i18n>EditEntryType.colTransformation}" />
                                     <t:template>
-                                        <Text text="{transformation/name}" wrapping="false" />
+                                        <Text text="{mdlEntryTypeMapping>transformation/name}" wrapping="false" />
                                     </t:template>
                                 </t:Column>
                             </t:columns>
                         </t:Table>
                     </IconTabFilter>
                     <IconTabFilter text="{i18n>EditEntryType.itfWriteMappings}" >
-                        <t:Table id="tblWriteMapping" rows="{path: '/writeMappings/',
+                        <t:Table id="tblWriteMapping" rows="{path: 'mdlEntryTypeMapping>/writeMappings/',
                             sorter : {
                                 path : 'destination' 
                              }
@@ -74,19 +74,19 @@
                                             <t:Column sortProperty="source" width="auto">
                                                 <Label text="{i18n>EditEntryType.colSource}" />
                                                 <t:template>
-                                                    <Text text="{source}" wrapping="false" />
+                                                    <Text text="{mdlEntryTypeMapping>source}" wrapping="false" />
                                                 </t:template>
                                             </t:Column>
                                             <t:Column sortProperty="destination" width="auto">
                                                 <Label text="{i18n>EditEntryType.colDestination}" />
                                                 <t:template>
-                                                    <Text text="{destination}" wrapping="false" />
+                                                    <Text text="{mdlEntryTypeMapping>destination}" wrapping="false" />
                                                 </t:template>
                                             </t:Column>
                                             <t:Column sortProperty="transformation/name" width="auto">
                                                 <Label text="{i18n>EditEntryType.colTransformation}" />
                                                 <t:template>
-                                                    <Text text="{transformation/name}" wrapping="false" />
+                                                    <Text text="{mdlEntryTypeMapping>transformation/name}" wrapping="false" />
                                                 </t:template>
                                             </t:Column>
                                         </t:columns>
@@ -95,9 +95,6 @@
                 </items>
             </IconTabBar>
         </content>
-        <beginButton>
-            <Button text="{i18n>btnSave}" type="Emphasized" press="_onSaveReadAttribute" />
-        </beginButton>
         <endButton>
             <Button text="{i18n>btnClose}" press="_onCloseEditEntryTypeDialog" />
         </endButton>

@@ -31,7 +31,9 @@ sap.ui.define([
             var ctx = rowItem.getBindingContext();
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
+            this.loadEntryTypeMapping(obj.id);
             this.loadFragment("EditEntryType", "editEntryType"); 
+            
             console.log(obj);
         },
 
@@ -268,6 +270,21 @@ sap.ui.define([
                 }.bind(this));
         },
 
+        loadEntryTypeMapping: function(id) {
+            var sQuery = "/api/v1/entrytypemapping/" + id;
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.loadJsonWithAjaxP(sQuery, mParameters)
+                .then(function (oData) {
+                    var oMainModel = new JSONModel(oData);
+                    this.getView().setModel(oMainModel, "mdlEntryTypeMapping");
+                }.bind(this))
+                .catch(function (oError) {
+                    this.messageBoxGenerator("Status Code: "+oError.status+ " \n Error Message: "+ JSON.stringify(oError.responseJSON), false);
+                }.bind(this));
+        },
+
         addWriteMapping: function(id, obj) {
             var sQuery = "/api/v1/remotesystem/" + id + "/write";
             var mParameters = {
@@ -384,7 +401,7 @@ sap.ui.define([
             var sQuery = oEvent.getParameter("query");
 
             var oFilter = this.getWriteMappingFilters(sQuery);
-            var oTable = this.getView().byId("tblWriteMapping");
+            var oTable = sap.ui.getCore().byId("tblWriteMapping");
             oTable.getBinding("rows").filter(oFilter, "Application");
         },
 
@@ -392,7 +409,7 @@ sap.ui.define([
             var sQuery = oEvent.getParameter("query");
 
             var oFilter = this.getWriteMappingFilters(sQuery);
-            var oTable = this.getView().byId("tblReadMapping");
+            var oTable = sap.ui.getCore().byId("tblReadMapping");
             oTable.getBinding("rows").filter(oFilter, "Application");
         },
 

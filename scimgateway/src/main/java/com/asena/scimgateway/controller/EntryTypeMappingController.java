@@ -1,5 +1,7 @@
 package com.asena.scimgateway.controller;
 
+import com.asena.scimgateway.exception.NotFoundException;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.dto.AttributeDTO;
 import com.asena.scimgateway.model.dto.EntryTypeMappingDTO;
 import com.asena.scimgateway.service.EntryTypeMappingService;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +25,13 @@ public class EntryTypeMappingController {
 
     @Autowired
     private EntryTypeMappingService entryTypeMappingService;
+    
+    @PreAuthorize("isAdmin()")
+    @GetMapping("/{id}")
+    public EntryTypeMappingDTO getEntryTypeMapping(@PathVariable long id) {
+        EntryTypeMapping em = entryTypeMappingService.findById(id).orElseThrow(() -> new NotFoundException(id));
+        return EntryTypeMappingDTO.toDTO(em);
+    }
 
     @PreAuthorize("isAdmin()")
     @PostMapping("/{id}/write")
