@@ -1,4 +1,4 @@
-INSERT INTO asena.scripts (id, content, name) SELECT NEXTVAL('asena.scripts_sequence'), '/*
+INSERT INTO ${flyway:defaultSchema}.scripts (id, content, name) SELECT NEXTVAL('${flyway:defaultSchema}.scripts_sequence'), '/*
  * Author: Aydin Tekin
  * Description: Retrieves the username from the primary SCIM mail address
  * Created on: 2021-02-02
@@ -12,4 +12,4 @@ function sacGetUserNameFromMail(param) {
         }
     }
 	return null;
-}', 'sacGetUserNameFromMail' where (not 'sacGetUserNameFromMail' in (select name from asena.scripts))
+}', 'sacGetUserNameFromMail' where (not 'sacGetUserNameFromMail' in (select name from ${flyway:defaultSchema}.scripts))

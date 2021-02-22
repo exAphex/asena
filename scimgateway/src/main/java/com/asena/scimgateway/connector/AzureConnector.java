@@ -9,6 +9,7 @@ import com.asena.scimgateway.http.HTTPClient;
 import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
@@ -57,25 +58,25 @@ public class AzureConnector implements IConnector {
         retSystem.addAttribute(new Attribute("passwordProfile", "passwordProfile", "passwordProfile"));
         retSystem.addAttribute(new Attribute("accountEnabled", "accountEnabled", "accountEnabled"));
         retSystem.addAttribute(new Attribute("mailNickname", "mailNickname", "mailNickname"));
-        
-        
+       
+        EntryTypeMapping emUser = new EntryTypeMapping("Users");
+        emUser.addWriteMapping(new Attribute("$.active", "accountEnabled", ""));
+        emUser.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
+        emUser.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
+        emUser.addWriteMapping(new Attribute("$.name.familyName", "surname", ""));
+        emUser.addWriteMapping(new Attribute("$.id", "id", ""));
+        emUser.addWriteMapping(new Attribute("$.userName", "mailNickname", "")); 
+        emUser.addWriteMapping(new Attribute("$.password", "passwordProfile", new Script("getAzurePassword")));
+        emUser.addWriteMapping(new Attribute("$.userName", "userPrincipalName", new Script("getMailSuffixFromAzureDomain")));
 
-        retSystem.addWriteMapping(new Attribute("$.active", "accountEnabled", ""));
-        retSystem.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
-        retSystem.addWriteMapping(new Attribute("$.name.familyName", "surname", ""));
-        retSystem.addWriteMapping(new Attribute("$.id", "id", ""));
-        retSystem.addWriteMapping(new Attribute("$.userName", "mailNickname", "")); 
-        retSystem.addWriteMapping(new Attribute("$.password", "passwordProfile", new Script("getAzurePassword")));
-        retSystem.addWriteMapping(new Attribute("$.userName", "userPrincipalName", new Script("getMailSuffixFromAzureDomain")));
-
-        retSystem.addReadMapping(new Attribute("id", "$.id", ""));
-        retSystem.addReadMapping(new Attribute("userPrincipalName", "$.userName", ""));
-        retSystem.addReadMapping(new Attribute("displayName", "$.displayName", ""));
-        retSystem.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
-        retSystem.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
-        retSystem.addReadMapping(new Attribute("surname", "$.name.familyName", ""));
-        retSystem.addReadMapping(new Attribute("mail", "$.emails", "")); 
+        emUser.addReadMapping(new Attribute("id", "$.id", ""));
+        emUser.addReadMapping(new Attribute("userPrincipalName", "$.userName", ""));
+        emUser.addReadMapping(new Attribute("displayName", "$.displayName", ""));
+        emUser.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
+        emUser.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
+        emUser.addReadMapping(new Attribute("surname", "$.name.familyName", ""));
+        emUser.addReadMapping(new Attribute("mail", "$.emails", "")); 
+        retSystem.addEntryTypeMapping(emUser);
         
 
         return retSystem;

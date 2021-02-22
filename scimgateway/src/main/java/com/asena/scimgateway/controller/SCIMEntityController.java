@@ -31,21 +31,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Component
 @Validated
-@RequestMapping("/gateway/{systemid}/scim/v2/Users")
-public class SCIMUserController {
+@RequestMapping("/gateway/{systemid}/scim/v2")
+public class SCIMEntityController {
 
-    Logger logger = LoggerFactory.getLogger(SCIMUserController.class);
+    Logger logger = LoggerFactory.getLogger(SCIMEntityController.class);
     
     @Autowired
     private RemoteSystemService remoteSystemService;
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
-    @GetMapping("")
-    public @ResponseBody HashMap<String, Object> scimUserList(@PathVariable String systemid, @RequestParam Map<String, String> params) {
+    @GetMapping("/{entity}")
+    public @ResponseBody HashMap<String, Object> scimEntityList(@PathVariable String systemid, @PathVariable String entity, @RequestParam Map<String, String> params) {
+        RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
+        HashMap<String, Object> retEntities = new HashMap<>();
+        try {
+            retEntities = new SCIMProcessor(rs, entity).getEntities();
+        } catch (Exception e) {
+            handleControllerError(e, params);
+        }
+        return retEntities;
+    }
+
+    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
+    @GetMapping("/{entity}/{id}")
+    public @ResponseBody HashMap<String, Object> scimEntityGet(@PathVariable String systemid, @PathVariable String entity, @PathVariable String id, @RequestParam Map<String, String> params) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         HashMap<String, Object> retUsers = new HashMap<>();
         try {
-            retUsers = SCIMProcessor.getUsers(rs);
+            retUsers = new SCIMProcessor(rs, entity).getEntity(id);
         } catch (Exception e) {
             handleControllerError(e, params);
         }
@@ -53,26 +66,13 @@ public class SCIMUserController {
     }
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
-    @GetMapping("/{id}")
-    public @ResponseBody HashMap<String, Object> scimUserGet(@PathVariable String systemid, @PathVariable String id, @RequestParam Map<String, String> params) {
-        RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
-        HashMap<String, Object> retUsers = new HashMap<>();
-        try {
-            retUsers = SCIMProcessor.getUser(rs, id);
-        } catch (Exception e) {
-            handleControllerError(e, params);
-        }
-        return retUsers;
-    }
-
-    @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
-    @PostMapping("") 
-    public @ResponseBody Object scimUserCreate(@PathVariable String systemid, @RequestBody Object params, HttpServletResponse response)
+    @PostMapping("/{entity}") 
+    public @ResponseBody Object scimUserCreate(@PathVariable String systemid, @PathVariable String entity, @RequestBody HashMap<String, Object> params, HttpServletResponse response)
             throws Exception {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         Object o = null;
         try {
-            o = SCIMProcessor.createUser(rs, params);
+            o = new SCIMProcessor(rs, entity).createEntity(params);
             response.setStatus(201);
         } catch (Exception e) {
             handleControllerError(e, params);
@@ -81,12 +81,12 @@ public class SCIMUserController {
     }
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
-    @PutMapping("/{id}")
-    public @ResponseBody Object scimUserUpdate(@PathVariable String systemid, @PathVariable String id, @RequestBody Object params, HttpServletResponse response) {
+    @PutMapping("/{entity}/{id}")
+    public @ResponseBody Object scimUserUpdate(@PathVariable String systemid, @PathVariable String entity, @PathVariable String id, @RequestBody HashMap<String, Object> params, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         Object o = null;
         try {
-            o = SCIMProcessor.updateUser(rs, id, params);
+            o = new SCIMProcessor(rs, entity).updateEntity(id, params);
             response.setStatus(201);
         } catch (Exception e) {
             handleControllerError(e, params);
@@ -95,12 +95,12 @@ public class SCIMUserController {
     }
     
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
-    @DeleteMapping("/{id}")
-    public void scimUserDelete(@PathVariable String systemid, @PathVariable String id, HttpServletResponse response) {
+    @DeleteMapping("/{entity}/{id}")
+    public void scimUserDelete(@PathVariable String systemid, @PathVariable String entity, @PathVariable String id, HttpServletResponse response) {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         boolean isDeleted = false;
         try {
-            isDeleted = SCIMProcessor.deleteUser(rs, id);
+            isDeleted = new SCIMProcessor(rs, entity).deleteEntity(id);
             response.setStatus(204);
         } catch (Exception e) {
             handleControllerError(e, null);

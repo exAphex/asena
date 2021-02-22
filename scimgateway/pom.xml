@@ -116,6 +116,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/*com/asena/scimgateway/connector/**</exclude>
+						<exclude>**/*com/asena/scimgateway/http/**</exclude>
 						<exclude>**/*com/asena/scimgateway/ScimgatewayApplication.class</exclude>
 					</excludes>
 				</configuration>

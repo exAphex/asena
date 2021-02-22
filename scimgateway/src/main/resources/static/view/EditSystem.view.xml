@@ -92,98 +92,36 @@
                             </ObjectPageSubSection>
                         </subSections>
                     </ObjectPageSection>
-                    <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titReadMapping}">
+                    <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titEntryTypes}">
                         <subSections>
                             <ObjectPageSubSection titleUppercase="false">
                                 <blocks>
-                                    <t:Table id="tblReadMapping" rows="{path: '/readMappings/',
+                                    <t:Table id="tblEntryType" rows="{path: '/entryTypeMappings/',
                             sorter : {
-                                path : 'destination' 
+                                path : 'name' 
                              }
                         }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="10" rowActionCount="2" ariaLabelledBy="title">
                                         <t:rowActionTemplate>
                                             <t:RowAction>
                                                 <t:items>
-                                                    <t:RowActionItem visible="true" icon="sap-icon://edit" press="_onReadMappingEdit" />
-                                                    <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onWriteMappingDelete" />
+                                                    <t:RowActionItem visible="true" icon="sap-icon://edit" press="_onEntryTypeMappingEdit" />
+                                                    <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onEntryTypeMappingDelete" />
                                                 </t:items>
                                             </t:RowAction>
                                         </t:rowActionTemplate>
                                         <t:toolbar>
                                             <m:Toolbar>
                                                 <m:ToolbarSpacer />
-                                                <m:Button icon="sap-icon://add" press="_onAddReadMapping" />
+                                                <m:Button icon="sap-icon://add" press="_onAddEntryTypeMapping" />
                                                 <m:ToolbarSeparator />
-                                                <m:SearchField search="_onSearchReadMappings" width="15rem" />
+                                                <m:SearchField search="_onSearchEntryTypeMapping" width="15rem" />
                                             </m:Toolbar>
                                         </t:toolbar>
                                         <t:columns>
-                                            <t:Column sortProperty="source" width="auto">
-                                                <m:Label text="{i18n>EditSystem.colSource}" />
+                                            <t:Column sortProperty="name" width="auto">
+                                                <m:Label text="{i18n>EditSystem.colName}" />
                                                 <t:template>
-                                                    <m:Text text="{source}" wrapping="false" />
-                                                </t:template>
-                                            </t:Column>
-                                            <t:Column sortProperty="destination" width="auto">
-                                                <m:Label text="{i18n>EditSystem.colDestination}" />
-                                                <t:template>
-                                                    <m:Text text="{destination}" wrapping="false" />
-                                                </t:template>
-                                            </t:Column>
-                                            <t:Column sortProperty="transformation/name" width="auto">
-                                                <m:Label text="{i18n>EditSystem.colTransformation}" />
-                                                <t:template>
-                                                    <m:Text text="{transformation/name}" wrapping="false" />
-                                                </t:template>
-                                            </t:Column>
-                                        </t:columns>
-                                    </t:Table>
-                                </blocks>
-                            </ObjectPageSubSection>
-                        </subSections>
-                    </ObjectPageSection>
-                    <ObjectPageSection titleUppercase="false" title="{i18n>EditSystem.titWriteMapping}">
-                        <subSections>
-                            <ObjectPageSubSection titleUppercase="false">
-                                <blocks>
-                                    <t:Table id="tblWriteMapping" rows="{path: '/writeMappings/',
-                            sorter : {
-                                path : 'destination' 
-                             }
-                        }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="10" rowActionCount="2" ariaLabelledBy="title">
-                                        <t:rowActionTemplate>
-                                            <t:RowAction>
-                                                <t:items>
-                                                    <t:RowActionItem visible="true" icon="sap-icon://edit" press="_onWriteMappingEdit" />
-                                                    <t:RowActionItem visible="true" icon="sap-icon://delete" press="_onWriteMappingDelete" />
-                                                </t:items>
-                                            </t:RowAction>
-                                        </t:rowActionTemplate>
-                                        <t:toolbar>
-                                            <m:Toolbar>
-                                                <m:ToolbarSpacer />
-                                                <m:Button icon="sap-icon://add" press="_onAddWriteMapping" />
-                                                <m:ToolbarSeparator />
-                                                <m:SearchField search="_onSearchWriteMappings" width="15rem" />
-                                            </m:Toolbar>
-                                        </t:toolbar>
-                                        <t:columns>
-                                            <t:Column sortProperty="source" width="auto">
-                                                <m:Label text="{i18n>EditSystem.colSource}" />
-                                                <t:template>
-                                                    <m:Text text="{source}" wrapping="false" />
-                                                </t:template>
-                                            </t:Column>
-                                            <t:Column sortProperty="destination" width="auto">
-                                                <m:Label text="{i18n>EditSystem.colDestination}" />
-                                                <t:template>
-                                                    <m:Text text="{destination}" wrapping="false" />
-                                                </t:template>
-                                            </t:Column>
-                                            <t:Column sortProperty="transformation/name" width="auto">
-                                                <m:Label text="{i18n>EditSystem.colTransformation}" />
-                                                <t:template>
-                                                    <m:Text text="{transformation/name}" wrapping="false" />
+                                                    <m:Text text="{name}" wrapping="false" />
                                                 </t:template>
                                             </t:Column>
                                         </t:columns>

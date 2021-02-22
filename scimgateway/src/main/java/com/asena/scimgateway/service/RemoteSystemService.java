@@ -9,8 +9,8 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import com.asena.scimgateway.exception.NotFoundException;
-import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.processor.ConnectorProcessor;
 import com.asena.scimgateway.repository.RemoteSystemRepository;
@@ -28,8 +28,9 @@ public class RemoteSystemService {
     @Autowired
     private UserService userService;
 
-    @Autowired 
-    private AttributeService attributeService;
+
+    @Autowired
+    private EntryTypeMappingService entryTypeMappingService;
 
     public List<RemoteSystem> list() {
         return remoteSystemRepository.findAll();
@@ -47,23 +48,14 @@ public class RemoteSystemService {
         rs.setProperties(connector.getProperties());
         rs.setServiceUser(userService.createServiceUser(rs.getName()));
 
-        Set<Attribute> writeMappings = connector.getWriteMappings();
-        Set<Attribute> newWriteMappings = new HashSet<>();
-        if (writeMappings != null) {
-            for (Attribute a : writeMappings) {
-                newWriteMappings.add(attributeService.create(a));
+        Set<EntryTypeMapping> entryTypeMappings = connector.getEntryTypeMappings();
+        Set<EntryTypeMapping> newEntryTypeMappings = new HashSet<>();
+        if (entryTypeMappings != null) {
+            for (EntryTypeMapping em : entryTypeMappings) {
+                newEntryTypeMappings.add(entryTypeMappingService.create(em));
             }
         }
-        rs.setWriteMappings(newWriteMappings);
-
-        Set<Attribute> readMappings = connector.getReadMappings();
-        Set<Attribute> newReadMappings = new HashSet<>();
-        if (readMappings != null) {
-            for (Attribute a : readMappings) {
-                newReadMappings.add(attributeService.create(a));
-            }
-        }
-        rs.setReadMappings(newReadMappings);
+        rs.setEntryTypeMappings(newEntryTypeMappings);
 
         return remoteSystemRepository.save(rs);
     }
@@ -97,15 +89,9 @@ public class RemoteSystemService {
         .orElseThrow(() -> new NotFoundException(id));
     } 
 
-    public RemoteSystem addWriteMapping(Attribute a, String id) {
+    public RemoteSystem addEntryTypeMapping(EntryTypeMapping em, String id) {
         RemoteSystem rs = findById(id).orElseThrow(() -> new NotFoundException(id));
-        rs.addWriteMapping(a);
-        return remoteSystemRepository.save(rs);
-    }
-
-    public RemoteSystem addReadMapping(Attribute a, String id) {
-        RemoteSystem rs = findById(id).orElseThrow(() -> new NotFoundException(id));
-        rs.addReadMapping(a);
+        rs.addEntryTypeMapping(em);
         return remoteSystemRepository.save(rs);
     }
    

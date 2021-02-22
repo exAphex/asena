@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.Attribute.AttributeType;
@@ -15,8 +16,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class AttributeServiceTest {
     @Autowired
     private AttributeService attributeService;
@@ -26,6 +29,9 @@ public class AttributeServiceTest {
 
     @Autowired
     private RemoteSystemService remoteSystemService;
+
+    @Autowired
+    private EntryTypeMappingService entryTypeMappingService;
 
     @BeforeEach
     void prepareDb() {
@@ -115,6 +121,8 @@ public class AttributeServiceTest {
         s.setName("Testname");
         s = scriptService.create(s);
 
+        EntryTypeMapping em = new EntryTypeMapping("User");
+
         Attribute a = new Attribute();
         a.setDescription("Testdesc");
         a.setDestination("Testdest");
@@ -124,10 +132,14 @@ public class AttributeServiceTest {
         a.setTransformation(s);
         a = attributeService.create(a);
 
+        em = entryTypeMappingService.create(em); 
+        em.addWriteMapping(a);
+        
+
         RemoteSystem rs = new RemoteSystem();
         rs.setType("LDAP");
         rs.setName("TESTSYS");
-        rs.addWriteMapping(a);
+        rs.addEntryTypeMapping(em);
         rs = remoteSystemService.create(rs);
 
         attributeService.deleteById(a.getId());

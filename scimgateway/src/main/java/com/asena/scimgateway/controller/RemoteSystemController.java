@@ -6,8 +6,8 @@ import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
-import com.asena.scimgateway.model.dto.AttributeDTO;
 import com.asena.scimgateway.model.dto.ConnectionPropertyDTO;
+import com.asena.scimgateway.model.dto.EntryTypeMappingDTO;
 import com.asena.scimgateway.model.dto.RemoteSystemDTO;
 import com.asena.scimgateway.processor.ConnectorProcessor;
 import com.asena.scimgateway.service.RemoteSystemService;
@@ -81,16 +81,10 @@ public class RemoteSystemController {
     }
 
     @PreAuthorize("isAdmin()")
-    @PostMapping("/{id}/write")
-    public RemoteSystemDTO addWriteMapping(@RequestBody AttributeDTO attrDTO, @PathVariable String id) {
-        return RemoteSystemDTO.toDTO(remoteSystemService.addWriteMapping(attrDTO.fromDTO(), id));
-    }
-
-    @PreAuthorize("isAdmin()")
-    @PostMapping("/{id}/read")
-    public RemoteSystemDTO addReadMapping(@RequestBody AttributeDTO attrDTO, @PathVariable String id) {
-        return RemoteSystemDTO.toDTO(remoteSystemService.addReadMapping(attrDTO.fromDTO(), id));
-    }
+    @PostMapping("/{id}/entrytypemapping")
+    public RemoteSystemDTO addEntryTypeMapping(@RequestBody EntryTypeMappingDTO emDTO, @PathVariable String id) {
+        return RemoteSystemDTO.toDTO(remoteSystemService.addEntryTypeMapping(emDTO.fromDTO(), id));
+    } 
 
     @PreAuthorize("isAdmin()")
     @PostMapping("/{id}/connection")

@@ -32,10 +32,7 @@ public class RemoteSystem {
     private Set<Attribute> attributes;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Attribute> writeMappings;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Attribute> readMappings;
+    private Set<EntryTypeMapping> entryTypeMappings; 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties;
@@ -50,28 +47,13 @@ public class RemoteSystem {
     public RemoteSystem() {
     }
 
-    public Set<Attribute> getReadMappings() {
-        return readMappings;
-    }
-
-    public void setReadMappings(Set<Attribute> readMappings) {
-        this.readMappings = readMappings;
-    }
-
+    
     public User getServiceUser() {
         return serviceUser;
     }
 
     public void setServiceUser(User serviceUser) {
         this.serviceUser = serviceUser;
-    }
-
-    public Set<Attribute> getWriteMappings() {
-        return writeMappings;
-    }
-
-    public void setWriteMappings(Set<Attribute> writeMappings) {
-        this.writeMappings = writeMappings;
     }
 
     public RemoteSystem addProperty(ConnectionProperty cp) {
@@ -82,6 +64,18 @@ public class RemoteSystem {
         if (cp != null) {
             properties.add(cp);
         }
+        return this;
+    }
+
+    public RemoteSystem addEntryTypeMapping(EntryTypeMapping em) {
+        if (this.entryTypeMappings == null) {
+            this.entryTypeMappings = new HashSet<>();
+        }
+
+        if ((em != null) && (!isEntryTypeMappingDuplicate(em))) {
+            this.entryTypeMappings.add(em);
+        }
+
         return this;
     }
 
@@ -96,74 +90,30 @@ public class RemoteSystem {
         return this;
     }
 
-    public RemoteSystem addWriteMapping(Attribute a) {
-        if (this.writeMappings == null) {
-            this.writeMappings = new HashSet<>();
-        }
-
-        if ((a != null) && (!isWriteMappingDuplicate(a))){
-            writeMappings.add(a);
-        }
-        return this;
-    }
-
-    public RemoteSystem addReadMapping(Attribute a) {
-        if (this.readMappings == null) {
-            this.readMappings = new HashSet<>();
-        }
-
-        if ((a != null) && (!isReadMappingDuplicate(a))){
-            readMappings.add(a);
-        }
-        return this;
-    }
-
-    private boolean isWriteMappingDuplicate(Attribute attr) {
-        if ((attr == null) || (attr.getDestination() == null)) {
+    private boolean isEntryTypeMappingDuplicate(EntryTypeMapping em) {
+        if ((em == null) || (em.getName() == null)) {
             return false;
         }
 
-        if (this.writeMappings == null) {
+        if (this.entryTypeMappings == null) {
             return false;
         }
 
-        for (Attribute a : this.writeMappings) {
-            if (attr.getDestination().equals(a.getDestination())) {
+        for (EntryTypeMapping e : this.entryTypeMappings) {
+            if (em.getName().equals(e.getName())) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    private boolean isReadMappingDuplicate(Attribute attr) {
-        if ((attr == null) || (attr.getDestination() == null)) {
-            return false;
-        }
-
-        if (this.readMappings == null) {
-            return false;
-        }
-
-        for (Attribute a : this.readMappings) {
-            if (attr.getDestination().equals(a.getDestination())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void deleteWriteMapping(Attribute a) {
-        writeMappings.remove(a);
-    }
-
-    public void deleteReadMapping(Attribute a) {
-        readMappings.remove(a);
     }
 
     public void deleteProperty(ConnectionProperty cp) {
         properties.remove(cp);
+    }
+
+    public void deleteEntryTypeMapping(EntryTypeMapping em) {
+        this.entryTypeMappings.remove(em);
     }
 
     public String getId() {
@@ -182,8 +132,16 @@ public class RemoteSystem {
         return properties;
     }
 
+    public Set<EntryTypeMapping> getEntryTypeMappings() {
+        return entryTypeMappings;
+    }
+
     public void setProperties(Set<ConnectionProperty> properties) {
         this.properties = properties;
+    }
+
+    public void setEntryTypeMappings(Set<EntryTypeMapping> entryTypeMappings) {
+        this.entryTypeMappings = entryTypeMappings;
     }
 
     public Set<Attribute> getAttributes() {
