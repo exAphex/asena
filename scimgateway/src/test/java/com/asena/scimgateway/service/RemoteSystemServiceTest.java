@@ -128,7 +128,7 @@ public class RemoteSystemServiceTest {
         
         rs = remoteSystemService.create(rs);
 
-        rs = remoteSystemService.addEntryTypeMapping(new EntryTypeMapping("User"), rs.getId());
+        rs = remoteSystemService.addEntryTypeMapping(new EntryTypeMapping("TEST"), rs.getId());
 
         remoteSystemService.deleteById(rs.getId());
 
@@ -146,17 +146,15 @@ public class RemoteSystemServiceTest {
         rs.setType("LDAP");
         
         rs = remoteSystemService.create(rs);
-
+        
         attributeService.deleteAll();
 
-        rs = remoteSystemService.addEntryTypeMapping(new EntryTypeMapping("User"), rs.getId());
+        rs = remoteSystemService.addEntryTypeMapping(new EntryTypeMapping("TEST"), rs.getId());
         
         EntryTypeMapping[] e = new EntryTypeMapping[rs.getEntryTypeMappings().size()];
         rs.getEntryTypeMappings().toArray(e);
 
-        assertEquals(1, e.length);
-       
-        assertEquals("User", e[0].getName());
+        assertEquals(2, e.length);
 
         assertThrows(NotFoundException.class, () -> {
             remoteSystemService.addEntryTypeMapping(null, "");
