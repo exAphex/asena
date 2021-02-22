@@ -59,7 +59,7 @@ public class AzureConnector implements IConnector {
         retSystem.addAttribute(new Attribute("accountEnabled", "accountEnabled", "accountEnabled"));
         retSystem.addAttribute(new Attribute("mailNickname", "mailNickname", "mailNickname"));
        
-        EntryTypeMapping emUser = new EntryTypeMapping("User");
+        EntryTypeMapping emUser = new EntryTypeMapping("Users");
         emUser.addWriteMapping(new Attribute("$.active", "accountEnabled", ""));
         emUser.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
         emUser.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));

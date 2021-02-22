@@ -58,7 +58,7 @@ public class SACConnector implements IConnector {
         retSystem.addAttribute(new Attribute("roles", "roles", "User roles"));
         retSystem.addAttribute(new Attribute("groups", "groups", "User groups"));
 
-        EntryTypeMapping emUser = new EntryTypeMapping("User");
+        EntryTypeMapping emUser = new EntryTypeMapping("Users");
         emUser.addWriteMapping(new Attribute("$.userName", "id", ""));
         emUser.addWriteMapping(new Attribute("$.emails", "userName", new Script("sacGetUserNameFromMail")));
         emUser.addWriteMapping(new Attribute("$.preferredLanguage", "preferredLanguage", ""));

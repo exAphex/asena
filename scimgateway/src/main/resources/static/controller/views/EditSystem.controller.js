@@ -31,6 +31,8 @@ sap.ui.define([
             var ctx = rowItem.getBindingContext();
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
+            this.currentEntryType = obj.id;
+
             this.loadEntryTypeMapping(obj.id);
             this.loadFragment("EditEntryType", "editEntryType"); 
             
@@ -86,7 +88,7 @@ sap.ui.define([
             if (this.isEdit) {
                 this.updateMapping(obj);
             } else {
-                this.addWriteMapping(this.id, obj);
+                this.addWriteMapping(this.currentEntryType, obj);
             }
         },
 
@@ -96,13 +98,13 @@ sap.ui.define([
             if (this.isEdit) {
                 this.updateMapping(obj);
             } else {
-                this.addReadMapping(this.id, obj);
+                this.addReadMapping(this.currentEntryType, obj);
             }
         },
 
         _onWriteMappingEdit: function(oEvent) {
             var rowItem = oEvent.getSource();
-            var ctx = rowItem.getBindingContext();
+            var ctx = rowItem.getBindingContext("mdlEntryTypeMapping");
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
             var mdl = new JSONModel(obj);
@@ -120,7 +122,7 @@ sap.ui.define([
 
         _onReadMappingEdit: function(oEvent) {
             var rowItem = oEvent.getSource();
-            var ctx = rowItem.getBindingContext();
+            var ctx = rowItem.getBindingContext("mdlEntryTypeMapping");
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
             var mdl = new JSONModel(obj);
@@ -151,7 +153,7 @@ sap.ui.define([
 
         _onWriteMappingDelete: function(oEvent) {
             var rowItem = oEvent.getSource();
-            var ctx = rowItem.getBindingContext();
+            var ctx = rowItem.getBindingContext("mdlEntryTypeMapping");
             var obj = ctx.getModel().getProperty(ctx.getPath());
 
             MessageBox.warning("Are you sure you want to delete the selected mapping?", {
@@ -166,7 +168,7 @@ sap.ui.define([
                         this.deleteWithJSONP(sQuery, mParameters)
                             .then(function () {
                                 this.messageBoxGenerator("Mapping was deleted successfully!", true);
-                                this.loadRemoteSystem(this.id);
+                                this.loadEntryTypeMapping(this.currentEntryType);
                             }.bind(this))
                             .catch(function (oError) {
                                 this.showError(oError); 
@@ -286,7 +288,7 @@ sap.ui.define([
         },
 
         addWriteMapping: function(id, obj) {
-            var sQuery = "/api/v1/remotesystem/" + id + "/write";
+            var sQuery = "/api/v1/entrytypemapping/" + id + "/write";
             var mParameters = {
                 bShowBusyIndicator: true
             };
@@ -297,7 +299,7 @@ sap.ui.define([
                 .then(function () {
                     this.genericDialog.close();
                     this.messageBoxGenerator("Write mapping added!", true);
-                    this.loadRemoteSystem(this.id);
+                    this.loadEntryTypeMapping(this.currentEntryType);
                 }.bind(this))
                 .catch(function (oError) {
                     this.showError(oError); 
@@ -305,7 +307,7 @@ sap.ui.define([
         },
 
         addReadMapping: function(id, obj) {
-            var sQuery = "/api/v1/remotesystem/" + id + "/read";
+            var sQuery = "/api/v1/entrytypemapping/" + id + "/read";
             var mParameters = {
                 bShowBusyIndicator: true
             };
@@ -316,7 +318,7 @@ sap.ui.define([
                 .then(function () {
                     this.genericDialog.close();
                     this.messageBoxGenerator("Read mapping added!", true);
-                    this.loadRemoteSystem(this.id);
+                    this.loadEntryTypeMapping(this.currentEntryType);
                 }.bind(this))
                 .catch(function (oError) {
                     this.showError(oError); 
@@ -355,6 +357,22 @@ sap.ui.define([
                 }.bind(this));
         },
 
+        addEntryType: function(id, obj) {
+            var sQuery = "/api/v1/remotesystem/" + id + "/entrytypemapping";
+            var mParameters = {
+                bShowBusyIndicator: true
+            };
+            this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+                .then(function () {
+                    this.genericDialog.close();
+                    this.messageBoxGenerator("Entry type added!", true);
+                    this.loadRemoteSystem(this.id);
+                }.bind(this))
+                .catch(function (oError) {
+                    this.showError(oError); 
+                }.bind(this));
+        },
+
         updateMapping: function(obj) {
             var sQuery = "/api/v1/attribute/" + obj.id;
             var mParameters = {
@@ -367,7 +385,7 @@ sap.ui.define([
                 .then(function () {
                     this.genericDialog.close();
                     this.messageBoxGenerator("Mapping saved!", true);
-                    this.loadRemoteSystem(this.id);;
+                    this.loadEntryTypeMapping(this.currentEntryType);
                 }.bind(this))
                 .catch(function (oError) {
                     this.showError(oError); 
@@ -397,6 +415,13 @@ sap.ui.define([
             oTable.getBinding("rows").filter(oFilter, "Application");
         },
 
+        _onSearchEntryTypeMapping: function(oEvent) {
+            var sQuery = oEvent.getParameter("query");
+            var oFilter = this.getEntryTypeMappingFilters(sQuery);
+            var oTable = this.getView().byId("tblEntryType");
+            oTable.getBinding("rows").filter(oFilter, "Application");
+        },
+
         _onSearchWriteMappings: function(oEvent) {
             var sQuery = oEvent.getParameter("query");
 
@@ -413,13 +438,55 @@ sap.ui.define([
             oTable.getBinding("rows").filter(oFilter, "Application");
         },
 
+        _onAddEntryTypeMapping: function() {
+            var mdl = new JSONModel({});
+            this.getView().setModel(mdl, "mdlAddEntryType");
+
+            this.isEdit = false;
+            this.loadRemoteSystemSuggestions(this.id);
+            this.loadFragment("AddEntryType");
+        },
+
+        _onEntryTypeMappingDelete: function(oEvent) {
+            var rowItem = oEvent.getSource();
+            var ctx = rowItem.getBindingContext();
+            var obj = ctx.getModel().getProperty(ctx.getPath());
+
+            MessageBox.warning("Are you sure you want to delete the selected entry type?", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+                    if (sAction == MessageBox.Action.OK) {
+                        var sQuery = "/api/v1/entrytypemapping/" + obj.id;
+                        var mParameters = {
+                            bShowBusyIndicator: true
+                        };
+                        this.deleteWithJSONP(sQuery, mParameters)
+                            .then(function () {
+                                this.messageBoxGenerator("Mapping was deleted successfully!", true);
+                                this.loadRemoteSystem(this.id);
+                            }.bind(this))
+                            .catch(function (oError) {
+                                this.showError(oError); 
+                            }.bind(this));
+                    }
+				}.bind(this)
+			});
+        },
+
+        _onSaveEntryType: function() {
+            var mdl = this.getView().getModel("mdlAddEntryType");
+            var obj = mdl.getProperty("/");
+            this.addEntryType(this.id, obj); 
+        },
+
         _onCloseEditEntryTypeDialog: function() {
             this.closeFragment("editEntryType");
         },
 
         setEndpointURL: function(id) {
             var loc = window.location;
-            var endpoint = loc.protocol + "//" + loc.host + "/gateway/" + id + "/scim/v2/Users";
+            var endpoint = loc.protocol + "//" + loc.host + "/gateway/" + id + "/scim/v2/";
             this.getView().byId("inptEndpoint").setValue(endpoint);
         }
     });

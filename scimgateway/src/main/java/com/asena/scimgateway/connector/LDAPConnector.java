@@ -62,7 +62,7 @@ public class LDAPConnector implements IConnector {
         retSystem.addAttribute(new Attribute("sn", "sn", "second name")); 
         retSystem.addAttribute(new Attribute("objectClass", "objectClass", "object class"));
 
-        EntryTypeMapping emUser = new EntryTypeMapping("User");
+        EntryTypeMapping emUser = new EntryTypeMapping("Users");
         emUser.addWriteMapping(new Attribute("$.userName", "cn", ""));
         emUser.addWriteMapping(new Attribute("$.userName", "uid", ""));
         emUser.addWriteMapping(new Attribute("$.name.familyName", "sn", ""));

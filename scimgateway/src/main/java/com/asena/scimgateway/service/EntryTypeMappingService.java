@@ -1,13 +1,16 @@
 package com.asena.scimgateway.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.EntryTypeMapping;
+import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.repository.EntryTypeMappingRepository;
+import com.asena.scimgateway.repository.RemoteSystemRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class EntryTypeMappingService {
 
     @Autowired 
     private AttributeService attributeService;
+
+    @Autowired
+    private RemoteSystemRepository remoteSystemRepository;
 
     public Optional<EntryTypeMapping> findById(long id) {
         return entryTypeMappingRepository.findById(id);
@@ -62,5 +68,24 @@ public class EntryTypeMappingService {
         EntryTypeMapping em = findById(id).orElseThrow(() -> new NotFoundException(id));
         em.addReadMapping(a);
         return entryTypeMappingRepository.save(em);
+    }
+
+    public void delete(EntryTypeMapping em) {
+        List<RemoteSystem> rs = remoteSystemRepository.findByEntryTypeMappingsId(em.getId());
+        for (RemoteSystem r : rs) {
+            r.deleteEntryTypeMapping(em);
+            remoteSystemRepository.save(r);
+        }
+
+        entryTypeMappingRepository.delete(em);
+    }
+
+    public EntryTypeMapping deleteById(long id) {
+        return findById(id)
+        .map(a -> {
+            delete(a);
+            return a;
+        })
+        .orElseThrow(() -> new NotFoundException(id));
     }
 }

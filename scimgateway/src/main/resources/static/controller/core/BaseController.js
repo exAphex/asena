@@ -231,6 +231,13 @@ sap.ui.define([
             return oFilter;
         },
 
+        getEntryTypeMappingFilters: function(sQuery) {
+            var oFilter = new Filter([
+                new Filter("name", FilterOperator.Contains, sQuery)
+            ]);
+            return oFilter; 
+        },
+
         getWriteMappingFilters: function(sQuery) {
             var oFilter = new Filter([
                 new Filter("source", FilterOperator.Contains, sQuery),
