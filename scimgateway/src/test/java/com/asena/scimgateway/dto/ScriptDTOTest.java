@@ -7,9 +7,7 @@ import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.dto.ScriptDTO;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class ScriptDTOTest {
     
     @Test

@@ -8,9 +8,7 @@ import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.model.dto.ConnectionPropertyDTO;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class ConnectionPropertyDTOTest {
     
     @Test

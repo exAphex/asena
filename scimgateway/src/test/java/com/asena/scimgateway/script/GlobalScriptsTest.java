@@ -11,11 +11,7 @@ import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mozilla.javascript.Context;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@ActiveProfiles("test")
 public class GlobalScriptsTest {
     private RemoteSystem remoteSystem;
     private GlobalScripts gb;

@@ -12,9 +12,7 @@ import com.asena.scimgateway.model.dto.AttributeDTO;
 import com.asena.scimgateway.model.dto.EntryTypeMappingDTO;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class EntryTypeMappingDTOTest {
 
     @Test

@@ -8,9 +8,7 @@ import com.asena.scimgateway.model.User.UserType;
 import com.asena.scimgateway.model.dto.UserDTO;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class UserDTOTest {
 
     @Test

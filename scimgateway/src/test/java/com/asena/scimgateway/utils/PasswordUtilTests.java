@@ -8,11 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@ActiveProfiles("test")
 public class PasswordUtilTests {
     @Test
     void generatePasswordTest() {
