@@ -48,7 +48,7 @@ public class SCIMProcessor {
         String id = transferCreateToConnector(conn, data);
         id = processId(id, getReadMappingNameId(conn));
 
-        SCIMResultProcessor.addMetaDataCreate(obj, remoteSystem, id);
+        SCIMResultProcessor.addMetaDataCreate(obj, remoteSystem, id, entity);
         return obj;
     }
 
@@ -60,7 +60,7 @@ public class SCIMProcessor {
         String id = transferUpdateToConnector(conn, data);
         id = processId(id, getReadMappingNameId(conn));
 
-        SCIMResultProcessor.addMetaDataCreate(obj, remoteSystem, id);;
+        SCIMResultProcessor.addMetaDataCreate(obj, remoteSystem, id, entity);
         return obj;
     }
 
@@ -83,7 +83,7 @@ public class SCIMProcessor {
             JSONUtil.create(jsonContext, a.getDestination(), attrObj);
         }
         HashMap<String, Object> tmpObj = jsonContext.read("$");
-        SCIMResultProcessor.addMetaDataList(tmpObj, entry, remoteSystem, (String)tmpObj.get("id"));
+        SCIMResultProcessor.addMetaDataList(tmpObj, entry, remoteSystem, (String)tmpObj.get("id"), entity);
         return tmpObj;
     }
 
