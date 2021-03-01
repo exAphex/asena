@@ -82,6 +82,14 @@ public class SACConnector implements IConnector {
         emUser.addReadMapping(new Attribute("roles", "$.roles", ""));
         retSystem.addEntryTypeMapping(emUser);
 
+        EntryTypeMapping emGroup = new EntryTypeMapping("Groups");
+        emGroup.addWriteMapping(new Attribute("$.userName", "id", ""));
+        emGroup.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
+
+        emGroup.addReadMapping(new Attribute("id", "$.id", ""));
+        emGroup.addReadMapping(new Attribute("displayName", "$.displayName", ""));
+        retSystem.addEntryTypeMapping(emGroup);
+
         return retSystem;
     }
 
