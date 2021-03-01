@@ -1,5 +1,6 @@
 package com.asena.scimgateway.connector;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +36,9 @@ public class SACConnector implements IConnector {
         RemoteSystem retSystem = new RemoteSystem();
         retSystem.addProperty(new ConnectionProperty("sac.url", "https://example.eu10.hcs.cloud.sap/api/v1/scim",
                 "URL to SAC", false, ConnectionPropertyType.STRING));
-        retSystem.addProperty(new ConnectionProperty("sac.tokenurl", "https://example.eu10.hcs.cloud.sap/api/v1/scim/Users?count=1",
-                "URL for CSRF-Token", false, ConnectionPropertyType.STRING));
+        retSystem.addProperty(
+                new ConnectionProperty("sac.tokenurl", "https://example.eu10.hcs.cloud.sap/api/v1/scim/Users?count=1",
+                        "URL for CSRF-Token", false, ConnectionPropertyType.STRING));
         retSystem.addProperty(
                 new ConnectionProperty("oauth.url", "https://example.authentication.eu10.hana.ondemand.com/oauth/token",
                         "OAuth token url", false, ConnectionPropertyType.STRING));
@@ -64,7 +66,7 @@ public class SACConnector implements IConnector {
         emUser.addWriteMapping(new Attribute("$.preferredLanguage", "preferredLanguage", ""));
         emUser.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
         emUser.addWriteMapping(new Attribute("$.name.familyName", "familyName", ""));
-        emUser.addWriteMapping(new Attribute("$.emails", "emails", "")); 
+        emUser.addWriteMapping(new Attribute("$.emails", "emails", ""));
         emUser.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
         emUser.addWriteMapping(new Attribute("$.active", "active", ""));
 
@@ -75,11 +77,11 @@ public class SACConnector implements IConnector {
         emUser.addReadMapping(new Attribute("familyName", "$.name.familyName", ""));
         emUser.addReadMapping(new Attribute("displayName", "$.displayName", ""));
         emUser.addReadMapping(new Attribute("active", "$.active", ""));
-        emUser.addReadMapping(new Attribute("emails", "$.emails", "")); 
+        emUser.addReadMapping(new Attribute("emails", "$.emails", ""));
         emUser.addReadMapping(new Attribute("groups", "$.groups", ""));
         emUser.addReadMapping(new Attribute("roles", "$.roles", ""));
         retSystem.addEntryTypeMapping(emUser);
-        
+
         return retSystem;
     }
 
@@ -188,28 +190,34 @@ public class SACConnector implements IConnector {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
+    
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
-        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        switch(entity){
+            case "Users":
+                return getEntitiesFromSAC(entity);
+            case "Groups":
+                return getEntitiesFromSAC(entity);
+            default:
+                throw new InternalErrorException("No support for entity " + entity);
+        }
+    }
 
-        HTTPClient hc = new HTTPClient();
-        hc.addInterceptor(oi);
-        hc.setUserName(this.oauthUser);
-        hc.setPassword(this.oauthPassword);
-
-        String result = hc.get(this.sacURL + "/Users");
-        ObjectMapper mapper = new ObjectMapper();
-
-        HashMap<String, Object> map = new HashMap<>();
-        map = mapper.readValue(result, map.getClass());
-
-        return transformEntityListFrom((List<HashMap<String, Object>>) map.get("Resources"));
+    
+    @Override
+    public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+        switch(entity){
+            case "Users":
+                return getEntityFromSAC(entity, data);
+            case "Groups":
+                return getEntityFromSAC(entity, data);
+            default:
+                throw new InternalErrorException("No support for entity " + entity);
+        }
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+    private HashMap<String, Object> getEntityFromSAC(String entity, HashMap<String, Object> data) throws IOException {
         String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
         if (userId == null) {
             throw new InternalErrorException("UserID not found in read mapping!");
@@ -222,13 +230,31 @@ public class SACConnector implements IConnector {
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
 
-        String result = hc.get(this.sacURL + "/Users/" + userId);
+        String result = hc.get(this.sacURL + "/" + entity + "/" + userId);
         ObjectMapper mapper = new ObjectMapper();
 
         HashMap<String, Object> map = new HashMap<>();
         map = mapper.readValue(result, map.getClass());
 
         return transformEntityFrom(map);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<HashMap<String, Object>> getEntitiesFromSAC(String entity) throws IOException {
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+
+        String result = hc.get(this.sacURL + "/" + entity);
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(result, map.getClass());
+
+        return transformEntityListFrom((List<HashMap<String, Object>>) map.get("Resources"));
     }
 
     private List<HashMap<String, Object>> transformEntityListFrom(List<HashMap<String, Object>> entities) {
