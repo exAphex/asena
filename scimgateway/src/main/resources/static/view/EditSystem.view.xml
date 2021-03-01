@@ -136,6 +136,13 @@
         <m:footer>
             <m:OverflowToolbar>
                 <m:ToolbarSpacer />
+                <m:MenuButton icon="sap-icon://outbox" text="{i18n>EditSystem.btnExport}">
+                    <m:menu>
+                        <m:Menu>
+                            <m:MenuItem text="{i18n>EditSystem.exportToSAPIdm}"  press="_onSAPIdMExport"/>
+                        </m:Menu>
+                    </m:menu>
+                </m:MenuButton>
                 <m:Button type="Emphasized" press="_onSaveSystem" text="{i18n>EditSystem.btnSave}" />
             </m:OverflowToolbar>
         </m:footer>

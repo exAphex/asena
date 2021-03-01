@@ -2,8 +2,9 @@ sap.ui.define([
     "controller/core/BaseController",
     "sap/ui/model/json/JSONModel",
     "com/asena/ui5/formatter/Formatter",
+    "com/asena/ui5/utils/SAPIdMExporter",
     "sap/m/MessageBox"
-], function (Controller, JSONModel, Formatter, MessageBox) {
+], function (Controller, JSONModel, Formatter, SAPIdMExporter, MessageBox) {
     "use strict"; 
     return Controller.extend("com.asena.ui5.controller.views.EditSystem", {
         formatter: Formatter,
@@ -35,8 +36,6 @@ sap.ui.define([
 
             this.loadEntryTypeMapping(obj.id);
             this.loadFragment("EditEntryType", "editEntryType"); 
-            
-            console.log(obj);
         },
 
         _onAddWriteMapping: function() {
@@ -488,6 +487,27 @@ sap.ui.define([
             var loc = window.location;
             var endpoint = loc.protocol + "//" + loc.host + "/gateway/" + id + "/scim/v2/";
             this.getView().byId("inptEndpoint").setValue(endpoint);
+        },
+
+        _onSAPIdMExport: function() {
+            var loc = window.location;
+            var rmObj = this.getView().getModel().getProperty("/");
+            var csvData = SAPIdMExporter.exportToSAPIdM(rmObj.name, rmObj.description, loc.hostname, "/gateway/" + this.id + "/scim/v2/", loc.port, rmObj.serviceUser.userName, rmObj.serviceUser.password);
+            this.downloadExport(rmObj.name + ".csv", csvData);
+            
+        },
+
+        downloadExport: function(filename, csvData) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csvData));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
         }
     });
 });
