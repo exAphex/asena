@@ -49,7 +49,6 @@ A step-by-step documentation of setting up Asena manually and using it can be fo
 
 
 ## ToDo
-* Group Handling
 * SDK for custom connectors
 * more connectivity (SAP/IBM)
 
