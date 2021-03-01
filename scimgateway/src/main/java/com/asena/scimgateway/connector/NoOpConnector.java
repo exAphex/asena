@@ -44,13 +44,17 @@ public class NoOpConnector implements IConnector {
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
         List<HashMap<String,Object>> ret = new ArrayList<>();
+        HashMap<String,Object> retObj = new HashMap<>();
+        retObj.put("noop", "test");
+        ret.add(retObj);
         return ret;
     }
 
     @Override
     public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        HashMap<String,Object> retObj = new HashMap<>();
+        retObj.put("noop", "test");
+        return retObj;
     }
 
     @Override

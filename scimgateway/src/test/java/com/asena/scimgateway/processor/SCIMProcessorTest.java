@@ -1,6 +1,7 @@
 package com.asena.scimgateway.processor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -44,6 +45,12 @@ public class SCIMProcessorTest {
         Attribute d = new Attribute();
         d.setSource("noop");
         d.setDestination("$.id");
+        d.setTransformation(s);
+
+        Attribute e = new Attribute();
+        e.setSource("noop");
+        e.setDestination("$.nameId");
+
 
         EntryTypeMapping em = new EntryTypeMapping("User");
         em.addWriteMapping(a);
@@ -53,9 +60,22 @@ public class SCIMProcessorTest {
         em.addWriteMapping(b);
         em.addWriteMapping(c);
         em.addReadMapping(d);
+        em.addReadMapping(e);
         rs.addEntryTypeMapping(em);
 
         rs.setType("NOOP");
+    }
+
+    @Test
+    void getEntitiesTest() throws Exception {
+        HashMap<String, Object> retData = new SCIMProcessor(this.rs, "User").getEntities();
+        assertNotNull(retData);
+    }
+
+    @Test
+    void getEntityTest() throws Exception {
+        HashMap<String, Object> retData = new SCIMProcessor(this.rs, "User").getEntity("testId");
+        assertNotNull(retData);
     }
 
     @Test

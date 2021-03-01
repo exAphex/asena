@@ -248,52 +248,13 @@ public class SCIMProcessor {
         return conn.getEntity(entity, data);
     }
 
-    public RemoteSystem getRemoteSystem() {
-        return remoteSystem;
-    }
 
     public void setRemoteSystem(RemoteSystem remoteSystem) {
         this.remoteSystem = remoteSystem;
     }
 
-    public String getEntity() {
-        return entity;
-    }
-
     public void setEntity(String entity) {
         this.entity = entity;
     }
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 }
