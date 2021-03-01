@@ -59,6 +59,7 @@ public class AzureConnector implements IConnector {
         retSystem.addAttribute(new Attribute("accountEnabled", "accountEnabled", "accountEnabled"));
         retSystem.addAttribute(new Attribute("mailNickname", "mailNickname", "mailNickname"));
         retSystem.addAttribute(new Attribute("mailEnabled", "mailEnabled", "mailEnabled"));
+        retSystem.addAttribute(new Attribute("securityEnabled", "securityEnabled", "securityEnabled"));
 
         EntryTypeMapping emUser = new EntryTypeMapping("Users");
         emUser.addWriteMapping(new Attribute("$.active", "accountEnabled", ""));
@@ -82,9 +83,14 @@ public class AzureConnector implements IConnector {
 
         EntryTypeMapping emGroup = new EntryTypeMapping("Groups");
         emGroup.addWriteMapping(new Attribute("$.id", "id", ""));
+        emGroup.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
+        emGroup.addWriteMapping(new Attribute("$.active", "mailEnabled", ""));
+        emGroup.addWriteMapping(new Attribute("$.userName", "mailNickname", ""));
+        emGroup.addWriteMapping(new Attribute("$.active", "securityEnabled", new Script("reverseBoolean")));
 
         emGroup.addReadMapping(new Attribute("id", "$.id", ""));
         emGroup.addReadMapping(new Attribute("displayName", "$.displayName", ""));
+        emGroup.addReadMapping(new Attribute("mailNickname", "$.userName", ""));
         retSystem.addEntryTypeMapping(emGroup);
 
         return retSystem;
@@ -133,25 +139,14 @@ public class AzureConnector implements IConnector {
 
     @Override
     public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
-        if (userId == null) {
-            throw new InternalErrorException("UserID not found in read mapping!");
+        switch (entity) {
+            case "Users":
+                return updateEntityInAzure(entity, data);
+            case "Groups":
+                return updateEntityInAzure(entity, data);
+            default:
+                throw new InternalErrorException("No entity passed to Azure connector!");
         }
-
-        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
-        oi.addBody("resource", this.baseURL);
-
-        HTTPClient hc = new HTTPClient();
-        hc.addInterceptor(oi);
-        hc.setUserName(this.oauthUser);
-        hc.setPassword(this.oauthPassword);
-        hc.setExpectedResponseCode(204);
-
-        DocumentContext jsonContext = JsonPath.parse(data);
-
-        hc.patch(this.baseURL + "/v1.0/Users/" + userId, jsonContext.jsonString());
-
-        return userId;
     }
 
     @Override
@@ -275,6 +270,28 @@ public class AzureConnector implements IConnector {
 
         hc.delete(this.baseURL + "/v1.0/" + entity + "/" + userId);
         return true;
+    }
+
+    private String updateEntityInAzure(String entity, HashMap<String, Object> data) throws Exception {
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(204);
+
+        DocumentContext jsonContext = JsonPath.parse(data);
+
+        hc.patch(this.baseURL + "/v1.0/" + entity + "/" + userId, jsonContext.jsonString());
+
+        return userId;
     }
     
 }
