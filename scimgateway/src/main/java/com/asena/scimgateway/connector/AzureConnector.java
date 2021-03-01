@@ -22,7 +22,6 @@ import com.jayway.jsonpath.JsonPath;
 
 public class AzureConnector implements IConnector {
     private String baseURL;
-    private String domainName;
     private String oauthURL;
     private String oauthUser;
     private String oauthPassword;
@@ -103,9 +102,6 @@ public class AzureConnector implements IConnector {
             switch (cp.getKey()) {
                 case "azure.baseurl":
                     this.baseURL = cp.getValue();
-                    break;
-                case "azure.domain.name":
-                    this.domainName = cp.getValue();
                     break;
                 case "oauth.url":
                     this.oauthURL = cp.getValue();
