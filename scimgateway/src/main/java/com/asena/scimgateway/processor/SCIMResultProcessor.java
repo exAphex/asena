@@ -8,27 +8,27 @@ import java.util.Map;
 import com.asena.scimgateway.model.RemoteSystem;
 
 public class SCIMResultProcessor {
-    public static void addMetaDataCreate(HashMap<String, Object> obj, RemoteSystem rs, String id) {
+    public static void addMetaDataCreate(HashMap<String, Object> obj, RemoteSystem rs, String id, String entity) {
         Map<String, Object> meta = new HashMap<>();
-        meta.put("resourceType", "User");
-        meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/Users/" + id));
+        meta.put("resourceType", entity);
+        meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/" + entity + "/" + id));
         obj.put("meta", meta);
 
         List<String> schemas = new ArrayList<>();
-        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:" + entity);
         obj.put("schemas", schemas);
         
         obj.put("id", id); 
     }
     
-    public static void addMetaDataList(HashMap<String, Object> resultEntry, HashMap<String, Object> sourceEntry, RemoteSystem rs, String nameId) {
+    public static void addMetaDataList(HashMap<String, Object> resultEntry, HashMap<String, Object> sourceEntry, RemoteSystem rs, String nameId, String entity) {
         Map<String, Object> meta = new HashMap<>();
-        meta.put("resourceType", "User");
-        meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/Users/" + nameId));
+        meta.put("resourceType", entity);
+        meta.put("location", ("/gateway/" + rs.getId() + "/scim/v2/"+ entity + "/" + nameId));
         resultEntry.put("meta", meta);
 
         List<String> schemas = new ArrayList<>();
-        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:" + entity);
         resultEntry.put("schemas", schemas);
     }
 

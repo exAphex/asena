@@ -1,5 +1,6 @@
 package com.asena.scimgateway.connector;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -33,12 +34,11 @@ public class AzureConnector implements IConnector {
                 "Base url of microsoft graph api", false, ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("azure.domain.name", "asenaorg.onmicrosoft.com",
                 "Domain name of your azure directory", false, ConnectionPropertyType.STRING));
-        retSystem.addProperty(
-                new ConnectionProperty("oauth.url", "https://login.microsoftonline.com/asenaorg.onmicrosoft.com/oauth2/token",
-                        "OAuth token url", false, ConnectionPropertyType.STRING));
-        retSystem.addProperty(
-                new ConnectionProperty("oauth.user", "x-xxxxxx-xxxx-xxxx-xxxx-xxxxxxxx",
-                        "OAuth user name", true, ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("oauth.url",
+                "https://login.microsoftonline.com/asenaorg.onmicrosoft.com/oauth2/token", "OAuth token url", false,
+                ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("oauth.user", "x-xxxxxx-xxxx-xxxx-xxxx-xxxxxxxx",
+                "OAuth user name", true, ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("oauth.password", "adminpassword", "Oauth user password", false,
                 ConnectionPropertyType.STRING));
         retSystem.setType("Microsoft Azure Active Directory");
@@ -58,16 +58,19 @@ public class AzureConnector implements IConnector {
         retSystem.addAttribute(new Attribute("passwordProfile", "passwordProfile", "passwordProfile"));
         retSystem.addAttribute(new Attribute("accountEnabled", "accountEnabled", "accountEnabled"));
         retSystem.addAttribute(new Attribute("mailNickname", "mailNickname", "mailNickname"));
-       
+        retSystem.addAttribute(new Attribute("mailEnabled", "mailEnabled", "mailEnabled"));
+        retSystem.addAttribute(new Attribute("securityEnabled", "securityEnabled", "securityEnabled"));
+
         EntryTypeMapping emUser = new EntryTypeMapping("Users");
         emUser.addWriteMapping(new Attribute("$.active", "accountEnabled", ""));
         emUser.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
         emUser.addWriteMapping(new Attribute("$.name.givenName", "givenName", ""));
         emUser.addWriteMapping(new Attribute("$.name.familyName", "surname", ""));
         emUser.addWriteMapping(new Attribute("$.id", "id", ""));
-        emUser.addWriteMapping(new Attribute("$.userName", "mailNickname", "")); 
+        emUser.addWriteMapping(new Attribute("$.userName", "mailNickname", ""));
         emUser.addWriteMapping(new Attribute("$.password", "passwordProfile", new Script("getAzurePassword")));
-        emUser.addWriteMapping(new Attribute("$.userName", "userPrincipalName", new Script("getMailSuffixFromAzureDomain")));
+        emUser.addWriteMapping(
+                new Attribute("$.userName", "userPrincipalName", new Script("getMailSuffixFromAzureDomain")));
 
         emUser.addReadMapping(new Attribute("id", "$.id", ""));
         emUser.addReadMapping(new Attribute("userPrincipalName", "$.userName", ""));
@@ -75,9 +78,20 @@ public class AzureConnector implements IConnector {
         emUser.addReadMapping(new Attribute("preferredLanguage", "$.preferredLanguage", ""));
         emUser.addReadMapping(new Attribute("givenName", "$.name.givenName", ""));
         emUser.addReadMapping(new Attribute("surname", "$.name.familyName", ""));
-        emUser.addReadMapping(new Attribute("mail", "$.emails", "")); 
+        emUser.addReadMapping(new Attribute("mail", "$.emails", ""));
         retSystem.addEntryTypeMapping(emUser);
-        
+
+        EntryTypeMapping emGroup = new EntryTypeMapping("Groups");
+        emGroup.addWriteMapping(new Attribute("$.id", "id", ""));
+        emGroup.addWriteMapping(new Attribute("$.displayName", "displayName", ""));
+        emGroup.addWriteMapping(new Attribute("$.active", "mailEnabled", ""));
+        emGroup.addWriteMapping(new Attribute("$.userName", "mailNickname", ""));
+        emGroup.addWriteMapping(new Attribute("$.active", "securityEnabled", new Script("reverseBoolean")));
+
+        emGroup.addReadMapping(new Attribute("id", "$.id", ""));
+        emGroup.addReadMapping(new Attribute("displayName", "$.displayName", ""));
+        emGroup.addReadMapping(new Attribute("mailNickname", "$.userName", ""));
+        retSystem.addEntryTypeMapping(emGroup);
 
         return retSystem;
     }
@@ -111,9 +125,113 @@ public class AzureConnector implements IConnector {
         return "id";
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
+        switch (entity) {
+            case "Users":
+                return createEntityInAzure(entity, data);
+            case "Groups":
+                return createEntityInAzure(entity, data);
+            default:
+                throw new InternalErrorException("No entity passed to Azure connector!");
+        }
+    }
+
+    @Override
+    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+        switch (entity) {
+            case "Users":
+                return updateEntityInAzure(entity, data);
+            case "Groups":
+                return updateEntityInAzure(entity, data);
+            default:
+                throw new InternalErrorException("No entity passed to Azure connector!");
+        }
+    }
+
+    @Override
+    public boolean deleteEntity(String entity, HashMap<String, Object> data) throws Exception {
+        switch (entity) {
+            case "Users":
+                return deleteEntityInAzure(entity, data);
+            case "Groups":
+                return deleteEntityInAzure(entity, data);
+            default:
+                throw new InternalErrorException("No entity passed to Azure connector!");
+        }
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+        switch (entity) {
+            case "Users":
+                return getEntitiesFromAzure(entity);
+            case "Groups":
+                return getEntitiesFromAzure(entity);
+            default:
+                throw new InternalErrorException("No entity passed to Azure connector!");
+        }
+    }
+
+    
+    @Override
+    public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
+        switch (entity) {
+            case "Users":
+                return getEntityFromAzure(entity, data);
+            case "Groups":
+                return getEntityFromAzure(entity, data);
+            default:
+                throw new InternalErrorException("No entity passed to Azure connector!");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private HashMap<String, Object> getEntityFromAzure(String entity, HashMap<String, Object> data)
+            throws IOException {
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+
+        String result = hc.get(this.baseURL + "/v1.0/" + entity + "/" + userId);
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(result, map.getClass());
+
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<HashMap<String, Object>> getEntitiesFromAzure(String entity) throws IOException {
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+
+        String result = hc.get(this.baseURL + "/v1.0/" + entity);
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map = mapper.readValue(result, map.getClass());
+
+        return (List<HashMap<String, Object>>) map.get("value");
+    }
+
+    @SuppressWarnings("unchecked")
+    private String createEntityInAzure(String entity, HashMap<String, Object> data) throws IOException {
         OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
         oi.addBody("resource", this.baseURL);
 
@@ -125,7 +243,7 @@ public class AzureConnector implements IConnector {
 
         DocumentContext jsonContext = JsonPath.parse(data);
 
-        String retUser = hc.post(this.baseURL + "/v1.0/Users", jsonContext.jsonString());
+        String retUser = hc.post(this.baseURL + "/v1.0/" + entity, jsonContext.jsonString());
         ObjectMapper mapper = new ObjectMapper();
 
         HashMap<String, Object> map = new HashMap<>();
@@ -134,8 +252,27 @@ public class AzureConnector implements IConnector {
         return (String) JSONUtil.getFromJSONPath("$.id", map);
     }
 
-    @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+
+    private boolean deleteEntityInAzure(String entity, HashMap<String, Object> data) throws IOException {
+        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+        if (userId == null) {
+            throw new InternalErrorException("UserID not found in read mapping!");
+        }
+
+        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
+        oi.addBody("resource", this.baseURL);
+
+        HTTPClient hc = new HTTPClient();
+        hc.addInterceptor(oi);
+        hc.setUserName(this.oauthUser);
+        hc.setPassword(this.oauthPassword);
+        hc.setExpectedResponseCode(204);
+
+        hc.delete(this.baseURL + "/v1.0/" + entity + "/" + userId);
+        return true;
+    }
+
+    private String updateEntityInAzure(String entity, HashMap<String, Object> data) throws Exception {
         String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
         if (userId == null) {
             throw new InternalErrorException("UserID not found in read mapping!");
@@ -152,74 +289,9 @@ public class AzureConnector implements IConnector {
 
         DocumentContext jsonContext = JsonPath.parse(data);
 
-        hc.patch(this.baseURL + "/v1.0/Users/" + userId, jsonContext.jsonString());
+        hc.patch(this.baseURL + "/v1.0/" + entity + "/" + userId, jsonContext.jsonString());
 
         return userId;
-    }
-
-    @Override
-    public boolean deleteEntity(String entity, HashMap<String, Object> data) throws Exception {
-        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
-        if (userId == null) {
-            throw new InternalErrorException("UserID not found in read mapping!");
-        }
-
-        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
-        oi.addBody("resource", this.baseURL);
-
-        HTTPClient hc = new HTTPClient();
-        hc.addInterceptor(oi);
-        hc.setUserName(this.oauthUser);
-        hc.setPassword(this.oauthPassword);
-        hc.setExpectedResponseCode(204);
-
-        hc.delete(this.baseURL + "/v1.0/Users/" + userId);
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
-        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
-        oi.addBody("resource", this.baseURL);
-
-        HTTPClient hc = new HTTPClient();
-        hc.addInterceptor(oi);
-        hc.setUserName(this.oauthUser);
-        hc.setPassword(this.oauthPassword);
-
-        String result = hc.get(this.baseURL + "/v1.0/Users");
-        ObjectMapper mapper = new ObjectMapper();
-
-        HashMap<String, Object> map = new HashMap<>();
-        map = mapper.readValue(result, map.getClass());
-
-        return (List<HashMap<String, Object>>) map.get("value");
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
-        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
-        if (userId == null) {
-            throw new InternalErrorException("UserID not found in read mapping!");
-        }
-        
-        OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
-        oi.addBody("resource", this.baseURL);
-
-        HTTPClient hc = new HTTPClient();
-        hc.addInterceptor(oi);
-        hc.setUserName(this.oauthUser);
-        hc.setPassword(this.oauthPassword);
-
-        String result = hc.get(this.baseURL + "/v1.0/Users/" + userId);
-        ObjectMapper mapper = new ObjectMapper();
-
-        HashMap<String, Object> map = new HashMap<>();
-        map = mapper.readValue(result, map.getClass());
-
-        return map; 
     }
     
 }
