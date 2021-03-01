@@ -1,17 +1,12 @@
 package com.asena.scimgateway.security.converter;
 
 import java.security.AlgorithmParameters;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.spec.InvalidParameterSpecException;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.util.Base64;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.AttributeConverter;
 
@@ -46,8 +41,7 @@ public class AttributeEncrypter implements AttributeConverter<String, String> {
             System.arraycopy(iv, 0, concat, 0, iv.length);
             System.arraycopy(enc, 0, concat, iv.length, enc.length);
             return Base64.getEncoder().encodeToString(concat);
-        } catch (IllegalBlockSizeException | InvalidParameterSpecException | BadPaddingException
-                | InvalidKeyException e) {
+        } catch (Exception e) {
             logger.error("Encryption error", e);
             return null;
         }
@@ -63,8 +57,7 @@ public class AttributeEncrypter implements AttributeConverter<String, String> {
             System.arraycopy(enc, 16, dec, 0, enc.length - 16); 
             cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
             return new String(cipher.doFinal(dec));
-        } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException
-                | InvalidAlgorithmParameterException e) {
+        } catch (Exception e) {
             logger.error("Encryption error", e);
             return null;
         }

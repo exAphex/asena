@@ -8,6 +8,9 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
 public class JSONUtil {
+
+    private JSONUtil() {}
+
     public static Object getObjectFromPath(Object obj, String path) throws Exception{
         Object retObj = JsonPath.parse(obj).read(path);
         return retObj;
