@@ -344,9 +344,6 @@ public class LDAPConnector implements IConnector {
 
             closeLDAPConnection(connection);
         } 
-
-
-        // TODO Auto-generated method stub
         return retObj;
     }
 
