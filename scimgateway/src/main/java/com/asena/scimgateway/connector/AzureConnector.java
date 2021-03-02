@@ -11,13 +11,13 @@ import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.EntryTypeMapping;
-import com.asena.scimgateway.model.Modification;
 import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
 import com.asena.scimgateway.utils.JSONUtil;
+import com.asena.scimgateway.utils.ModificationUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -271,9 +271,8 @@ public class AzureConnector implements IConnector {
     }
 
     private String updateEntityInAzure(String entity, ModificationStep ms) throws Exception {
-        Modification mUserId = ms.findModificationByAttribute(getNameId());
-        String userId = (mUserId != null ? (String) mUserId.getValue() : null);
-        HashMap<String, Object> data = collectSimpleModifications(ms);
+        String userId = (String) ms.findValueByAttribute(getNameId());
+        HashMap<String, Object> data = ModificationUtil.collectSimpleModifications(ms);
         if (userId == null) {
             throw new InternalErrorException("UserID not found in read mapping!");
         }
@@ -294,12 +293,4 @@ public class AzureConnector implements IConnector {
         return userId;
     }
 
-    private HashMap<String, Object> collectSimpleModifications(ModificationStep ms) {
-        HashMap<String, Object> retData = new HashMap<String, Object>();
-        for (Modification m : ms.getModifications()) {
-            retData.put(m.getAttributeName(), m.getValue());
-        }
-        return retData;
-    }
-    
 }

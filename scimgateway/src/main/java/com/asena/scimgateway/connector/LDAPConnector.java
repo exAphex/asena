@@ -199,24 +199,24 @@ public class LDAPConnector implements IConnector {
 		conn.modify(dn, modAttr);
 	}
 
-    private String updateEntity(HashMap<String, Object> data) {
+    private String updateEntity(ModificationStep ms) {
         LdapConnection connection = null;
         String retStr = null;
         try {
             connection = ldapConnect();
-            retStr = (String)ConnectorUtil.getAttributeValue(nameId, data);
-            for (String key : data.keySet()) {
-                if (!key.equals(nameId)) {
-                    Object objData = data.get(key);
+            retStr = (String) ms.findValueByAttribute(nameId);
+            for (com.asena.scimgateway.model.Modification m : ms.getModifications()) {
+                if (!m.getAttributeName().equals(nameId)) {
+                    Object objData = m.getValue();
                     if (objData instanceof NativeArray) {
                         NativeArray tempArr = (NativeArray) objData;
                         List<String> lstValues = new ArrayList<String>();
                         for (int i = 0; i < tempArr.size(); i++) {
                             lstValues.add((String) tempArr.get(i));
                         }
-                        upsertAttributeArray(connection, retStr, key, lstValues);
+                        upsertAttributeArray(connection, retStr, m.getAttributeName(), lstValues);
                     } else {
-                        upsertAttribute(connection, retStr, key, (String)data.get(key));
+                        upsertAttribute(connection, retStr, m.getAttributeName(), (String)objData);
                     }
                 }
             } 
@@ -231,8 +231,7 @@ public class LDAPConnector implements IConnector {
 
     @Override
     public String updateEntity(String entity, ModificationStep ms) throws Exception {
-        throw new InternalErrorException("NOT SUPPORTED!");
-        //return updateEntity(null);
+        return updateEntity(ms);
     }
 
     @Override

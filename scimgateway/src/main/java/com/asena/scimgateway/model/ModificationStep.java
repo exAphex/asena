@@ -36,6 +36,16 @@ public class ModificationStep {
         return null;
     }
 
+    public Object findValueByAttribute(String attributeName) {
+        Modification m = findModificationByAttribute(attributeName);
+        if (m != null) {
+            return m.getValue();
+        } else {
+            return null;
+        }
+    }
+
+
     public void setModificationValueByAttribute(String attributeName, Object o) {
         if (attributeName == null) {
             return;
