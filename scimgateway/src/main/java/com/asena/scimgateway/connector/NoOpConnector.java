@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 
@@ -32,8 +34,9 @@ public class NoOpConnector implements IConnector {
     }
 
     @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        return (String) data.get(this.nameId);
+    public String updateEntity(String entity, ModificationStep ms) throws Exception {
+        throw new InternalErrorException("NOT SUPPORTED!");
+        //return (String) data.get(this.nameId);
     }
 
     @Override

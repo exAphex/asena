@@ -13,6 +13,7 @@ import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.EntryTypeMapping;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
@@ -229,8 +230,9 @@ public class LDAPConnector implements IConnector {
     }
 
     @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        return updateEntity(data);
+    public String updateEntity(String entity, ModificationStep ms) throws Exception {
+        throw new InternalErrorException("NOT SUPPORTED!");
+        //return updateEntity(null);
     }
 
     @Override

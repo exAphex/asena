@@ -11,6 +11,8 @@ import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.EntryTypeMapping;
+import com.asena.scimgateway.model.Modification;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
@@ -134,12 +136,12 @@ public class AzureConnector implements IConnector {
     }
 
     @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+    public String updateEntity(String entity, ModificationStep ms) throws Exception {
         switch (entity) {
             case "Users":
-                return updateEntityInAzure(entity, data);
+                return updateEntityInAzure(entity, ms);
             case "Groups":
-                return updateEntityInAzure(entity, data);
+                return updateEntityInAzure(entity, ms);
             default:
                 throw new InternalErrorException("No entity passed to Azure connector!");
         }
@@ -268,12 +270,14 @@ public class AzureConnector implements IConnector {
         return true;
     }
 
-    private String updateEntityInAzure(String entity, HashMap<String, Object> data) throws Exception {
-        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+    private String updateEntityInAzure(String entity, ModificationStep ms) throws Exception {
+        Modification mUserId = ms.findModificationByAttribute(getNameId());
+        String userId = (mUserId != null ? (String) mUserId.getValue() : null);
+        HashMap<String, Object> data = collectSimpleModifications(ms);
         if (userId == null) {
             throw new InternalErrorException("UserID not found in read mapping!");
         }
-
+        
         OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
         oi.addBody("resource", this.baseURL);
 
@@ -288,6 +292,14 @@ public class AzureConnector implements IConnector {
         hc.patch(this.baseURL + "/v1.0/" + entity + "/" + userId, jsonContext.jsonString());
 
         return userId;
+    }
+
+    private HashMap<String, Object> collectSimpleModifications(ModificationStep ms) {
+        HashMap<String, Object> retData = new HashMap<String, Object>();
+        for (Modification m : ms.getModifications()) {
+            retData.put(m.getAttributeName(), m.getValue());
+        }
+        return retData;
     }
     
 }

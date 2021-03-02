@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Modification;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.Modification.ModificationType;
 
 public class ModificationProcessor {
@@ -43,6 +44,19 @@ public class ModificationProcessor {
                 modifications.add(new Modification((String) elemPath, elemValue.get("value")));
             }
         }
+
         return modifications;
     }
+
+    public static ModificationStep update(HashMap<String, Object> obj) {
+        ModificationStep retModifications = new ModificationStep();
+
+        for (String elemKey : obj.keySet()) {
+            retModifications.addModification(new Modification(elemKey, obj.get(elemKey)));
+        }
+
+        return retModifications;
+    }
+
+    
 }

@@ -12,6 +12,7 @@ import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.EntryTypeMapping;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
@@ -139,7 +140,9 @@ public class SACConnector implements IConnector {
 
     @SuppressWarnings("unchecked")
     @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
+    public String updateEntity(String entity, ModificationStep ms) throws Exception {
+        throw new InternalErrorException("NOT SUPPORTED!");
+        /*
         String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
         if (userId == null) {
             throw new InternalErrorException("UserID not found in read mapping!");
@@ -163,7 +166,7 @@ public class SACConnector implements IConnector {
         HashMap<String, Object> map = new HashMap<>();
         map = mapper.readValue(retUser, map.getClass());
 
-        return (String) JSONUtil.getFromJSONPath("$.id", map);
+        return (String) JSONUtil.getFromJSONPath("$.id", map);*/
     }
 
     @Override

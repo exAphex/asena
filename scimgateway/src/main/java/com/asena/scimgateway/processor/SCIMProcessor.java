@@ -74,9 +74,13 @@ public class SCIMProcessor {
     public HashMap<String, Object> updateEntity(String entityId, HashMap<String, Object> obj) throws Exception {
         IConnector conn = getConnector();
         HashMap<String, Object> data = prepareDataToRemoteSystem(obj);
-        data = postPrepareDataToRemoteSystem(conn, remoteSystem, entityId, data);
+        Modification mId = getWriteNameId(conn, entityId); 
+        ModificationStep mStep = ModificationProcessor.update(data);
 
-        String id = transferUpdateToConnector(conn, data);
+        mStep.upsertModification(mId);
+        mStep.setId((String) mId.getValue());
+
+        String id = transferUpdateToConnector(conn, mStep);
         id = processId(id, getReadMappingNameId(conn));
 
         SCIMResultProcessor.addMetaDataCreate(obj, remoteSystem, id, entity);
@@ -290,16 +294,10 @@ public class SCIMProcessor {
         return conn.createEntity(entity, data);
     }
 
-    private String transferUpdateToConnector(IConnector conn, HashMap<String, Object> data)
-            throws Exception {
-        conn.setupConnector(remoteSystem);
-        return conn.updateEntity(entity, data);
-    }
-
     private String transferUpdateToConnector(IConnector conn, ModificationStep ms)
             throws Exception {
         conn.setupConnector(remoteSystem);
-        return null;
+        return conn.updateEntity(entity, ms);
     }
 
     private boolean transferDeleteToConnector(IConnector conn, HashMap<String, Object> data)

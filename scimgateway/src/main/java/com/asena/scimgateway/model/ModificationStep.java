@@ -60,4 +60,8 @@ public class ModificationStep {
             setModificationValueByAttribute(m.getAttributeName(), m.getValue());
         }
     }
+
+    public List<Modification> getModifications() {
+        return modifications;
+    }
 }
