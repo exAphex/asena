@@ -9,7 +9,10 @@ import com.asena.scimgateway.connector.IConnector;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.EntryTypeMapping;
+import com.asena.scimgateway.model.Modification;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.Modification.ModificationType;
 import com.asena.scimgateway.utils.JSONUtil;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -41,6 +44,22 @@ public class SCIMProcessor {
         return data;
     }
 
+    public HashMap<String, Object> patchEntity(String entityId, HashMap<String, Object> obj) throws Exception {
+        IConnector conn = getConnector();
+        List<Modification> modifications = ModificationProcessor.patch(obj);
+        ModificationStep mStep = prepareDataFromRemoteSystem(modifications);
+        Modification mId = getWriteNameId(conn, entityId);
+ 
+        mStep.upsertModification(mId);
+        mStep.setId((String) mId.getValue());
+
+        String id = transferUpdateToConnector(conn, mStep);
+        id = processId(id, getReadMappingNameId(conn));
+
+        SCIMResultProcessor.addMetaDataCreate(obj, remoteSystem, id, entity);
+        return null;
+    }
+
     public HashMap<String, Object> createEntity(HashMap<String, Object> obj) throws Exception {
         IConnector conn = getConnector();
         HashMap<String, Object> data = prepareDataToRemoteSystem(obj);
@@ -70,6 +89,47 @@ public class SCIMProcessor {
         data = postPrepareDataToRemoteSystem(conn, remoteSystem, entityId, data);
 
         return transferDeleteToConnector(conn, data);
+    }
+
+    private ModificationStep prepareDataFromRemoteSystem(List<Modification> data) {
+        Set<Attribute> attrs = getWriteMappings();
+        ModificationStep retModifications = new ModificationStep();
+
+        if (data == null) {
+            throw new InternalErrorException("No data for modification found!");
+        }
+
+        for (Attribute a : attrs) {
+            Object o = null;
+            Modification m = null;
+            if (((a.getSource() == null) || (a.getSource().length() < 1)) && (a.getDestination() != null)) {
+                o = null;
+            } else {
+                try {
+                    m = findInModifications(data, a.getSource());
+                    o = m.getValue();
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+            if (a.getTransformation() != null) {
+                o = ScriptProcessor.processTransformation(a, o, remoteSystem);
+            }
+            retModifications.addModification(new Modification(a.getDestination(), o, (m != null ? m.getType() : ModificationType.SIMPLE)));
+        }
+
+        return retModifications;
+    }
+
+    private Modification findInModifications(List<Modification> data, String attr) {
+        String finalAttrName = attr.substring(2);
+        for (Modification m : data) {
+            if (finalAttrName.equals(m.getAttributeName())) {
+                return m;
+            }
+        }
+
+        throw new InternalErrorException("Attribute not found!");
     }
 
     private HashMap<String, Object> prepareDataFromRemoteSystem(HashMap<String, Object> entry) {
@@ -132,6 +192,12 @@ public class SCIMProcessor {
         }
 
         throw new InternalErrorException("No write mapping with nameId " + writeNameId + " found!");
+    }
+
+    private Modification getWriteNameId(IConnector conn, String id) {
+        String nameId = conn.getNameId();
+        String newId = processId(id, getWriteMappingNameId(conn));
+        return new Modification(nameId, newId);
     }
 
     private HashMap<String, Object> postPrepareDataToRemoteSystem(IConnector conn, RemoteSystem rs, String id, HashMap<String, Object> data) {
@@ -228,6 +294,12 @@ public class SCIMProcessor {
             throws Exception {
         conn.setupConnector(remoteSystem);
         return conn.updateEntity(entity, data);
+    }
+
+    private String transferUpdateToConnector(IConnector conn, ModificationStep ms)
+            throws Exception {
+        conn.setupConnector(remoteSystem);
+        return null;
     }
 
     private boolean transferDeleteToConnector(IConnector conn, HashMap<String, Object> data)
