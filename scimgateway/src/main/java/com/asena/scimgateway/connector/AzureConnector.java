@@ -27,6 +27,8 @@ public class AzureConnector implements IConnector {
     private String oauthURL;
     private String oauthUser;
     private String oauthPassword;
+    private String userExpandProperties;
+    private String groupExpandProperties;
 
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
@@ -42,6 +44,8 @@ public class AzureConnector implements IConnector {
                 "OAuth user name", true, ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("oauth.password", "adminpassword", "Oauth user password", false,
                 ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("azure.user.expand", "memberOf", "Attributes for Graph API expand (user)", false, ConnectionPropertyType.STRING));
+        retSystem.addProperty(new ConnectionProperty("azure.group.expand", "memberOf", "Attributes for Graph API expand (group)", false, ConnectionPropertyType.STRING));
         retSystem.setType("Microsoft Azure Active Directory");
 
         retSystem.addAttribute(new Attribute("displayName", "displayName", "Displayname"));
@@ -113,6 +117,12 @@ public class AzureConnector implements IConnector {
                     break;
                 case "oauth.password":
                     this.oauthPassword = cp.getValue();
+                    break;
+                case "azure.user.expand":
+                    this.userExpandProperties = cp.getValue();
+                    break;
+                case "azure.group.expand":
+                    this.groupExpandProperties = cp.getValue();
                     break;
             }
         }
@@ -200,7 +210,9 @@ public class AzureConnector implements IConnector {
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
 
-        String result = hc.get(this.baseURL + "/v1.0/" + entity + "/" + userId);
+        String url= getURL(entity, userId, true);
+
+        String result = hc.get(url);
         ObjectMapper mapper = new ObjectMapper();
 
         HashMap<String, Object> map = new HashMap<>();
@@ -219,7 +231,7 @@ public class AzureConnector implements IConnector {
         hc.setUserName(this.oauthUser);
         hc.setPassword(this.oauthPassword);
 
-        String result = hc.get(this.baseURL + "/v1.0/" + entity);
+        String result = hc.get(getURL(entity, null, true));
         ObjectMapper mapper = new ObjectMapper();
 
         HashMap<String, Object> map = new HashMap<>();
@@ -241,7 +253,7 @@ public class AzureConnector implements IConnector {
 
         DocumentContext jsonContext = JsonPath.parse(data);
 
-        String retUser = hc.post(this.baseURL + "/v1.0/" + entity, jsonContext.jsonString());
+        String retUser = hc.post(getURL(entity, null, false), jsonContext.jsonString());
         ObjectMapper mapper = new ObjectMapper();
 
         HashMap<String, Object> map = new HashMap<>();
@@ -266,7 +278,7 @@ public class AzureConnector implements IConnector {
         hc.setPassword(this.oauthPassword);
         hc.setExpectedResponseCode(204);
 
-        hc.delete(this.baseURL + "/v1.0/" + entity + "/" + userId);
+        hc.delete(getURL(entity, userId, false));
         return true;
     }
 
@@ -288,9 +300,30 @@ public class AzureConnector implements IConnector {
 
         DocumentContext jsonContext = JsonPath.parse(data);
 
-        hc.patch(this.baseURL + "/v1.0/" + entity + "/" + userId, jsonContext.jsonString());
+        hc.patch(getURL(entity, userId, false), jsonContext.jsonString());
 
         return userId;
     }
 
+    private String getURL(String entity, String userId, boolean includeParams) {
+        String retURL = this.baseURL + "/v1.0/" + entity;
+        if (userId != null) {
+            retURL += "/" + userId;
+        } 
+        if (includeParams) {
+            switch (entity) {
+                case "Users":
+                    if ((this.userExpandProperties != null) && (!this.userExpandProperties.isEmpty())) {
+                        retURL += "?$expand=" + this.userExpandProperties;
+                    }
+                    break;
+                case "Groups":
+                    if ((this.groupExpandProperties != null) && (!this.groupExpandProperties.isEmpty())) {
+                        retURL += "?$expand=" + this.groupExpandProperties;
+                    }
+                    break;
+            }
+        }
+        return retURL;
+    }
 }
