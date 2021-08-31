@@ -19,7 +19,6 @@ public class HTTPClient {
         POST, PUT, PATCH
     }
 
-
     private String mediaType = null;
     private String userName;
     private String password;
@@ -77,7 +76,15 @@ public class HTTPClient {
         return write(url, obj, HTTP_OPERATION.POST);
     }
 
+    public Response postWithResponse(String url, String obj) throws IOException {
+        return writeWithResponse(url, obj, HTTP_OPERATION.POST);
+    }
+
     private String write(String url, String obj, HTTP_OPERATION op) throws IOException {
+        return writeWithResponse(url, obj, op).body().string();
+    }
+
+    private Response writeWithResponse(String url, String obj, HTTP_OPERATION op) throws IOException {
         this.client = buildClient();
         MediaType mt = MediaType.parse((this.mediaType != null) ? this.mediaType : "application/json; charset=utf-8");
         RequestBody body = RequestBody.create(obj, mt);
@@ -101,7 +108,7 @@ public class HTTPClient {
         if (response.code() != expectedResponseCode) {
             throw new IOException("Unexpected http code: " + response.code() + " - " + response.body().string());
         }
-        return response.body().string();
+        return response;
     }
 
     public String put(String url, String obj) throws IOException {
