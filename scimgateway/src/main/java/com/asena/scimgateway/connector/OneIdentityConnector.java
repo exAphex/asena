@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.utils.oneidentity.OneIdentityInterceptor;
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.http.BasicAuthInterceptor;
 import com.asena.scimgateway.http.HTTPClient;
 import com.asena.scimgateway.model.Attribute;
@@ -14,6 +15,7 @@ import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
+import com.asena.scimgateway.utils.ConnectorUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OneIdentityConnector implements IConnector {
@@ -24,6 +26,7 @@ public class OneIdentityConnector implements IConnector {
 	private String userName;
 	private String password;
 	private String authString;
+	private String apiEntityEndPoint;
 
 	@Override
 	public RemoteSystem getRemoteSystemTemplate() {
@@ -41,6 +44,8 @@ public class OneIdentityConnector implements IConnector {
 				ConnectionPropertyType.STRING));
 		retSystem.addProperty(new ConnectionProperty("password", "pass", "Basic auth user password", false,
 				ConnectionPropertyType.STRING));
+		retSystem.addProperty(new ConnectionProperty("apientityendpoint", "/AppServer/api/entity/",
+				"API endpoint for single entitiy calls", false, ConnectionPropertyType.STRING));
 		retSystem.setType("OneIdentity");
 
 		retSystem.addAttribute(new Attribute("display", "display", "display name"));
@@ -81,6 +86,9 @@ public class OneIdentityConnector implements IConnector {
 					break;
 				case "password":
 					this.password = cp.getValue();
+					break;
+				case "apientityendpoint":
+					this.apiEntityEndPoint = cp.getValue();
 					break;
 			}
 		}
@@ -132,8 +140,29 @@ public class OneIdentityConnector implements IConnector {
 
 	@Override
 	public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+		if (userId == null) {
+			throw new InternalErrorException("UserID not found in read mapping!");
+		}
+
+		OneIdentityInterceptor oi = new OneIdentityInterceptor(this.host + this.authEndPoint, this.authString,
+				this.userName, this.password);
+		BasicAuthInterceptor bi = new BasicAuthInterceptor(this.userName, this.password);
+
+		HTTPClient hc = new HTTPClient();
+		hc.addInterceptor(oi);
+		hc.addInterceptor(bi);
+		hc.setUserName(this.userName);
+		hc.setPassword(this.password);
+
+		String result = hc.get(this.host + this.apiEntityEndPoint + "Person/" + userId);
+		ObjectMapper mapper = new ObjectMapper();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map = mapper.readValue(result, map.getClass());
+
+		return map;
+
 	}
 
 }
