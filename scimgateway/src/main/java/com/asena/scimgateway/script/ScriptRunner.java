@@ -15,9 +15,10 @@ public class ScriptRunner {
     private Context context;
 
     private Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
-    
+
     public ScriptRunner(RemoteSystem rs) {
         this.context = Context.enter();
+        this.context.getWrapFactory().setJavaPrimitiveWrap(false);
         this.scope = this.context.initStandardObjects(new GlobalScripts(this.context, rs));
     }
 
@@ -32,7 +33,7 @@ public class ScriptRunner {
         if ((s != null) && (s.getName() != null) && (s.getContent() != null)) {
             Object obj = this.scope.get(s.getName(), this.scope);
             if (obj instanceof Function) {
-                Object[] funcParams = {param};
+                Object[] funcParams = { param };
                 Function f = (Function) obj;
                 retData = f.call(this.context, this.scope, this.scope, funcParams);
             } else {

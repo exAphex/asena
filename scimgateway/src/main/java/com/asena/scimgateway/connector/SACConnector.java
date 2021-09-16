@@ -12,11 +12,13 @@ import com.asena.scimgateway.http.oauth.OAuthInterceptor;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.EntryTypeMapping;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.Script;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
 import com.asena.scimgateway.utils.JSONUtil;
+import com.asena.scimgateway.utils.ModificationUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
@@ -139,8 +141,8 @@ public class SACConnector implements IConnector {
 
     @SuppressWarnings("unchecked")
     @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
+    public String updateEntity(String entity, ModificationStep ms) throws Exception {
+        String userId = (String) ms.findValueByAttribute(getNameId());
         if (userId == null) {
             throw new InternalErrorException("UserID not found in read mapping!");
         }
@@ -148,7 +150,7 @@ public class SACConnector implements IConnector {
         OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
         CSRFInterceptor ci = new CSRFInterceptor(this.csrfURL);
 
-        String s = transformEntityTo(data);
+        String s = transformEntityTo(ms);
         HTTPClient hc = new HTTPClient();
         hc.addInterceptor(oi);
         hc.addInterceptor(ci);
@@ -258,6 +260,11 @@ public class SACConnector implements IConnector {
         tmpEntity.put("groups", JSONUtil.getFromJSONPath("$.groups", entity)); 
 
         return tmpEntity;
+    }
+
+    private String transformEntityTo(ModificationStep ms) throws JsonProcessingException {
+        HashMap<String, Object> entity = ModificationUtil.collectSimpleModifications(ms);
+        return transformEntityTo(entity);
     }
 
     private String transformEntityTo(HashMap<String, Object> entity) throws JsonProcessingException {

@@ -36,6 +36,8 @@ public class GlobalScripts extends ImporterTopLevel {
         List<String> hooks = new ArrayList<>();
         hooks.add("getSystemProperty");
         hooks.add("getRemoteSystem");
+        hooks.add("getSystemId");
+        hooks.add("println");
 
         String[] hookNames = new String[hooks.size()];
         hookNames = hooks.toArray(hookNames);
@@ -56,5 +58,18 @@ public class GlobalScripts extends ImporterTopLevel {
         }
         return null;
     }
-    
+
+    public String getSystemId() {
+        if (remoteSystem != null) {
+            return remoteSystem.getId();
+        } else {
+            return null;
+        }
+    }
+
+    public String println(Object s) {
+        System.out.println(s);
+        return null;
+    }
+
 }

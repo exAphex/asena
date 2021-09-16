@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 
@@ -32,8 +34,10 @@ public class NoOpConnector implements IConnector {
     }
 
     @Override
-    public String updateEntity(String entity, HashMap<String, Object> data) throws Exception {
-        return (String) data.get(this.nameId);
+    public String updateEntity(String entity, ModificationStep ms) throws Exception {
+        // throw new InternalErrorException("NOT SUPPORTED!");
+
+        return ms.getId();
     }
 
     @Override
@@ -43,8 +47,8 @@ public class NoOpConnector implements IConnector {
 
     @Override
     public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
-        List<HashMap<String,Object>> ret = new ArrayList<>();
-        HashMap<String,Object> retObj = new HashMap<>();
+        List<HashMap<String, Object>> ret = new ArrayList<>();
+        HashMap<String, Object> retObj = new HashMap<>();
         retObj.put("noop", "test");
         ret.add(retObj);
         return ret;
@@ -52,7 +56,7 @@ public class NoOpConnector implements IConnector {
 
     @Override
     public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
-        HashMap<String,Object> retObj = new HashMap<>();
+        HashMap<String, Object> retObj = new HashMap<>();
         retObj.put("noop", "test");
         return retObj;
     }
@@ -61,5 +65,5 @@ public class NoOpConnector implements IConnector {
     public String getNameId() {
         return nameId;
     }
-    
+
 }
