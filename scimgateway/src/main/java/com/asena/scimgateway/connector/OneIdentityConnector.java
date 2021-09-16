@@ -16,7 +16,10 @@ import com.asena.scimgateway.model.ModificationStep;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.ConnectionProperty.ConnectionPropertyType;
 import com.asena.scimgateway.utils.ConnectorUtil;
+import com.asena.scimgateway.utils.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 public class OneIdentityConnector implements IConnector {
 
@@ -101,8 +104,27 @@ public class OneIdentityConnector implements IConnector {
 
 	@Override
 	public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		OneIdentityInterceptor oi = new OneIdentityInterceptor(this.host + this.authEndPoint, this.authString,
+				this.userName, this.password);
+		BasicAuthInterceptor bi = new BasicAuthInterceptor(this.userName, this.password);
+
+		HTTPClient hc = new HTTPClient();
+		hc.addInterceptor(oi);
+		hc.addInterceptor(bi);
+		hc.setUserName(this.userName);
+		hc.setPassword(this.password);
+
+		HashMap<String, Object> valuesObj = new HashMap<>();
+		valuesObj.put("values", data);
+		DocumentContext jsonContext = JsonPath.parse(valuesObj);
+
+		String retUser = hc.post(this.host + this.apiEntityEndPoint + "Person", jsonContext.jsonString());
+		ObjectMapper mapper = new ObjectMapper();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map = mapper.readValue(retUser, map.getClass());
+
+		return (String) JSONUtil.getFromJSONPath("$.uid", map);
 	}
 
 	@Override
