@@ -102,6 +102,7 @@ public class OneIdentityConnector implements IConnector {
 		return "id";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String createEntity(String entity, HashMap<String, Object> data) throws Exception {
 		OneIdentityInterceptor oi = new OneIdentityInterceptor(this.host + this.authEndPoint, this.authString,
@@ -139,6 +140,7 @@ public class OneIdentityConnector implements IConnector {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
 		OneIdentityInterceptor oi = new OneIdentityInterceptor(this.host + this.authEndPoint, this.authString,
@@ -160,6 +162,7 @@ public class OneIdentityConnector implements IConnector {
 		return map;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public HashMap<String, Object> getEntity(String entity, HashMap<String, Object> data) throws Exception {
 		String userId = (String) ConnectorUtil.getAttributeValue(getNameId(), data);
