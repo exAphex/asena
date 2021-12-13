@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.Jobs">
-	<Page showHeader="false">
-		<content></content>
-	</Page>
+	<SplitContainer id="SplitContDemo" mode="StretchCompressMode" initialDetail="detail" initialMaster="master">
+		<detailPages>
+			<Page id="detail" showHeader="false">
+				<content>
+					<t:Table id="tblJobs" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="1" ariaLabelledBy="title">
+						<t:toolbar>
+							<Toolbar>
+								<ToolbarSpacer />
+								<Button tooltip="{i18n>Jobs.ttAddJob}" icon="sap-icon://add" press="_onAddJob" />
+								<Button tooltip="{i18n>Jobs.ttDeleteJob}" icon="sap-icon://delete" press="_onDeleteJob" />
+								<Button tooltip="{i18n>Jobs.ttRefreshJobs}" icon="sap-icon://refresh" press="_onRefreshJobs" />
+							</Toolbar>
+						</t:toolbar>
+						<t:columns>
+							<t:Column sortProperty="name" width="12em">
+								<Label text="{i18n>Jobs.colName}" />
+								<t:template>
+									<Text text="{name}" wrapping="false" />
+								</t:template>
+							</t:Column>
+							<t:Column sortProperty="description" width="auto">
+								<Label text="{i18n>Jobs.colDescription}" />
+								<t:template>
+									<Text text="{description}" wrapping="false" />
+								</t:template>
+							</t:Column>
+							<t:Column sortProperty="status" width="7em">
+								<Label text="{i18n>Jobs.colStatus}" />
+								<t:template>
+									<Text text="{status}" wrapping="false" />
+								</t:template>
+							</t:Column>
+						</t:columns>
+					</t:Table>
+				</content>
+			</Page>
+		</detailPages>
+		<masterPages>
+			<Page id="master" showHeader="false">
+				<content>
+					<List mode="SingleSelectMaster" items="{/packages}">
+						<headerToolbar>
+							<OverflowToolbar>
+								<Title text="{i18n>Jobs.headerPackages}" />
+								<ToolbarSpacer />
+								<Button icon="sap-icon://add" tooltip="{i18n>Jobs.ttCreatePackage}" press="_onAddPackage" />
+								<Button icon="sap-icon://delete" tooltip="{i18n>Jobs.ttDeletePackage}" press="onToggleContextMenu" enabled="false" />
+							</OverflowToolbar>
+						</headerToolbar>
+						<StandardListItem title="{name}" icon="sap-icon://product" />
+					</List>
+				</content>
+			</Page>
+		</masterPages>
+	</SplitContainer>
 </mvc:View>
