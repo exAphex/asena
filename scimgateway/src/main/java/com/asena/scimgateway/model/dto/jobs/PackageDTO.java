@@ -1,11 +1,16 @@
 package com.asena.scimgateway.model.dto.jobs;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.model.jobs.Package;
 
 public class PackageDTO {
 
 	private long id;
 	private String name;
+	private List<JobDTO> jobs = new ArrayList<>();
 
 	public static PackageDTO toDTO(Package p) {
 		PackageDTO pDTO = new PackageDTO();
@@ -16,6 +21,11 @@ public class PackageDTO {
 
 		pDTO.setId(p.getId());
 		pDTO.setName(p.getName());
+
+		for (Job j : p.getJobs()) {
+			pDTO.addJob(JobDTO.toDTO(j));
+		}
+
 		return pDTO;
 	}
 
@@ -23,6 +33,10 @@ public class PackageDTO {
 		Package p = new Package();
 		p.setId(getId());
 		p.setName(getName());
+
+		for (JobDTO j : getJobs()) {
+			p.addJob(j.fromDTO());
+		}
 		return p;
 	}
 
@@ -40,5 +54,13 @@ public class PackageDTO {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void addJob(JobDTO j) {
+		this.jobs.add(j);
+	}
+
+	public List<JobDTO> getJobs() {
+		return this.jobs;
 	}
 }

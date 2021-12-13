@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.asena.scimgateway.exception.NotFoundException;
+import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.model.jobs.Package;
 
 @Service
@@ -36,5 +37,16 @@ public class PackageService {
 			packageRepository.deleteById(id);
 			return p;
 		}).orElseThrow(() -> new NotFoundException(id));
+	}
+
+	public Package addJob(Job j, long id) {
+		Job job = new Job();
+		job.setName(j.getName());
+		job.setDescription(j.getDescription());
+		job.setEnabled(j.isEnabled());
+
+		Package p = findById(id).orElseThrow(() -> new NotFoundException(id));
+		p.addJob(job);
+		return packageRepository.save(p);
 	}
 }

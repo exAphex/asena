@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.model.dto.jobs.JobDTO;
 import com.asena.scimgateway.model.dto.jobs.PackageDTO;
 import com.asena.scimgateway.model.jobs.Package;
 import com.asena.scimgateway.service.PackageService;
@@ -42,14 +43,20 @@ public class PackageController {
 
 	@PreAuthorize("isAdmin()")
 	@PostMapping("")
-	public PackageDTO createSystem(@RequestBody PackageDTO pDTO) {
+	public PackageDTO createPackage(@RequestBody PackageDTO pDTO) {
 		Package p = pDTO.fromDTO();
 		return PackageDTO.toDTO(packageService.create(p));
 	}
 
 	@PreAuthorize("isAdmin()")
 	@DeleteMapping("/{id}")
-	public void deleteScript(@PathVariable long id) {
+	public void deletePackage(@PathVariable long id) {
 		packageService.deleteById(id);
+	}
+
+	@PreAuthorize("isAdmin()")
+	@PostMapping("/{id}/connection")
+	public PackageDTO addJob(@RequestBody JobDTO jDTO, @PathVariable long id) {
+		return PackageDTO.toDTO(packageService.addJob(jDTO.fromDTO(), id));
 	}
 }
