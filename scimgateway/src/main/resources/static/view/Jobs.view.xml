@@ -40,13 +40,15 @@
 		<masterPages>
 			<Page id="master" showHeader="false">
 				<content>
-					<List mode="SingleSelectMaster" items="{/packages}">
+					<List id="lstPackages" mode="SingleSelectMaster" selectionChange="_onSelectChangePackages" items="{path: '/',sorter : {path : 'name'}}">
 						<headerToolbar>
 							<OverflowToolbar>
 								<Title text="{i18n>Jobs.headerPackages}" />
 								<ToolbarSpacer />
 								<Button icon="sap-icon://add" tooltip="{i18n>Jobs.ttCreatePackage}" press="_onAddPackage" />
-								<Button icon="sap-icon://delete" tooltip="{i18n>Jobs.ttDeletePackage}" press="onToggleContextMenu" enabled="false" />
+								<Button icon="sap-icon://refresh" tooltip="{i18n>Jobs.ttRefreshPackage}" press="_onRefreshPackage" />
+
+								<Button id="btnDeletePackage" icon="sap-icon://delete" tooltip="{i18n>Jobs.ttDeletePackage}" press="_onDeletePackage" enabled="false" />
 							</OverflowToolbar>
 						</headerToolbar>
 						<StandardListItem title="{name}" icon="sap-icon://product" />
