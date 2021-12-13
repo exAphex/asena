@@ -1,154 +1,141 @@
 {
-    "version": "1.1.0",
-    "sap.app":
-    {
-        "_version": "1.1.0", 
-        "id": "com.asena.ui5", 
-        "type": "application",
-        "i18n": "i18n/i18n.properties", 
-        "app": "properties/static.properties", 
-        "title": "Passwords Web",
-        "description": "", 
-        "applicationVersion":{
-            "version": "1.0.0"
-        }
-    },
-    "sap.ui":
-    {
-        "_version": "1.1.0", 
-        "technology": "UI5", 
-        "deviceTypes":
-        { 
-            "desktop": true, 
-            "tablet": true, 
-            "phone": true 
-        },
-        "supportedThemes":["sap_bluecrystal"]
-    },
-    "sap.ui5":
-    {
-        "_version":"1.1.0", 
-        "rootView":
-        { 
-            "viewName": "com.asena.ui5.view.Shell", 
-            "type": "XML" 
-        },
-        "dependencies":{
-            "minUI5Version": "1.30",
-            "libs": 
-            {
-                "sap.m":{} 
-            }
-        },
-        "routing":
-        {
-            "config":
-            {
-                "routerClass": "sap.m.routing.Router",
-                "viewType": "XML", 
-                "viewPath": "com.asena.ui5.view", 
-                "controlId": "pwApp", 
-                "transition": "slide",
-                "targetAggregation": "pages", 
-                "controlAggregation": "pages", 
-                "bypassed": 
-                { 
-                    "target": "notFound" 
-                }
-            },
-            "routes":
-            [
-                {
-                    "pattern": "", 
-                    "name": "applications", 
-                    "target": "Applications" 
-                },
-                {
-                    "pattern": "Systems",
-                    "name": "systems",
-                    "target": "Systems"
-                },
-                {
-                    "pattern": "EditSystem/{id}", 
-                    "name": "editsystem", 
-                    "target": "EditSystem" 
-                },
-                {
-                    "pattern": "Settings", 
-                    "name": "settings", 
-                    "target": "Settings" 
-                },
-                {
-                    "pattern": "Scripts", 
-                    "name": "scripts", 
-                    "target": "Scripts" 
-                },
-                {
-                    "pattern": "EditScript/{id}", 
-                    "name": "editscript", 
-                    "target": "EditScript" 
-                },
-                {
-                    "pattern": "Logs", 
-                    "name": "logs", 
-                    "target": "Logs" 
-                }
-            ],
-            "targets":
-            {
-                "Applications":
-                { 
-                    "viewName": "Applications", 
-                    "viewLevel": 1 
-                },
-                "notFound": 
-                { 
-                    "viewName": "NotFound", 
-                    "transition": "show", 
-                    "viewLevel": 2 
-                },
-                "Settings": 
-                { 
-                    "viewName": "Settings",
-                    "viewLevel": 2 
-                },
-                "Systems": 
-                { 
-                    "viewName": "Systems",
-                    "viewLevel": 2 
-                },
-                "EditSystem": 
-                { 
-                    "viewName": "EditSystem",
-                    "viewLevel": 2 
-                },
-                "EditScript": 
-                { 
-                    "viewName": "EditScript",
-                    "viewLevel": 2 
-                },
-                "Scripts": 
-                {
-                    "viewName": "Scripts",
-                    "viewLevel": 2
-                },
-                "Logs": 
-                {
-                    "viewName": "Logs",
-                    "viewLevel": 2
-                }
-            }
-        },
-        "models": 
-        {
-            "i18n": 
-            {
-                "type": "sap.ui.model.resource.ResourceModel", 
-                "settings": 
-                {
-                    "bundleName": "com.asena.ui5.i18n.i18n"
-                }
-            }
-        }
+  "version": "1.1.0",
+  "sap.app": {
+    "_version": "1.1.0",
+    "id": "com.asena.ui5",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "app": "properties/static.properties",
+    "title": "Passwords Web",
+    "description": "",
+    "applicationVersion": {
+      "version": "1.0.0"
     }
+  },
+  "sap.ui": {
+    "_version": "1.1.0",
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    },
+    "supportedThemes": ["sap_bluecrystal"]
+  },
+  "sap.ui5": {
+    "_version": "1.1.0",
+    "rootView": {
+      "viewName": "com.asena.ui5.view.Shell",
+      "type": "XML"
+    },
+    "dependencies": {
+      "minUI5Version": "1.30",
+      "libs": {
+        "sap.m": {}
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "com.asena.ui5.view",
+        "controlId": "pwApp",
+        "transition": "slide",
+        "targetAggregation": "pages",
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": "notFound"
+        }
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "applications",
+          "target": "Applications"
+        },
+        {
+          "pattern": "Systems",
+          "name": "systems",
+          "target": "Systems"
+        },
+        {
+          "pattern": "EditSystem/{id}",
+          "name": "editsystem",
+          "target": "EditSystem"
+        },
+        {
+          "pattern": "Settings",
+          "name": "settings",
+          "target": "Settings"
+        },
+        {
+          "pattern": "Scripts",
+          "name": "scripts",
+          "target": "Scripts"
+        },
+        {
+          "pattern": "Jobs",
+          "name": "jobs",
+          "target": "Jobs"
+        },
+        {
+          "pattern": "EditScript/{id}",
+          "name": "editscript",
+          "target": "EditScript"
+        },
+        {
+          "pattern": "Logs",
+          "name": "logs",
+          "target": "Logs"
+        }
+      ],
+      "targets": {
+        "Applications": {
+          "viewName": "Applications",
+          "viewLevel": 1
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "transition": "show",
+          "viewLevel": 2
+        },
+        "Settings": {
+          "viewName": "Settings",
+          "viewLevel": 2
+        },
+        "Systems": {
+          "viewName": "Systems",
+          "viewLevel": 2
+        },
+        "EditSystem": {
+          "viewName": "EditSystem",
+          "viewLevel": 2
+        },
+        "Jobs": {
+          "viewName": "Jobs",
+          "viewLevel": 2
+        },
+        "EditScript": {
+          "viewName": "EditScript",
+          "viewLevel": 2
+        },
+        "Scripts": {
+          "viewName": "Scripts",
+          "viewLevel": 2
+        },
+        "Logs": {
+          "viewName": "Logs",
+          "viewLevel": 2
+        }
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.asena.ui5.i18n.i18n"
+        }
+      }
+    }
+  }
 }

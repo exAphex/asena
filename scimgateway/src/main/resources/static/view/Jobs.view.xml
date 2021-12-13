@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.Jobs">
+	<Page showHeader="false">
+		<content></content>
+	</Page>
+</mvc:View>
