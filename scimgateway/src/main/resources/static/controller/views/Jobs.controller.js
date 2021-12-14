@@ -2,6 +2,7 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
   "use strict";
   return Controller.extend("com.asena.ui5.controller.views.Jobs", {
     formatter: Formatter,
+    currPackageId: 0,
 
     onInit: function () {
       var target = sap.ui.core.UIComponent.getRouterFor(this).getTarget("Jobs");
@@ -25,8 +26,19 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       this.loadFragment("AddPackage");
     },
 
+    _onAddJob: function () {
+      var mdl = new JSONModel({});
+      this.getView().setModel(mdl, "mdlAddJob");
+
+      this.loadFragment("AddJob");
+    },
+
     _onRefreshPackage: function () {
       this.loadPackages();
+    },
+
+    _onRefreshJobs: function () {
+      this.loadJobs(this.currPackageId);
     },
 
     _onSaveAddPackage: function () {
@@ -36,10 +48,24 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       this.createPackage(packageObj);
     },
 
+    _onSaveAddJob: function () {
+      var mdl = this.getView().getModel("mdlAddJob");
+      var jobObj = mdl.getProperty("/");
+
+      this.createJob(jobObj, this.currPackageId);
+    },
+
     _onSelectChangePackages: function (oEvent) {
       var lst = oEvent.getSource();
-      if (lst.getSelectedItem()) {
+      var selItem = lst.getSelectedItem();
+      if (selItem) {
+        var ctx = selItem.getBindingContext();
+        var p = ctx.getModel().getProperty(ctx.getPath());
+
+        this.currPackageId = p.id;
+        this.loadJobs(this.currPackageId);
         this.getView().byId("btnDeletePackage").setEnabled(true);
+        this.getView().byId("detail").setVisible(true);
       }
     },
 
@@ -75,6 +101,36 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       });
     },
 
+    _onDeleteJob: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext("mdlJobs");
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      MessageBox.warning("Are you sure you want to delete the job " + p.name + "?", {
+        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+        emphasizedAction: MessageBox.Action.OK,
+        onClose: function (sAction) {
+          if (sAction == MessageBox.Action.OK) {
+            var sQuery = "/api/v1/job/" + p.id;
+            var mParameters = {
+              bShowBusyIndicator: true,
+            };
+            this.deleteWithJSONP(sQuery, mParameters)
+              .then(
+                function () {
+                  this.messageBoxGenerator("Job was deleted successfully!", true);
+                  this.loadJobs(this.currPackageId);
+                }.bind(this)
+              )
+              .catch(
+                function (oError) {
+                  this.showError(oError);
+                }.bind(this)
+              );
+          }
+        }.bind(this),
+      });
+    },
+
     createPackage: function (obj) {
       var sQuery = "/api/v1/package";
       var mParameters = {
@@ -95,12 +151,55 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
         );
     },
 
+    createJob: function (obj, packageId) {
+      var sQuery = "/api/v1/package/" + packageId + "/job";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+        .then(
+          function () {
+            this.genericDialog.close();
+            this.messageBoxGenerator("Job created!", true);
+            this.loadJobs(packageId);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
+
+    loadJobs: function (packageId) {
+      var sQuery = "/api/v1/package/" + packageId;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.getView().byId("tblJobs").setSelectedIndex(-1);
+      this.loadJsonWithAjaxP(sQuery, mParameters)
+        .then(
+          function (oData) {
+            var oMainModel = new JSONModel(oData);
+            this.getView().setModel(oMainModel, "mdlJobs");
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.messageBoxGenerator("Status Code: " + oError.status + " \n Error Message: " + JSON.stringify(oError.responseJSON), false);
+          }.bind(this)
+        );
+    },
+
     loadPackages: function () {
       var sQuery = "/api/v1/package";
       var mParameters = {
         bShowBusyIndicator: true,
       };
+      this.currPackageId = 0;
       this.getView().byId("btnDeletePackage").setEnabled(false);
+      this.getView().byId("tblJobs").setSelectedIndex(-1);
+      this.getView().byId("detail").setVisible(false);
 
       this.loadJsonWithAjaxP(sQuery, mParameters)
         .then(

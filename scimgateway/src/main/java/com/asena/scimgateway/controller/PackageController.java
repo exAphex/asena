@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.dto.jobs.JobDTO;
 import com.asena.scimgateway.model.dto.jobs.PackageDTO;
 import com.asena.scimgateway.model.jobs.Package;
@@ -55,7 +56,14 @@ public class PackageController {
 	}
 
 	@PreAuthorize("isAdmin()")
-	@PostMapping("/{id}/connection")
+	@GetMapping("/{id}")
+	public PackageDTO getPackage(@PathVariable long id) {
+		Package p = packageService.findById(id).orElseThrow(() -> new NotFoundException(id));
+		return PackageDTO.toDTO(p);
+	}
+
+	@PreAuthorize("isAdmin()")
+	@PostMapping("/{id}/job")
 	public PackageDTO addJob(@RequestBody JobDTO jDTO, @PathVariable long id) {
 		return PackageDTO.toDTO(packageService.addJob(jDTO.fromDTO(), id));
 	}
