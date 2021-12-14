@@ -13,6 +13,7 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       this.loadRemoteSystems();
       this.loadScripts();
       this.loadLogs();
+      this.loadJobs();
     },
 
     _onDisplay: function () {
@@ -30,6 +31,25 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           function (oData) {
             var oMainModel = new JSONModel(oData);
             this.getView().setModel(oMainModel);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.messageBoxGenerator("Status Code: " + oError.status + " \n Error Message: " + JSON.stringify(oError.responseJSON), false);
+          }.bind(this)
+        );
+    },
+
+    loadJobs: function () {
+      var sQuery = "/api/v1/package";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.loadJsonWithAjaxP(sQuery, mParameters)
+        .then(
+          function (oData) {
+            var oMainModel = new JSONModel(oData);
+            this.getView().setModel(oMainModel, "mdlJobs");
           }.bind(this)
         )
         .catch(
@@ -102,6 +122,16 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
         "logs",
         {
           app: "logs",
+        },
+        false
+      );
+    },
+
+    _onJobsPressed: function () {
+      sap.ui.core.UIComponent.getRouterFor(this).navTo(
+        "jobs",
+        {
+          app: "jobs",
         },
         false
       );

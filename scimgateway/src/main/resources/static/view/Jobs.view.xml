@@ -36,7 +36,7 @@
 							<t:Column sortProperty="enabled" width="7em">
 								<Label text="{i18n>Jobs.colStatus}" />
 								<t:template>
-									<Text text="{mdlJobs>enabled}" wrapping="false" />
+									<ObjectStatus text="{path: 'enabled',formatter: '.formatter.convertSystemStatus'}" inverted="true" state="{path: 'enabled', formatter: '.formatter.convertSystemColor'}" />
 								</t:template>
 							</t:Column>
 						</t:columns>
