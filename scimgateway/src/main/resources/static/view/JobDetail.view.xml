@@ -39,7 +39,7 @@
 										<t:toolbar>
 											<m:Toolbar>
 												<m:ToolbarSpacer />
-												<m:Button icon="sap-icon://add" tooltip="{i18n>JobDetail.ttAddPass}" press="_onAddConnectionProperty" />
+												<m:Button icon="sap-icon://add" tooltip="{i18n>JobDetail.ttAddPass}" press="_onAddPass" />
 												<m:Button icon="sap-icon://refresh" tooltip="{i18n>JobDetail.ttRefresh}" press="_onAddConnectionProperty" />
 											</m:Toolbar>
 										</t:toolbar>
@@ -63,7 +63,7 @@
 												</t:template>
 											</t:Column>
 											<t:Column sortProperty="repository" width="10em">
-												<m:Label text="{i18n>JobDetail.colRepository}" />
+												<m:Label text="{i18n>JobDetail.colSystem}" />
 												<t:template>
 													<m:Text text="{repository}" wrapping="false" />
 												</t:template>

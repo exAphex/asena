@@ -37,5 +37,12 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           }.bind(this)
         );
     },
+
+    _onAddPass: function () {
+      var mdl = new JSONModel({});
+      this.getView().setModel(mdl, "mdlAddPass");
+
+      this.loadFragment("AddPass");
+    },
   });
 });
