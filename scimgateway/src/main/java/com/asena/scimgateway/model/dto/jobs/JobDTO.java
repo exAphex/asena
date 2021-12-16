@@ -1,6 +1,10 @@
 package com.asena.scimgateway.model.dto.jobs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.asena.scimgateway.model.jobs.Job;
+import com.asena.scimgateway.model.jobs.Pass;
 
 public class JobDTO {
 
@@ -8,6 +12,7 @@ public class JobDTO {
 	private String name;
 	private String description;
 	private boolean enabled;
+	private List<PassDTO> passes = new ArrayList<>();
 
 	public static JobDTO toDTO(Job j) {
 		JobDTO jDTO = new JobDTO();
@@ -20,6 +25,11 @@ public class JobDTO {
 		jDTO.setName(j.getName());
 		jDTO.setDescription(j.getDescription());
 		jDTO.setEnabled(j.isEnabled());
+
+		for (Pass p : j.getPasses()) {
+			jDTO.addPass(PassDTO.toDTO(p));
+		}
+
 		return jDTO;
 	}
 
@@ -45,6 +55,11 @@ public class JobDTO {
 		j.setName(getName());
 		j.setDescription(getDescription());
 		j.setEnabled(isEnabled());
+
+		for (PassDTO p : getPasses()) {
+			j.addPass(p.fromDTO());
+		}
+
 		return j;
 	}
 
@@ -62,6 +77,14 @@ public class JobDTO {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void addPass(PassDTO p) {
+		this.passes.add(p);
+	}
+
+	public List<PassDTO> getPasses() {
+		return this.passes;
 	}
 
 }

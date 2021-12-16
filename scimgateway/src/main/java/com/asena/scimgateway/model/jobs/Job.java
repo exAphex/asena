@@ -1,9 +1,15 @@
 package com.asena.scimgateway.model.jobs;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -23,6 +29,9 @@ public class Job {
 	private String name;
 	private String description;
 	private boolean enabled;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Pass> passes = new HashSet<>();
 
 	@Override
 	public int hashCode() {
@@ -61,6 +70,24 @@ public class Job {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void addPass(Pass p) {
+		if (this.passes == null) {
+			this.passes = new HashSet<>();
+		}
+
+		if (p != null) {
+			this.passes.add(p);
+		}
+	}
+
+	public void deletePass(Pass p) {
+		this.passes.remove(p);
+	}
+
+	public Set<Pass> getPasses() {
+		return this.passes;
 	}
 
 }

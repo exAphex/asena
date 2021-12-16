@@ -54,4 +54,5 @@ public class Pass {
 	public long getId() {
 		return this.id;
 	}
+
 }
