@@ -131,6 +131,20 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       });
     },
 
+    _onEditJob: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext("mdlJobs");
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      sap.ui.core.UIComponent.getRouterFor(this).navTo(
+        "jobdetail",
+        {
+          app: "jobdetail",
+          id: p.id,
+        },
+        false
+      );
+    },
+
     createPackage: function (obj) {
       var sQuery = "/api/v1/package";
       var mParameters = {

@@ -84,6 +84,11 @@
           "target": "EditScript"
         },
         {
+          "pattern": "JobDetail/{id}",
+          "name": "jobdetail",
+          "target": "JobDetail"
+        },
+        {
           "pattern": "Logs",
           "name": "logs",
           "target": "Logs"
@@ -113,6 +118,10 @@
         },
         "Jobs": {
           "viewName": "Jobs",
+          "viewLevel": 2
+        },
+        "JobDetail": {
+          "viewName": "JobDetail",
           "viewLevel": 2
         },
         "EditScript": {
