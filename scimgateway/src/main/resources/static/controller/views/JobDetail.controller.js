@@ -9,11 +9,33 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       sap.ui.core.UIComponent.getRouterFor(this).getRoute("jobdetail").attachPatternMatched(this._onObjectMatched, this);
     },
 
-    _onObjectMatched: function () {},
+    _onObjectMatched: function (oEvent) {
+      this.id = oEvent.getParameter("arguments").id;
+      this.loadJob(this.id);
+    },
 
     _onDisplay: function () {
       var mainModel = sap.ui.getCore().getModel("mainModel");
       mainModel.setProperty("/showNavButton", true);
+    },
+
+    loadJob: function (id) {
+      var sQuery = "/api/v1/job/" + id;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.loadJsonWithAjaxP(sQuery, mParameters)
+        .then(
+          function (oData) {
+            var oMainModel = new JSONModel(oData);
+            this.getView().setModel(oMainModel);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.messageBoxGenerator("Status Code: " + oError.status + " \n Error Message: " + JSON.stringify(oError.responseJSON), false);
+          }.bind(this)
+        );
     },
   });
 });

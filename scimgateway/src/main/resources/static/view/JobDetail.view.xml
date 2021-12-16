@@ -44,28 +44,28 @@
 											</m:Toolbar>
 										</t:toolbar>
 										<t:columns>
-											<t:Column sortProperty="description" width="auto">
+											<t:Column sortProperty="type" width="5em">
 												<m:Label text="{i18n>JobDetail.colType}" />
 												<t:template>
-													<m:Text text="{description}" wrapping="false" />
+													<m:Text text="{type}" wrapping="false" />
 												</t:template>
 											</t:Column>
-											<t:Column sortProperty="key" width="auto">
+											<t:Column sortProperty="name" width="18em">
 												<m:Label text="{i18n>JobDetail.colName}" />
 												<t:template>
-													<m:Text text="{key}" wrapping="false" />
-												</t:template>
-											</t:Column>
-											<t:Column sortProperty="value" width="auto">
-												<m:Label text="{i18n>JobDetail.colDescription}" />
-												<t:template>
-													<m:Text text="{value}" wrapping="false" />
+													<m:Text text="{name}" wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column sortProperty="description" width="auto">
-												<m:Label text="{i18n>JobDetail.colRepository}" />
+												<m:Label text="{i18n>JobDetail.colDescription}" />
 												<t:template>
 													<m:Text text="{description}" wrapping="false" />
+												</t:template>
+											</t:Column>
+											<t:Column sortProperty="repository" width="10em">
+												<m:Label text="{i18n>JobDetail.colRepository}" />
+												<t:template>
+													<m:Text text="{repository}" wrapping="false" />
 												</t:template>
 											</t:Column>
 
