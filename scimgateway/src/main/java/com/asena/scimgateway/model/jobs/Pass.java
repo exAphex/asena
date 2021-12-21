@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.asena.scimgateway.model.RemoteSystem;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity
@@ -22,13 +24,31 @@ public class Pass {
 	@SequenceGenerator(name = "passes_seq", sequenceName = "passes_sequence", allocationSize = 1)
 	private long id;
 	private String name;
+	private String description;
 	private PassType type;
+	private RemoteSystem system;
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
 		hcb.append(id);
 		return hcb.toHashCode();
+	}
+
+	public RemoteSystem getSystem() {
+		return system;
+	}
+
+	public void setSystem(RemoteSystem system) {
+		this.system = system;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public PassType getType() {

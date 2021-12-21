@@ -5,16 +5,16 @@
             <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
                 <f:content>
                     <Label text="{i18n>AddPass.lblType}" />
-                    <Select forceSelection="true" selectedKey="{/SelectedProduct2}" items="{/}">
-                        <core:Item key="{key}" text="{name}" />
+                    <Select forceSelection="true" change="_onAddPassTypeChange" selectedKey="{mdlAddPass>/selectedType}" items="{mdlTypes>/}">
+                        <core:Item key="{mdlTypes>type}" text="{mdlTypes>name}" />
                     </Select>
                     <Label text="{i18n>AddPass.lblPassName}" />
                     <Input value="{mdlAddPass>/name}" />
                     <Label text="{i18n>AddPass.lblDescription}" />
                     <Input value="{mdlAddPass>/description}" />
-                    <Label text="{i18n>AddPass.lblSystem}" />
-                    <Select forceSelection="true" selectedKey="{/SelectedProduct2}" items="{/}">
-                        <core:Item key="{key}" text="{name}" />
+                    <Label visible="{mdlAddPass>/systemVisible}" text="{i18n>AddPass.lblSystem}" />
+                    <Select visible="{mdlAddPass>/systemVisible}" selectedKey="{mdlAddPass>/selectedSystem}" forceSelection="true" items="{mdlSystems>/}">
+                        <core:Item key="{mdlSystems>key}" text="{mdlSystems>name}" />
                     </Select>
                 </f:content>
             </f:SimpleForm>

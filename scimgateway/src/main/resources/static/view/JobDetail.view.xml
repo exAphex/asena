@@ -7,22 +7,6 @@
 					<ObjectPageHeader objectTitle="{/name}" objectSubtitle="{/description}" />
 				</headerTitle>
 				<sections>
-					<ObjectPageSection titleUppercase="false" title="{i18n>JobDetail.titJob}">
-						<subSections>
-							<ObjectPageSubSection>
-								<blocks>
-									<l:VerticalLayout class="sapUiContentPadding" width="100%">
-										<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
-											<f:content>
-												<m:Label text="{i18n>JobDetail.lblEnabled}" />
-												<m:Switch type="AcceptReject" state="{/enabled}" />
-											</f:content>
-										</f:SimpleForm>
-									</l:VerticalLayout>
-								</blocks>
-							</ObjectPageSubSection>
-						</subSections>
-					</ObjectPageSection>
 					<ObjectPageSection titleUppercase="false" title="{i18n>JobDetail.titPasses}">
 						<subSections>
 							<ObjectPageSubSection titleUppercase="false">
@@ -71,6 +55,22 @@
 
 										</t:columns>
 									</t:Table>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+					<ObjectPageSection titleUppercase="false" title="{i18n>JobDetail.titJob}">
+						<subSections>
+							<ObjectPageSubSection>
+								<blocks>
+									<l:VerticalLayout class="sapUiContentPadding" width="100%">
+										<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
+											<f:content>
+												<m:Label text="{i18n>JobDetail.lblEnabled}" />
+												<m:Switch type="AcceptReject" state="{/enabled}" />
+											</f:content>
+										</f:SimpleForm>
+									</l:VerticalLayout>
 								</blocks>
 							</ObjectPageSubSection>
 						</subSections>
