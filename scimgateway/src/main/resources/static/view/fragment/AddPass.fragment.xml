@@ -14,7 +14,7 @@
                     <Input value="{mdlAddPass>/description}" />
                     <Label visible="{mdlAddPass>/systemVisible}" text="{i18n>AddPass.lblSystem}" />
                     <Select visible="{mdlAddPass>/systemVisible}" selectedKey="{mdlAddPass>/selectedSystem}" forceSelection="true" items="{mdlSystems>/}">
-                        <core:Item key="{mdlSystems>key}" text="{mdlSystems>name}" />
+                        <core:Item key="{mdlSystems>id}" text="{mdlSystems>name}" />
                     </Select>
                 </f:content>
             </f:SimpleForm>

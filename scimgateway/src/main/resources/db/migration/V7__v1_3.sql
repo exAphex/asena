@@ -47,10 +47,17 @@ ALTER TABLE IF EXISTS ${flyway:defaultSchema}.packages_jobs
 
 CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passes (
 	id bigint NOT NULL,
+	description character varying(255),
 	name character varying(255),
 	"type" integer,
+	system_id character varying(255),
 	PRIMARY KEY(id)
 );
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passes
+	ADD CONSTRAINT fk5cv2ucg3j3b2lxlnoqba8dafq
+	FOREIGN KEY (system_id)
+	REFERENCES remotesystems (id);
 
 CREATE SEQUENCE ${flyway:defaultSchema}.passes_sequence
     INCREMENT 1

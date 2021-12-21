@@ -1,6 +1,6 @@
 package com.asena.scimgateway.model.dto.jobs;
 
-import com.asena.scimgateway.model.RemoteSystem;
+import com.asena.scimgateway.model.dto.RemoteSystemDTO;
 import com.asena.scimgateway.model.jobs.Pass;
 import com.asena.scimgateway.model.jobs.Pass.PassType;
 
@@ -10,7 +10,7 @@ public class PassDTO {
 	private String name;
 	private PassType type;
 	private String description;
-	private RemoteSystem system;
+	private RemoteSystemDTO system;
 
 	public static PassDTO toDTO(Pass p) {
 		PassDTO pDTO = new PassDTO();
@@ -23,16 +23,16 @@ public class PassDTO {
 		pDTO.setName(p.getName());
 		pDTO.setType(p.getType());
 		pDTO.setDescription(p.getDescription());
-		pDTO.setSystem(p.getSystem());
+		pDTO.setSystem(RemoteSystemDTO.toDTO(p.getSystem()));
 
 		return pDTO;
 	}
 
-	public RemoteSystem getSystem() {
+	public RemoteSystemDTO getSystem() {
 		return system;
 	}
 
-	public void setSystem(RemoteSystem system) {
+	public void setSystem(RemoteSystemDTO system) {
 		this.system = system;
 	}
 
@@ -58,7 +58,9 @@ public class PassDTO {
 		p.setName(getName());
 		p.setType(getType());
 		p.setDescription(getDescription());
-		p.setSystem(getSystem());
+		if (getSystem() != null) {
+			p.setSystem(getSystem().fromDTO());
+		}
 
 		return p;
 	}

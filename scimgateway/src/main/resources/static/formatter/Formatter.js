@@ -87,6 +87,17 @@ sap.ui.define(function () {
       sec = (sec < 10 ? "0" : "") + sec;
       return hour + ":" + min + ":" + sec + " " + day + "-" + month + "-" + date.getFullYear();
     },
+
+    convertPassType: function (type) {
+      switch (type) {
+        case "WRITE":
+          return "sap-icon://display-more";
+        case "READ":
+          return "sap-icon://mirrored-task-circle-2";
+        case "PROCESS":
+          return "sap-icon://rhombus-milestone-2";
+      }
+    },
   };
   return Formatter;
 }, true);

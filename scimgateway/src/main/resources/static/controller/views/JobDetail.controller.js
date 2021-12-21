@@ -90,5 +90,43 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       }
       this.getView().getModel("mdlAddPass").setProperty("/systemVisible", systemVisible);
     },
+
+    _onSaveAddPass: function () {
+      var obj = this.getView().getModel("mdlAddPass").getProperty("/");
+      try {
+        if (!obj.name || obj.name === "") {
+          throw "Name has to be selected";
+        }
+
+        var writeObj = { id: 0, name: obj.name, description: obj.description, type: obj.selectedType, system: obj.selectedSystem == -1 ? null : { id: obj.selectedSystem } };
+        this.createPass(writeObj);
+      } catch (e) {
+        this.messageBoxGenerator(e, false);
+      }
+    },
+
+    createPass: function (obj) {
+      var sQuery = "/api/v1/job/" + this.id + "/pass";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+        .then(
+          function () {
+            this.genericDialog.close();
+            this.messageBoxGenerator("Pass created!", true);
+            this.loadJob(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
+
+    _onRefreshPass: function () {
+      this.loadJob(this.id);
+    },
   });
 });

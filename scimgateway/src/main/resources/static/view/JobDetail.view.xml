@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.uxap" xmlns:f="sap.ui.layout.form" xmlns:m="sap.m" xmlns:tnt="sap.tnt" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.JobDetail">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:c="sap.ui.core" xmlns="sap.uxap" xmlns:f="sap.ui.layout.form" xmlns:m="sap.m" xmlns:tnt="sap.tnt" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.JobDetail">
 	<m:Page showHeader="false">
 		<m:content>
 			<ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
@@ -11,7 +11,7 @@
 						<subSections>
 							<ObjectPageSubSection titleUppercase="false">
 								<blocks>
-									<t:Table id="tblSteps" rows="{/properties/}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="10" rowActionCount="2" ariaLabelledBy="title">
+									<t:Table id="tblSteps" rows="{/passes}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="10" rowActionCount="2" ariaLabelledBy="title">
 										<t:rowActionTemplate>
 											<t:RowAction>
 												<t:items>
@@ -24,14 +24,14 @@
 											<m:Toolbar>
 												<m:ToolbarSpacer />
 												<m:Button icon="sap-icon://add" tooltip="{i18n>JobDetail.ttAddPass}" press="_onAddPass" />
-												<m:Button icon="sap-icon://refresh" tooltip="{i18n>JobDetail.ttRefresh}" press="_onAddConnectionProperty" />
+												<m:Button icon="sap-icon://refresh" tooltip="{i18n>JobDetail.ttRefresh}" press="_onRefreshPass" />
 											</m:Toolbar>
 										</t:toolbar>
 										<t:columns>
-											<t:Column sortProperty="type" width="5em">
+											<t:Column hAlign="Center" sortProperty="type" width="4em">
 												<m:Label text="{i18n>JobDetail.colType}" />
 												<t:template>
-													<m:Text text="{type}" wrapping="false" />
+													<c:Icon tooltip="{type}" src="{path: 'type',formatter: '.formatter.convertPassType'}" />
 												</t:template>
 											</t:Column>
 											<t:Column sortProperty="name" width="18em">
@@ -49,7 +49,7 @@
 											<t:Column sortProperty="repository" width="10em">
 												<m:Label text="{i18n>JobDetail.colSystem}" />
 												<t:template>
-													<m:Text text="{repository}" wrapping="false" />
+													<m:Text text="{system/name}" wrapping="false" />
 												</t:template>
 											</t:Column>
 
