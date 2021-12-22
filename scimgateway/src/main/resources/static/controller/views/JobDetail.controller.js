@@ -128,5 +128,35 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
     _onRefreshPass: function () {
       this.loadJob(this.id);
     },
+
+    _onPassDelete: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext();
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      MessageBox.warning("Are you sure you want to delete the pass " + p.name + "?", {
+        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+        emphasizedAction: MessageBox.Action.OK,
+        onClose: function (sAction) {
+          if (sAction == MessageBox.Action.OK) {
+            var sQuery = "/api/v1/pass/" + p.id;
+            var mParameters = {
+              bShowBusyIndicator: true,
+            };
+            this.deleteWithJSONP(sQuery, mParameters)
+              .then(
+                function () {
+                  this.messageBoxGenerator("Pass was deleted successfully!", true);
+                  this.loadJob(this.id);
+                }.bind(this)
+              )
+              .catch(
+                function (oError) {
+                  this.showError(oError);
+                }.bind(this)
+              );
+          }
+        }.bind(this),
+      });
+    },
   });
 });

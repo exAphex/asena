@@ -1,7 +1,9 @@
 package com.asena.scimgateway.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.jobs.Job;
@@ -32,11 +34,22 @@ public class PassService {
 		}).orElseThrow(() -> new NotFoundException(id));
 	}
 
+	private void recalculateRanks(Set<Pass> passes) {
+		List<Pass> lstPasses = new ArrayList<>(passes);
+		lstPasses.sort((o1, o2) -> (o1.getRank() > o2.getRank() ? 1 : -1));
+		for (int i = 0; i < lstPasses.size(); i++) {
+			Pass p = lstPasses.get(i);
+			p.setRank(i);
+			passRepository.save(p);
+		}
+	}
+
 	private void delete(Pass p) {
 		List<Job> jobs = jobRepository.findByPassesId(p.getId());
 		for (Job j : jobs) {
 			j.deletePass(p);
 			j = jobRepository.save(j);
+			recalculateRanks(j.getPasses());
 		}
 
 	}

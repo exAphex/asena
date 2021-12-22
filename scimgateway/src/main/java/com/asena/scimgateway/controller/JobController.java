@@ -29,7 +29,7 @@ public class JobController {
 
 	@PreAuthorize("isAdmin()")
 	@DeleteMapping("/{id}")
-	public void deletePackage(@PathVariable long id) {
+	public void deleteJob(@PathVariable long id) {
 		jobService.deleteById(id);
 	}
 

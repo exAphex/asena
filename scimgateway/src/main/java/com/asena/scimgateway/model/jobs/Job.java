@@ -90,4 +90,8 @@ public class Job {
 		return this.passes;
 	}
 
+	public void setPasses(Set<Pass> passes) {
+		this.passes = passes;
+	}
+
 }

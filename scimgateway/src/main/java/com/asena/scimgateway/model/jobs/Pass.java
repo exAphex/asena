@@ -29,6 +29,7 @@ public class Pass {
 	private String name;
 	private String description;
 	private PassType type;
+	private long rank;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "system_id")
@@ -39,6 +40,14 @@ public class Pass {
 		HashCodeBuilder hcb = new HashCodeBuilder();
 		hcb.append(id);
 		return hcb.toHashCode();
+	}
+
+	public long getRank() {
+		return rank;
+	}
+
+	public void setRank(long rank) {
+		this.rank = rank;
 	}
 
 	public RemoteSystem getSystem() {

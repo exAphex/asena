@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passes (
 	name character varying(255),
 	"type" integer,
 	system_id character varying(255),
+	"rank" bigint NOT NULL,
 	PRIMARY KEY(id)
 );
 

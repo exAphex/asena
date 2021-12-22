@@ -11,6 +11,7 @@ public class PassDTO {
 	private PassType type;
 	private String description;
 	private RemoteSystemDTO system;
+	private long rank;
 
 	public static PassDTO toDTO(Pass p) {
 		PassDTO pDTO = new PassDTO();
@@ -24,8 +25,16 @@ public class PassDTO {
 		pDTO.setType(p.getType());
 		pDTO.setDescription(p.getDescription());
 		pDTO.setSystem(RemoteSystemDTO.toDTO(p.getSystem()));
-
+		pDTO.setRank(p.getRank());
 		return pDTO;
+	}
+
+	public long getRank() {
+		return rank;
+	}
+
+	public void setRank(long rank) {
+		this.rank = rank;
 	}
 
 	public RemoteSystemDTO getSystem() {
@@ -58,6 +67,8 @@ public class PassDTO {
 		p.setName(getName());
 		p.setType(getType());
 		p.setDescription(getDescription());
+		p.setRank(getRank());
+
 		if (getSystem() != null) {
 			p.setSystem(getSystem().fromDTO());
 		}

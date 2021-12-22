@@ -1,7 +1,9 @@
 package com.asena.scimgateway.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.RemoteSystem;
@@ -50,11 +52,33 @@ public class JobService {
 
 	}
 
+	private long getMaxPassRank(Set<Pass> passes) {
+		long retRank = 0;
+		for (Pass p : passes) {
+			if (p.getRank() >= retRank) {
+				retRank = p.getRank() + 1;
+			}
+		}
+		return retRank;
+	}
+
+	private void recalculateRanks(Set<Pass> passes) {
+		List<Pass> lstPasses = new ArrayList<>(passes);
+		lstPasses.sort((o1, o2) -> (o1.getRank() > o2.getRank() ? 1 : -1));
+		for (int i = 0; i < lstPasses.size(); i++) {
+			Pass p = lstPasses.get(i);
+			p.setRank(i);
+			passRepository.save(p);
+		}
+	}
+
 	public Job addPass(Pass p, long id) {
+		Job j = findById(id).orElseThrow(() -> new NotFoundException(id));
 		Pass pass = new Pass();
 		pass.setName(p.getName());
 		pass.setDescription(p.getDescription());
 		pass.setType(p.getType());
+		pass.setRank(getMaxPassRank(j.getPasses()));
 
 		RemoteSystem rs = p.getSystem();
 		if (rs != null) {
@@ -64,9 +88,12 @@ public class JobService {
 		}
 		pass = passRepository.save(pass);
 
-		Job j = findById(id).orElseThrow(() -> new NotFoundException(id));
 		j.addPass(pass);
-		return jobRepository.save(j);
+		j = jobRepository.save(j);
+
+		recalculateRanks(j.getPasses());
+
+		return findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 }
