@@ -60,8 +60,8 @@
 												<m:Label text="" />
 												<t:template>
 													<l:HorizontalLayout width="100%">
-														<m:Button icon="sap-icon://arrow-top" type="Transparent" press="onPress" tooltip="{i18n>JobDetail.ttEditPass}" />
-														<m:Button icon="sap-icon://arrow-bottom" type="Transparent" press="onPress" tooltip="{i18n>JobDetail.ttEditPass}" />
+														<m:Button icon="sap-icon://arrow-top" type="Transparent" press="_onMoveUpPass" tooltip="{i18n>JobDetail.ttMoveUpPass}" />
+														<m:Button icon="sap-icon://arrow-bottom" type="Transparent" press="_onMoveDownPass" tooltip="{i18n>JobDetail.ttMoveDownPass}" />
 													</l:HorizontalLayout>
 
 												</t:template>

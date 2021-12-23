@@ -158,5 +158,47 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
         }.bind(this),
       });
     },
+
+    _onMoveUpPass: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext();
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      var sQuery = "/api/v1/job/" + this.id + "/" + p.id + "/moveup";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.createDataWithAjaxP(sQuery, JSON.stringify({}), mParameters)
+        .then(
+          function () {
+            this.loadJob(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
+
+    _onMoveDownPass: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext();
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      var sQuery = "/api/v1/job/" + this.id + "/" + p.id + "/movedown";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.createDataWithAjaxP(sQuery, JSON.stringify({}), mParameters)
+        .then(
+          function () {
+            this.loadJob(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
   });
 });

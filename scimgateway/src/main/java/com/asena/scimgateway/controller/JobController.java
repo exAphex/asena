@@ -46,4 +46,16 @@ public class JobController {
 		return JobDTO.toDTO(jobService.addPass(pDTO.fromDTO(), id));
 	}
 
+	@PreAuthorize("isAdmin()")
+	@PostMapping("/{id}/{passId}/moveup")
+	public JobDTO moveupPass(@PathVariable long id, @PathVariable long passId) {
+		return JobDTO.toDTO(jobService.moveUp(passId, id));
+	}
+
+	@PreAuthorize("isAdmin()")
+	@PostMapping("/{id}/{passId}/movedown")
+	public JobDTO movedownPass(@PathVariable long id, @PathVariable long passId) {
+		return JobDTO.toDTO(jobService.moveDown(passId, id));
+	}
+
 }
