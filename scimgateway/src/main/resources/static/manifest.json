@@ -89,6 +89,11 @@
           "target": "JobDetail"
         },
         {
+          "pattern": "ReaderPass/{id}",
+          "name": "readerpass",
+          "target": "ReaderPass"
+        },
+        {
           "pattern": "Logs",
           "name": "logs",
           "target": "Logs"
@@ -126,6 +131,10 @@
         },
         "EditScript": {
           "viewName": "EditScript",
+          "viewLevel": 2
+        },
+        "ReaderPass": {
+          "viewName": "job/ReaderPass",
           "viewLevel": 2
         },
         "Scripts": {
