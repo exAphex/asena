@@ -15,7 +15,7 @@
 											<f:content>
 												<m:Label text="{i18n>ReaderPass.lblRepository}" />
 												<m:Input value="{/repository/name}" editable="false" />
-												<m:Label text="{i18n>ReaderPass.lblRepository}" />
+												<m:Label text="{i18n>ReaderPass.lblSourceProperties}" />
 												<t:Table id="tblConnProperties" rows="{path: '/properties/',
                             sorter : {
                                 path : 'key' 

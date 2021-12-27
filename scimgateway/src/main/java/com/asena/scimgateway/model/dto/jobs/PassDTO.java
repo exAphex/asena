@@ -1,7 +1,12 @@
 package com.asena.scimgateway.model.dto.jobs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.asena.scimgateway.model.dto.RemoteSystemDTO;
 import com.asena.scimgateway.model.jobs.Pass;
+import com.asena.scimgateway.model.jobs.PassMapping;
+import com.asena.scimgateway.model.jobs.PassProperty;
 import com.asena.scimgateway.model.jobs.Pass.PassType;
 
 public class PassDTO {
@@ -12,6 +17,12 @@ public class PassDTO {
 	private String description;
 	private RemoteSystemDTO system;
 	private long rank;
+	private String tableName;
+	private boolean clearTable;
+
+	private List<PassPropertyDTO> properties = new ArrayList<>();
+
+	private List<PassMappingDTO> mappings = new ArrayList<>();
 
 	public static PassDTO toDTO(Pass p) {
 		PassDTO pDTO = new PassDTO();
@@ -26,7 +37,50 @@ public class PassDTO {
 		pDTO.setDescription(p.getDescription());
 		pDTO.setSystem(RemoteSystemDTO.toDTO(p.getSystem()));
 		pDTO.setRank(p.getRank());
+		pDTO.setTableName(p.getTableName());
+		pDTO.setClearTable(p.isClearTable());
+
+		for (PassProperty pp : p.getProperties()) {
+			pDTO.addProperty(PassPropertyDTO.toDTO(pp));
+		}
+
+		for (PassMapping pm : p.getMappings()) {
+			pDTO.addMapping(PassMappingDTO.toDTO(pm));
+		}
+
 		return pDTO;
+	}
+
+	public List<PassMappingDTO> getMappings() {
+		return mappings;
+	}
+
+	public void setMappings(List<PassMappingDTO> mappings) {
+		this.mappings = mappings;
+	}
+
+	public List<PassPropertyDTO> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(List<PassPropertyDTO> properties) {
+		this.properties = properties;
+	}
+
+	public boolean isClearTable() {
+		return clearTable;
+	}
+
+	public void setClearTable(boolean clearTable) {
+		this.clearTable = clearTable;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	public long getRank() {
@@ -68,9 +122,19 @@ public class PassDTO {
 		p.setType(getType());
 		p.setDescription(getDescription());
 		p.setRank(getRank());
+		p.setTableName(getTableName());
+		p.setClearTable(isClearTable());
 
 		if (getSystem() != null) {
 			p.setSystem(getSystem().fromDTO());
+		}
+
+		for (PassPropertyDTO pp : getProperties()) {
+			p.addProperty(pp.fromDTO());
+		}
+
+		for (PassMappingDTO pm : getMappings()) {
+			p.addMapping(pm.fromDTO());
 		}
 
 		return p;
@@ -90,6 +154,14 @@ public class PassDTO {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void addProperty(PassPropertyDTO p) {
+		this.properties.add(p);
+	}
+
+	public void addMapping(PassMappingDTO p) {
+		this.mappings.add(p);
 	}
 
 }
