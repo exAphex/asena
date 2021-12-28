@@ -200,5 +200,30 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           }.bind(this)
         );
     },
+
+    _onPassEdit: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext();
+      var p = ctx.getModel().getProperty(ctx.getPath());
+
+      switch (p.type) {
+        case "PROCESS":
+          alert("Unknown pass type!");
+          break;
+        case "READ":
+          sap.ui.core.UIComponent.getRouterFor(this).navTo(
+            "readerpass",
+            {
+              app: "readerpass",
+              id: p.id,
+            },
+            false
+          );
+          break;
+        case "WRITE":
+          alert("Unknown pass type!");
+          break;
+      }
+    },
   });
 });

@@ -8,6 +8,7 @@ import java.util.Set;
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.model.jobs.Pass;
+import com.asena.scimgateway.model.jobs.PassProperty;
 import com.asena.scimgateway.repository.JobRepository;
 import com.asena.scimgateway.repository.PassRepository;
 
@@ -52,5 +53,17 @@ public class PassService {
 			recalculateRanks(j.getPasses());
 		}
 
+	}
+
+	public Pass addPassProperty(PassProperty prop, long id) {
+		Pass p = findById(id).orElseThrow(() -> new NotFoundException(id));
+
+		PassProperty pp = new PassProperty();
+		pp.setKey(prop.getKey());
+		pp.setValue(prop.getValue());
+		pp.setDescription(prop.getDescription());
+
+		p.addProperty(pp);
+		return passRepository.save(p);
 	}
 }

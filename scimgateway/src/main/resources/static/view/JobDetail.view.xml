@@ -19,7 +19,7 @@
 										<t:rowActionTemplate>
 											<t:RowAction>
 												<t:items>
-													<t:RowActionItem visible="true" tooltip="{i18n>JobDetail.ttEditPass}" icon="sap-icon://edit" press="_onConnectionPropertyEdit" />
+													<t:RowActionItem visible="true" tooltip="{i18n>JobDetail.ttEditPass}" icon="sap-icon://edit" press="_onPassEdit" />
 													<t:RowActionItem visible="true" tooltip="{i18n>JobDetail.ttDeletePass}" icon="sap-icon://delete" press="_onPassDelete" />
 												</t:items>
 											</t:RowAction>

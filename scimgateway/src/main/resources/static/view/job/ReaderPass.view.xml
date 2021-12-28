@@ -14,7 +14,7 @@
 										<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
 											<f:content>
 												<m:Label text="{i18n>ReaderPass.lblRepository}" />
-												<m:Input value="{/repository/name}" editable="false" />
+												<m:Input value="{/system/name}" editable="false" />
 												<m:Label text="{i18n>ReaderPass.lblSourceProperties}" />
 												<t:Table id="tblConnProperties" rows="{path: '/properties/',
                             sorter : {
@@ -25,32 +25,32 @@
 														<t:RowAction>
 															<t:items>
 																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onConnectionPropertyEdit" />
-																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onConnectionPropertyDelete" />
+																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onPassPropertyDelete" />
 															</t:items>
 														</t:RowAction>
 													</t:rowActionTemplate>
 													<t:toolbar>
 														<m:Toolbar>
 															<m:ToolbarSpacer />
-															<m:Button icon="sap-icon://add" press="_onAddConnectionProperty" />
+															<m:Button icon="sap-icon://add" press="_onAddProperty" />
 
 														</m:Toolbar>
 													</t:toolbar>
 													<t:columns>
 														<t:Column sortProperty="key" width="auto">
-															<m:Label text="{i18n>EditSystem.colName}" />
+															<m:Label text="{i18n>ReaderPass.colName}" />
 															<t:template>
 																<m:Text text="{key}" wrapping="false" />
 															</t:template>
 														</t:Column>
 														<t:Column sortProperty="value" width="auto">
-															<m:Label text="{i18n>EditSystem.colValue}" />
+															<m:Label text="{i18n>ReaderPass.colValue}" />
 															<t:template>
 																<m:Text text="{value}" wrapping="false" />
 															</t:template>
 														</t:Column>
 														<t:Column sortProperty="description" width="auto">
-															<m:Label text="{i18n>EditSystem.colDescription}" />
+															<m:Label text="{i18n>ReaderPass.colDescription}" />
 															<t:template>
 																<m:Text text="{description}" wrapping="false" />
 															</t:template>
@@ -73,11 +73,11 @@
 										<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
 											<f:content>
 												<m:Label text="{i18n>ReaderPass.lblTableName}" />
-												<m:Input value="{/repository/name}" editable="true" />
+												<m:Input value="{/tableName}" editable="true" />
 												<m:Label text="{i18n>ReaderPass.lblClearTable}" />
 												<m:CheckBox selected="{/clearTable}" />
-												<m:Label text="{i18n>ReaderPass.lblRepository}" />
-												<t:Table id="tblEntryType" rows="{path: '/entryTypeMappings/',
+												<m:Label text="{i18n>ReaderPass.lblMappings}" />
+												<t:Table id="tblMappings" rows="{path: '/entryTypeMappings/',
                             sorter : {
                                 path : 'name' 
                              }

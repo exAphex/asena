@@ -10,12 +10,25 @@ sap.ui.define(["controller/views/job/BasePassController", "sap/ui/model/json/JSO
     },
 
     _onObjectMatched: function (oEvent) {
-      this.lol();
+      this.id = oEvent.getParameter("arguments").id;
+      this.loadPass(this.id);
     },
 
     _onDisplay: function () {
       var mainModel = sap.ui.getCore().getModel("mainModel");
       mainModel.setProperty("/showNavButton", true);
+    },
+
+    _onAddProperty: function () {
+      this.openAddProperty();
+    },
+
+    _onSavePassProperty: function () {
+      this.addPassProperty();
+    },
+
+    _onPassPropertyDelete: function (oEvent) {
+      this.deletePassProperty(oEvent);
     },
   });
 });
