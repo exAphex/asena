@@ -89,14 +89,8 @@ CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passmappings (
 	id bigint NOT NULL,
 	destination character varying(255),
 	source character varying(255),
-	script_id bigint,
 	PRIMARY KEY(id)
 );
-
-ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passmappings
-	ADD CONSTRAINT fkc2tq6pvfag1apy61jtar023v7
-	FOREIGN KEY (script_id)
-	REFERENCES ${flyway:defaultSchema}.scripts (id);
 
 CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passproperties (
 	id bigint NOT NULL,

@@ -1,16 +1,11 @@
 package com.asena.scimgateway.model.jobs;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import com.asena.scimgateway.model.Script;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -25,10 +20,6 @@ public class PassMapping {
 	private String source;
 	private String destination;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "script_id")
-	private Script script;
-
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
@@ -38,14 +29,6 @@ public class PassMapping {
 
 	public long getId() {
 		return id;
-	}
-
-	public Script getScript() {
-		return script;
-	}
-
-	public void setScript(Script script) {
-		this.script = script;
 	}
 
 	public String getDestination() {

@@ -1,6 +1,5 @@
 package com.asena.scimgateway.model.dto.jobs;
 
-import com.asena.scimgateway.model.dto.ScriptDTO;
 import com.asena.scimgateway.model.jobs.PassMapping;
 
 public class PassMappingDTO {
@@ -8,7 +7,6 @@ public class PassMappingDTO {
 	private long id;
 	private String source;
 	private String destination;
-	private ScriptDTO script;
 
 	public static PassMappingDTO toDTO(PassMapping pm) {
 		PassMappingDTO pmDTO = new PassMappingDTO();
@@ -20,7 +18,6 @@ public class PassMappingDTO {
 		pmDTO.setId(pm.getId());
 		pmDTO.setSource(pm.getSource());
 		pmDTO.setDestination(pm.getDestination());
-		pmDTO.setScript(ScriptDTO.toDTO(pm.getScript()));
 
 		return pmDTO;
 	}
@@ -31,23 +28,11 @@ public class PassMappingDTO {
 		pm.setSource(getSource());
 		pm.setDestination(getDestination());
 
-		if (getScript() != null) {
-			pm.setScript(getScript().fromDTO());
-		}
-
 		return pm;
 	}
 
 	public long getId() {
 		return id;
-	}
-
-	public ScriptDTO getScript() {
-		return script;
-	}
-
-	public void setScript(ScriptDTO script) {
-		this.script = script;
 	}
 
 	public String getDestination() {
