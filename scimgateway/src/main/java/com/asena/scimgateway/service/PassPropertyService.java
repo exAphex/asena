@@ -40,4 +40,14 @@ public class PassPropertyService {
 		}
 	}
 
+	public PassProperty update(PassProperty pp, long id) {
+		return findById(id).map(p -> {
+			p.setKey(pp.getKey());
+			p.setValue(pp.getValue());
+			p.setDescription(pp.getDescription());
+
+			return propertyRepository.save(p);
+		}).orElseThrow(() -> new NotFoundException(id));
+	}
+
 }

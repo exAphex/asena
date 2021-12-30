@@ -20,7 +20,9 @@
                     <tnt:NavigationListItem text="{i18n>Shell.nvlHome}" icon="sap-icon://home" select="_onSelectHome" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlSystems}" icon="sap-icon://it-system" select="_onSelectSystems" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlScripts}" icon="sap-icon://syntax" select="_onSelectScripts" />
-                    <tnt:NavigationListItem text="{i18n>Shell.nvlJobs}" icon="sap-icon://workflow-tasks" select="_onSelectJobs" />
+                    <tnt:NavigationListItem text="{i18n>Shell.nvlWorkflows}" icon="sap-icon://workflow-tasks">
+                        <tnt:NavigationListItem text="{i18n>Shell.nvlJobs}" select="_onSelectJobs" />
+                    </tnt:NavigationListItem>
                     <tnt:NavigationListItem text="{i18n>Shell.nvlLogs}" icon="sap-icon://order-status" select="_onSelectLogs" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlSettings}" icon="sap-icon://action-settings" select="_onSelectSettings" />
                 </tnt:NavigationList>

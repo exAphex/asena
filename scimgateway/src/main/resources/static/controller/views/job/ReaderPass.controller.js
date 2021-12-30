@@ -30,5 +30,9 @@ sap.ui.define(["controller/views/job/BasePassController", "sap/ui/model/json/JSO
     _onPassPropertyDelete: function (oEvent) {
       this.deletePassProperty(oEvent);
     },
+
+    _onPassPropertyEdit: function (oEvent) {
+      this.editPassProperty(oEvent);
+    },
   });
 });

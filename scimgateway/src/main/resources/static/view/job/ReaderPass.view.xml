@@ -24,7 +24,7 @@
 													<t:rowActionTemplate>
 														<t:RowAction>
 															<t:items>
-																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onConnectionPropertyEdit" />
+																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onPassPropertyEdit" />
 																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onPassPropertyDelete" />
 															</t:items>
 														</t:RowAction>
