@@ -77,7 +77,7 @@
 												<m:Label text="{i18n>ReaderPass.lblClearTable}" />
 												<m:CheckBox selected="{/clearTable}" />
 												<m:Label text="{i18n>ReaderPass.lblMappings}" />
-												<t:Table id="tblMappings" rows="{path: '/entryTypeMappings/',
+												<t:Table id="tblMappings" rows="{path: '/mappings/',
                             sorter : {
                                 path : 'name' 
                              }
@@ -86,36 +86,29 @@
 														<t:RowAction>
 															<t:items>
 																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onEntryTypeMappingEdit" />
-																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onEntryTypeMappingDelete" />
+																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onPassMappingDelete" />
 															</t:items>
 														</t:RowAction>
 													</t:rowActionTemplate>
 													<t:toolbar>
 														<m:Toolbar>
 															<m:ToolbarSpacer />
-															<m:Button icon="sap-icon://add" press="_onAddEntryTypeMapping" />
+															<m:Button icon="sap-icon://add" press="_onAddPassMapping" />
 														</m:Toolbar>
 													</t:toolbar>
 													<t:columns>
-														<t:Column sortProperty="name" width="auto">
+														<t:Column sortProperty="destination" width="auto">
 															<m:Label text="{i18n>ReaderPass.colDestinationAttr}" />
 															<t:template>
-																<m:Text text="{name}" wrapping="false" />
+																<m:Text text="{destination}" wrapping="false" />
 															</t:template>
 														</t:Column>
-														<t:Column sortProperty="name" width="auto">
+														<t:Column sortProperty="source" width="auto">
 															<m:Label text="{i18n>ReaderPass.colSourceAttr}" />
 															<t:template>
-																<m:Text text="{name}" wrapping="false" />
+																<m:Text text="{source}" wrapping="false" />
 															</t:template>
 														</t:Column>
-														<t:Column sortProperty="name" width="auto">
-															<m:Label text="{i18n>ReaderPass.colScript}" />
-															<t:template>
-																<m:Text text="{name}" wrapping="false" />
-															</t:template>
-														</t:Column>
-
 													</t:columns>
 												</t:Table>
 											</f:content>

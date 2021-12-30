@@ -2,6 +2,7 @@ package com.asena.scimgateway.controller;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.model.dto.jobs.PassDTO;
+import com.asena.scimgateway.model.dto.jobs.PassMappingDTO;
 import com.asena.scimgateway.model.dto.jobs.PassPropertyDTO;
 import com.asena.scimgateway.model.jobs.Pass;
 import com.asena.scimgateway.service.PassService;
@@ -44,5 +45,11 @@ public class PassController {
 	@PostMapping("/{id}/property")
 	public PassDTO addProperty(@RequestBody PassPropertyDTO pDTO, @PathVariable long id) {
 		return PassDTO.toDTO(passService.addPassProperty(pDTO.fromDTO(), id));
+	}
+
+	@PreAuthorize("isAdmin()")
+	@PostMapping("/{id}/mapping")
+	public PassDTO addMapping(@RequestBody PassMappingDTO pDTO, @PathVariable long id) {
+		return PassDTO.toDTO(passService.addPassMapping(pDTO.fromDTO(), id));
 	}
 }

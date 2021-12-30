@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:t="sap.ui.table">
+	<Dialog draggable="true" resizable="true" title="{i18n>AddPassMapping.title}">
+		<content>
+			<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
+				<f:content>
+					<Label text="{i18n>AddPassMapping.lblDestination}" />
+					<Input value="{mdlAddMapping>/destination}" />
+					<Label text="{i18n>AddPassMapping.lblSource}" />
+					<Input value="{mdlAddMapping>/source}" />
+				</f:content>
+			</f:SimpleForm>
+		</content>
+		<beginButton>
+			<Button text="{i18n>btnSave}" type="Emphasized" press="_onSavePassMapping" />
+		</beginButton>
+		<endButton>
+			<Button text="{i18n>btnClose}" press="_onCloseDialog" />
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

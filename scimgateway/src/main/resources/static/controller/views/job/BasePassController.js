@@ -49,6 +49,13 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       this.loadFragment("AddPassProperty");
     },
 
+    openAddMapping: function () {
+      this.isEdit = false;
+      var mdl = new JSONModel({});
+      this.getView().setModel(mdl, "mdlAddMapping");
+      this.loadFragment("AddPassMapping");
+    },
+
     addPassProperty: function () {
       var obj = this.getView().getModel("mdlAddProperty").getProperty("/");
       try {
@@ -68,6 +75,28 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       }
     },
 
+    addPassMapping: function () {
+      var obj = this.getView().getModel("mdlAddMapping").getProperty("/");
+      try {
+        if (!obj.source || obj.source === "") {
+          throw "Source has to be selected";
+        }
+
+        if (!obj.destination || obj.destination === "") {
+          throw "Destination has to be selected";
+        }
+
+        var writeObj = { id: 0, source: obj.source, destination: obj.destination };
+        if (!this.isEdit) {
+          this.createPassMapping(writeObj);
+        } else {
+          this.modifyPassMapping(this.passPropertyId, writeObj);
+        }
+      } catch (e) {
+        this.messageBoxGenerator(e, false);
+      }
+    },
+
     createPassProperty: function (obj) {
       var sQuery = "/api/v1/pass/" + this.id + "/property";
       var mParameters = {
@@ -78,6 +107,26 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           function () {
             this.genericDialog.close();
             this.messageBoxGenerator("Property added!", true);
+            this.loadPass(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
+
+    createPassMapping: function (obj) {
+      var sQuery = "/api/v1/pass/" + this.id + "/mapping";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.createDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+        .then(
+          function () {
+            this.genericDialog.close();
+            this.messageBoxGenerator("Mapping added!", true);
             this.loadPass(this.id);
           }.bind(this)
         )
@@ -125,6 +174,36 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
               .then(
                 function () {
                   this.messageBoxGenerator("Property was deleted successfully!", true);
+                  this.loadPass(this.id);
+                }.bind(this)
+              )
+              .catch(
+                function (oError) {
+                  this.showError(oError);
+                }.bind(this)
+              );
+          }
+        }.bind(this),
+      });
+    },
+
+    deletePassMapping: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext();
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      MessageBox.warning("Are you sure you want to delete the mapping?", {
+        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+        emphasizedAction: MessageBox.Action.OK,
+        onClose: function (sAction) {
+          if (sAction == MessageBox.Action.OK) {
+            var sQuery = "/api/v1/passmapping/" + p.id;
+            var mParameters = {
+              bShowBusyIndicator: true,
+            };
+            this.deleteWithJSONP(sQuery, mParameters)
+              .then(
+                function () {
+                  this.messageBoxGenerator("Mapping was deleted successfully!", true);
                   this.loadPass(this.id);
                 }.bind(this)
               )
