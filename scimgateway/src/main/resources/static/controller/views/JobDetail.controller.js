@@ -225,5 +225,30 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           break;
       }
     },
+
+    _onSaveJob: function () {
+      var mdl = this.getView().getModel();
+      var obj = mdl.getProperty("/");
+      this.updateJob(obj);
+    },
+
+    updateJob: function (obj) {
+      var sQuery = "/api/v1/job/" + obj.id;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+        .then(
+          function () {
+            this.messageBoxGenerator("Job saved!", true);
+            this.loadJob(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
   });
 });

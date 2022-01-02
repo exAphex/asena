@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,5 +52,11 @@ public class PassController {
 	@PostMapping("/{id}/mapping")
 	public PassDTO addMapping(@RequestBody PassMappingDTO pDTO, @PathVariable long id) {
 		return PassDTO.toDTO(passService.addPassMapping(pDTO.fromDTO(), id));
+	}
+
+	@PreAuthorize("isAdmin()")
+	@PutMapping("/{id}")
+	public PassDTO modifyJob(@RequestBody PassDTO pDTO, @PathVariable long id) {
+		return PassDTO.toDTO(passService.update(pDTO.fromDTO(), id));
 	}
 }

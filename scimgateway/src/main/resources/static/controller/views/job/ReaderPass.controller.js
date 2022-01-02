@@ -50,5 +50,9 @@ sap.ui.define(["controller/views/job/BasePassController", "sap/ui/model/json/JSO
     _onPassMappingEdit: function (oEvent) {
       this.editPassMapping(oEvent);
     },
+
+    _onSavePass: function () {
+      this.savePass();
+    },
   });
 });

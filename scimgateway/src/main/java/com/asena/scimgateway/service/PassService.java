@@ -78,4 +78,13 @@ public class PassService {
 		p.addMapping(pp);
 		return passRepository.save(p);
 	}
+
+	public Pass update(Pass p, long id) {
+		return findById(id).map(r -> {
+			r.setClearTable(p.isClearTable());
+			r.setDescription(p.getDescription());
+			r.setTableName(p.getTableName());
+			return passRepository.save(r);
+		}).orElseThrow(() -> new NotFoundException(id));
+	}
 }

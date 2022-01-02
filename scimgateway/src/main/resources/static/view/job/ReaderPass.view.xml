@@ -122,6 +122,11 @@
 				</sections>
 			</ObjectPageLayout>
 		</m:content>
-		<m:footer></m:footer>
+		<m:footer>
+			<m:Toolbar>
+				<m:ToolbarSpacer />
+				<m:Button press="_onSavePass" text="{i18n>ReaderPass.btnSave}" type="Emphasized" icon="sap-icon://save" />
+			</m:Toolbar>
+		</m:footer>
 	</m:Page>
 </mvc:View>

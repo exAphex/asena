@@ -138,4 +138,12 @@ public class JobService {
 		return findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
+	public Job update(Job j, long id) {
+		return findById(id).map(r -> {
+			r.setDescription(j.getDescription());
+			r.setEnabled(j.isEnabled());
+			return jobRepository.save(r);
+		}).orElseThrow(() -> new NotFoundException(id));
+	}
+
 }

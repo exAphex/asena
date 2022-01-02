@@ -276,5 +276,30 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       this.loadPassMapping(p.id);
       this.loadFragment("AddPassMapping");
     },
+
+    savePass: function () {
+      var mdl = this.getView().getModel();
+      var obj = mdl.getProperty("/");
+      this.updatePass(obj);
+    },
+
+    updatePass: function (obj) {
+      var sQuery = "/api/v1/pass/" + obj.id;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+        .then(
+          function () {
+            this.messageBoxGenerator("Pass saved!", true);
+            this.loadPass(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
   });
 });
