@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PassRepository extends JpaRepository<Pass, Long> {
 	List<Pass> findByPropertiesId(long id);
+
+	List<Pass> findByMappingsId(long id);
 }

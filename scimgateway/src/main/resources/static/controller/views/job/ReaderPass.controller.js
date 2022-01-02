@@ -46,5 +46,9 @@ sap.ui.define(["controller/views/job/BasePassController", "sap/ui/model/json/JSO
     _onPassMappingDelete: function (oEvent) {
       this.deletePassMapping(oEvent);
     },
+
+    _onPassMappingEdit: function (oEvent) {
+      this.editPassMapping(oEvent);
+    },
   });
 });

@@ -85,7 +85,7 @@
 													<t:rowActionTemplate>
 														<t:RowAction>
 															<t:items>
-																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onEntryTypeMappingEdit" />
+																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onPassMappingEdit" />
 																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onPassMappingDelete" />
 															</t:items>
 														</t:RowAction>

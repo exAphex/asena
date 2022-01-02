@@ -3,6 +3,7 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
   return Controller.extend("com.asena.ui5.controller.views.job.BasePassController", {
     isEdit: false,
     passPropertyId: 0,
+    passMappingId: 0,
 
     loadPass: function (id) {
       var sQuery = "/api/v1/pass/" + id;
@@ -33,6 +34,25 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           function (oData) {
             var oMainModel = new JSONModel(oData);
             this.getView().setModel(oMainModel, "mdlAddProperty");
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.messageBoxGenerator("Status Code: " + oError.status + " \n Error Message: " + JSON.stringify(oError.responseJSON), false);
+          }.bind(this)
+        );
+    },
+
+    loadPassMapping: function (id) {
+      var sQuery = "/api/v1/passmapping/" + id;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.loadJsonWithAjaxP(sQuery, mParameters)
+        .then(
+          function (oData) {
+            var oMainModel = new JSONModel(oData);
+            this.getView().setModel(oMainModel, "mdlAddMapping");
           }.bind(this)
         )
         .catch(
@@ -90,7 +110,7 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
         if (!this.isEdit) {
           this.createPassMapping(writeObj);
         } else {
-          this.modifyPassMapping(this.passPropertyId, writeObj);
+          this.modifyPassMapping(this.passMappingId, writeObj);
         }
       } catch (e) {
         this.messageBoxGenerator(e, false);
@@ -147,6 +167,26 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           function () {
             this.genericDialog.close();
             this.messageBoxGenerator("Property saved!", true);
+            this.loadPass(this.id);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.showError(oError);
+          }.bind(this)
+        );
+    },
+
+    modifyPassMapping: function (id, obj) {
+      var sQuery = "/api/v1/passmapping/" + id;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.updateDataWithAjaxP(sQuery, JSON.stringify(obj), mParameters)
+        .then(
+          function () {
+            this.genericDialog.close();
+            this.messageBoxGenerator("Mapping saved!", true);
             this.loadPass(this.id);
           }.bind(this)
         )
@@ -225,6 +265,16 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
       this.passPropertyId = p.id;
       this.loadPassProperty(p.id);
       this.loadFragment("AddPassProperty");
+    },
+
+    editPassMapping: function (oEvent) {
+      var rowItem = oEvent.getSource();
+      var ctx = rowItem.getBindingContext();
+      var p = ctx.getModel().getProperty(ctx.getPath());
+      this.isEdit = true;
+      this.passMappingId = p.id;
+      this.loadPassMapping(p.id);
+      this.loadFragment("AddPassMapping");
     },
   });
 });
