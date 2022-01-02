@@ -228,7 +228,14 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           );
           break;
         case "WRITE":
-          alert("Unknown pass type!");
+          sap.ui.core.UIComponent.getRouterFor(this).navTo(
+            "writerpass",
+            {
+              app: "writerpass",
+              id: p.id,
+            },
+            false
+          );
           break;
       }
     },

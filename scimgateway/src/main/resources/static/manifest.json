@@ -94,6 +94,11 @@
           "target": "ReaderPass"
         },
         {
+          "pattern": "WriterPass/{id}",
+          "name": "writerpass",
+          "target": "WriterPass"
+        },
+        {
           "pattern": "ProcessPass/{id}",
           "name": "processpass",
           "target": "ProcessPass"
@@ -140,6 +145,10 @@
         },
         "ReaderPass": {
           "viewName": "job/ReaderPass",
+          "viewLevel": 2
+        },
+        "WriterPass": {
+          "viewName": "job/WriterPass",
           "viewLevel": 2
         },
         "ProcessPass": {
