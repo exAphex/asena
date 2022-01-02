@@ -208,7 +208,14 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
 
       switch (p.type) {
         case "PROCESS":
-          alert("Unknown pass type!");
+          sap.ui.core.UIComponent.getRouterFor(this).navTo(
+            "processpass",
+            {
+              app: "processpass",
+              id: p.id,
+            },
+            false
+          );
           break;
         case "READ":
           sap.ui.core.UIComponent.getRouterFor(this).navTo(

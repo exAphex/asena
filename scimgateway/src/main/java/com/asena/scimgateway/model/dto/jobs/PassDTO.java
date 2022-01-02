@@ -19,6 +19,7 @@ public class PassDTO {
 	private long rank;
 	private String tableName;
 	private boolean clearTable;
+	private String sourceQuery;
 
 	private List<PassPropertyDTO> properties = new ArrayList<>();
 
@@ -39,6 +40,7 @@ public class PassDTO {
 		pDTO.setRank(p.getRank());
 		pDTO.setTableName(p.getTableName());
 		pDTO.setClearTable(p.isClearTable());
+		pDTO.setSourceQuery(p.getSourceQuery());
 
 		for (PassProperty pp : p.getProperties()) {
 			pDTO.addProperty(PassPropertyDTO.toDTO(pp));
@@ -49,6 +51,14 @@ public class PassDTO {
 		}
 
 		return pDTO;
+	}
+
+	public String getSourceQuery() {
+		return sourceQuery;
+	}
+
+	public void setSourceQuery(String sourceQuery) {
+		this.sourceQuery = sourceQuery;
 	}
 
 	public List<PassMappingDTO> getMappings() {
@@ -124,6 +134,7 @@ public class PassDTO {
 		p.setRank(getRank());
 		p.setTableName(getTableName());
 		p.setClearTable(isClearTable());
+		p.setSourceQuery(getSourceQuery());
 
 		if (getSystem() != null) {
 			p.setSystem(getSystem().fromDTO());

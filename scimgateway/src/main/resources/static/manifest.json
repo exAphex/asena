@@ -94,6 +94,11 @@
           "target": "ReaderPass"
         },
         {
+          "pattern": "ProcessPass/{id}",
+          "name": "processpass",
+          "target": "ProcessPass"
+        },
+        {
           "pattern": "Logs",
           "name": "logs",
           "target": "Logs"
@@ -135,6 +140,10 @@
         },
         "ReaderPass": {
           "viewName": "job/ReaderPass",
+          "viewLevel": 2
+        },
+        "ProcessPass": {
+          "viewName": "job/ProcessPass",
           "viewLevel": 2
         },
         "Scripts": {

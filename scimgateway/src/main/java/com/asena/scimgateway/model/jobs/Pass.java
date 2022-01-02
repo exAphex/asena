@@ -37,6 +37,7 @@ public class Pass {
 	private long rank;
 	private String tableName;
 	private boolean clearTable;
+	private String sourceQuery;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PassProperty> properties = new HashSet<>();
@@ -53,6 +54,14 @@ public class Pass {
 		HashCodeBuilder hcb = new HashCodeBuilder();
 		hcb.append(id);
 		return hcb.toHashCode();
+	}
+
+	public String getSourceQuery() {
+		return sourceQuery;
+	}
+
+	public void setSourceQuery(String sourceQuery) {
+		this.sourceQuery = sourceQuery;
 	}
 
 	public boolean isClearTable() {
