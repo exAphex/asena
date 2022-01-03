@@ -6,13 +6,13 @@
 					<ObjectPageHeader objectTitle="{/name}" objectSubtitle="{/description}" />
 				</headerTitle>
 				<sections>
-					<ObjectPageSection titleUppercase="false" title="{i18n>ProcessPass.titSource}">
+					<ObjectPageSection titleUppercase="false" title="{i18n>WriterPass.titSource}">
 						<subSections>
 							<ObjectPageSubSection>
 								<blocks>
 									<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
 										<f:content>
-											<m:Label text="{i18n>ProcessPass.lblSource}" />
+											<m:Label text="{i18n>WriterPass.lblSource}" />
 											<m:TextArea value="{/sourceQuery}" rows="12" />
 
 										</f:content>

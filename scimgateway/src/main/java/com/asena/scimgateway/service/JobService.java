@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
+import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.repository.JobRepository;
@@ -13,6 +14,8 @@ import com.asena.scimgateway.repository.PackageRepository;
 import com.asena.scimgateway.repository.PassRepository;
 import com.asena.scimgateway.model.jobs.Package;
 import com.asena.scimgateway.model.jobs.Pass;
+import com.asena.scimgateway.model.jobs.PassProperty;
+import com.asena.scimgateway.processor.ConnectorProcessor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,6 +130,15 @@ public class JobService {
 			String rsId = rs.getId();
 			rs = remoteSystemService.findById(rsId).orElseThrow(() -> new NotFoundException(rsId));
 			pass.setSystem(rs);
+
+			RemoteSystem connector = ConnectorProcessor.getRemoteSystemByType(rs.getType());
+			Set<ConnectionProperty> props = connector.getProperties();
+			if (props != null) {
+				for (ConnectionProperty cp : props) {
+					pass.addProperty(new PassProperty(cp.getKey(),
+							"$function.getRemoteSystemProperty(" + cp.getKey() + ")", cp.getDescription()));
+				}
+			}
 		}
 		pass = passRepository.save(pass);
 

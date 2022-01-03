@@ -21,6 +21,15 @@ public class PassProperty {
 	private String value;
 	private String description;
 
+	public PassProperty(String key, String value, String description) {
+		setKey(key);
+		setValue(value);
+		setDescription(description);
+	}
+
+	public PassProperty() {
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
