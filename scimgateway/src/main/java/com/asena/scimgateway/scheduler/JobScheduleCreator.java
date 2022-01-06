@@ -45,7 +45,7 @@ public class JobScheduleCreator {
 		factoryBean.setName(triggerName);
 		factoryBean.setStartTime(startTime);
 		factoryBean.setRepeatInterval(repeatTime);
-		factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+		factoryBean.setRepeatCount(1);
 		factoryBean.setMisfireInstruction(misFireInstruction);
 		factoryBean.afterPropertiesSet();
 		return factoryBean.getObject();
@@ -59,6 +59,7 @@ public class JobScheduleCreator {
 		factoryBean.setApplicationContext(context);
 		factoryBean.setName(jobName);
 		factoryBean.setGroup(jobGroup);
+		factoryBean.setDurability(true);
 
 		// Set job data map
 		JobDataMap jobDataMap = new JobDataMap();

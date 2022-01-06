@@ -6,18 +6,27 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
+import com.asena.scimgateway.jobs.JobRunner;
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.repository.JobRepository;
 import com.asena.scimgateway.repository.PackageRepository;
 import com.asena.scimgateway.repository.PassRepository;
+import com.asena.scimgateway.scheduler.JobScheduleCreator;
 import com.asena.scimgateway.model.jobs.Package;
 import com.asena.scimgateway.model.jobs.Pass;
 import com.asena.scimgateway.model.jobs.PassProperty;
 import com.asena.scimgateway.processor.ConnectorProcessor;
 
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,6 +43,15 @@ public class JobService {
 
 	@Autowired
 	private PassRepository passRepository;
+
+	@Autowired
+	private SchedulerFactoryBean schedulerFactoryBean;
+
+	@Autowired
+	private JobScheduleCreator scheduleCreator;
+
+	@Autowired
+	private ApplicationContext context;
 
 	public Optional<Job> findById(long id) {
 		return jobRepository.findById(id);
@@ -156,6 +174,33 @@ public class JobService {
 			r.setEnabled(j.isEnabled());
 			return jobRepository.save(r);
 		}).orElseThrow(() -> new NotFoundException(id));
+	}
+
+	/*
+	 * private Trigger getOndemandTrigger(Scheduler scheduler, long id) { Trigger
+	 * retTrigger = null; try { retTrigger =
+	 * scheduler.getTrigger(TriggerKey.triggerKey("ondemand_" + id)); if (retTrigger
+	 * == null) { retTrigger = scheduleCreator.createSimpleTrigger("ondemand_" + id,
+	 * new Date(), (long) 1, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW); } } catch
+	 * (SchedulerException e) { e.printStackTrace(); } return retTrigger; }
+	 */
+
+	public Job startJob(long id) throws SchedulerException {
+		Job j = findById(id).orElseThrow(() -> new NotFoundException(id));
+		Scheduler scheduler = schedulerFactoryBean.getScheduler();
+		JobDetail jobDetail = JobBuilder.newJob(JobRunner.class).withIdentity(j.getId() + "", "jobs").build();
+		if (!scheduler.checkExists(jobDetail.getKey())) {
+
+			jobDetail = scheduleCreator.createJob(JobRunner.class, false, context, j.getId() + "", "jobs");
+			scheduler.addJob(jobDetail, true);
+		}
+		List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobDetail.getKey());
+		for (Trigger t : triggers) {
+			scheduler.unscheduleJob(t.getKey());
+		}
+		scheduler.triggerJob(jobDetail.getKey());
+
+		return j;
 	}
 
 }

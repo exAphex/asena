@@ -6,6 +6,7 @@ import com.asena.scimgateway.model.dto.jobs.PassDTO;
 import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.service.JobService;
 
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -63,6 +64,12 @@ public class JobController {
 	@PostMapping("/{id}/{passId}/movedown")
 	public JobDTO movedownPass(@PathVariable long id, @PathVariable long passId) {
 		return JobDTO.toDTO(jobService.moveDown(passId, id));
+	}
+
+	@PreAuthorize("isAdmin()")
+	@GetMapping("/{id}/run")
+	public JobDTO movedownPass(@PathVariable long id) throws SchedulerException {
+		return JobDTO.toDTO(jobService.startJob(id));
 	}
 
 }
