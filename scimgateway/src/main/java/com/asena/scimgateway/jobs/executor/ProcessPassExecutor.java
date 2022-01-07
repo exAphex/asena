@@ -26,11 +26,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProcessPassExecutor extends BaseExecutor {
 
-	String variablePrefix = "${";
-	String variableSuffix = "}";
-	String functionPrefix = "$function.";
-	String functionStart = "(";
-	String functionEnd = ")";
+	private static String variablePrefix = "${";
+	private static String variableSuffix = "}";
+	private static String functionPrefix = "$function.";
+	private static String functionStart = "(";
+	private static String functionEnd = ")";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -38,37 +38,63 @@ public class ProcessPassExecutor extends BaseExecutor {
 	@Autowired
 	private ScriptService scriptService;
 
-	public void execute(Pass p) {
-		String sQuery = p.getSourceQuery();
-		List<Map<String, String>> data = queryData(sQuery);
-		List<Map<String, String>> processedData = processData(p, data);
-		// List<HashMap<String, String>> lstData = processData(sQuery);
-		writeData(processedData, p);
-	}
-
-	private void writeData(List<Map<String, String>> data, Pass p) {
+	private void handleTable(Pass p, List<PassMapping> passes) {
 		if (p.isClearTable()) {
 			jdbcTemplate.execute("DROP TABLE IF EXISTS " + p.getTableName() + ";");
 		}
 
-		List<PassMapping> lstPasses = new ArrayList<>(p.getMappings());
-		lstPasses.sort((o1, o2) -> (o1.getDestination().compareTo(o2.getDestination())));
 		String createTableSQL = "CREATE TABLE IF NOT EXISTS " + p.getTableName() + "(";
-		String insertMappingSQL = "";
-		String placeHolderMappingSQL = "";
-		for (PassMapping pm : lstPasses) {
+		for (PassMapping pm : passes) {
 			createTableSQL += pm.getDestination() + " varchar(255),";
-			insertMappingSQL += pm.getDestination() + ",";
-			placeHolderMappingSQL += "?,";
 		}
 
 		if (createTableSQL.substring(createTableSQL.length() - 1).equals(",")) {
 			createTableSQL = createTableSQL.substring(0, createTableSQL.length() - 1);
-			insertMappingSQL = insertMappingSQL.substring(0, insertMappingSQL.length() - 1);
-			placeHolderMappingSQL = placeHolderMappingSQL.substring(0, placeHolderMappingSQL.length() - 1);
 		}
 		createTableSQL += ");";
 		jdbcTemplate.execute(createTableSQL);
+	}
+
+	private String getPlaceHolderSQL(List<PassMapping> passes) {
+		String placeHolderMappingSQL = "";
+		for (int i = 0; i < passes.size(); i++) {
+			placeHolderMappingSQL += "?,";
+		}
+
+		if (placeHolderMappingSQL.substring(placeHolderMappingSQL.length() - 1).equals(",")) {
+			placeHolderMappingSQL = placeHolderMappingSQL.substring(0, placeHolderMappingSQL.length() - 1);
+		}
+
+		return placeHolderMappingSQL;
+	}
+
+	private String getInsertValuesSQL(List<PassMapping> passes) {
+		String insertMappingSQL = "";
+		for (PassMapping pm : passes) {
+			insertMappingSQL += pm.getDestination() + ",";
+		}
+
+		if (insertMappingSQL.substring(insertMappingSQL.length() - 1).equals(",")) {
+			insertMappingSQL = insertMappingSQL.substring(0, insertMappingSQL.length() - 1);
+		}
+
+		return insertMappingSQL;
+	}
+
+	public void execute(Pass p) {
+		String sQuery = p.getSourceQuery();
+		List<Map<String, String>> data = queryData(sQuery);
+		List<Map<String, String>> processedData = processData(p, data);
+		writeData(processedData, p);
+	}
+
+	private void writeData(List<Map<String, String>> data, Pass p) {
+		List<PassMapping> lstPasses = new ArrayList<>(p.getMappings());
+		lstPasses.sort((o1, o2) -> (o1.getDestination().compareTo(o2.getDestination())));
+
+		handleTable(p, lstPasses);
+		String placeHolderMappingSQL = getPlaceHolderSQL(lstPasses);
+		String insertMappingSQL = getInsertValuesSQL(lstPasses);
 
 		for (Map<String, String> d : data) {
 			String insertSQL = "INSERT INTO " + p.getTableName() + " (" + insertMappingSQL + ") VALUES ("
