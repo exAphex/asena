@@ -30,7 +30,7 @@ public class Job {
 	private String description;
 	private boolean enabled;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Pass> passes = new HashSet<>();
 
 	@Override

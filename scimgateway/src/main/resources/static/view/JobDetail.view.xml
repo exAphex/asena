@@ -4,7 +4,11 @@
 		<m:content>
 			<ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
 				<headerTitle>
-					<ObjectPageHeader objectTitle="{/name}" objectSubtitle="{/description}" />
+					<ObjectPageHeader objectTitle="{/name}" objectSubtitle="{/description}">
+						<actions>
+							<ObjectPageHeaderActionButton icon="sap-icon://begin" text="{i18n>JobDetail.btnStart}" importance="Low" tooltip="{i18n>JobDetail.btnStart}" />
+						</actions>
+					</ObjectPageHeader>
 				</headerTitle>
 				<sections>
 					<ObjectPageSection titleUppercase="false" title="{i18n>JobDetail.titPasses}">

@@ -37,22 +37,18 @@ public class ScriptService {
     }
 
     public Script update(Script sc, long id) {
-        return findById(id)
-        .map(s -> {
+        return findById(id).map(s -> {
             s.setContent(sc.getContent());
 
             return scriptRepository.save(s);
-        })
-        .orElseThrow(() -> new NotFoundException(id));
+        }).orElseThrow(() -> new NotFoundException(id));
     }
 
     public Script deleteById(long id) {
-        return findById(id)
-        .map(sc -> {
+        return findById(id).map(sc -> {
             deleteScript(sc);
             return sc;
-        })
-        .orElseThrow(() -> new NotFoundException(id)); 
+        }).orElseThrow(() -> new NotFoundException(id));
     }
 
     public void deleteAll() {
@@ -70,5 +66,9 @@ public class ScriptService {
         }
 
         scriptRepository.deleteById(s.getId());
+    }
+
+    public Script findByName(String name) {
+        return scriptRepository.findByName(name);
     }
 }
