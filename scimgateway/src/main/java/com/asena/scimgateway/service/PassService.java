@@ -85,6 +85,7 @@ public class PassService {
 			r.setDescription(p.getDescription());
 			r.setTableName(p.getTableName());
 			r.setSourceQuery(p.getSourceQuery());
+			r.setEntityType(p.getEntityType());
 			return passRepository.save(r);
 		}).orElseThrow(() -> new NotFoundException(id));
 	}

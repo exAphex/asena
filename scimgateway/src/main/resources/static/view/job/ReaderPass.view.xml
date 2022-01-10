@@ -76,6 +76,10 @@
 												<m:Input value="{/tableName}" editable="true" />
 												<m:Label text="{i18n>ReaderPass.lblClearTable}" />
 												<m:CheckBox selected="{/clearTable}" />
+												<m:Label text="{i18n>ReaderPass.lblEntityType}" />
+												<m:Select forceSelection="true" selectedKey="{/entityType}" items="{mdlEntityTypes>/remoteSystemTemplate/entryTypeMappings/}">
+													<core:Item key="{mdlEntityTypes>name}" text="{mdlEntityTypes>name}" />
+												</m:Select>
 												<m:Label text="{i18n>ReaderPass.lblMappings}" />
 												<t:Table id="tblMappings" rows="{path: '/mappings/',
                             sorter : {

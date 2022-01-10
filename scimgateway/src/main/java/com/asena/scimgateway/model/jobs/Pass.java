@@ -38,6 +38,7 @@ public class Pass {
 	private String tableName;
 	private boolean clearTable;
 	private String sourceQuery;
+	private String entityType;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PassProperty> properties = new HashSet<>();
@@ -54,6 +55,14 @@ public class Pass {
 		HashCodeBuilder hcb = new HashCodeBuilder();
 		hcb.append(id);
 		return hcb.toHashCode();
+	}
+
+	public String getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
 	}
 
 	public String getSourceQuery() {

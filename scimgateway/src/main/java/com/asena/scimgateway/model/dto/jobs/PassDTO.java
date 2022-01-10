@@ -20,6 +20,7 @@ public class PassDTO {
 	private String tableName;
 	private boolean clearTable;
 	private String sourceQuery;
+	private String entityType;
 
 	private List<PassPropertyDTO> properties = new ArrayList<>();
 
@@ -41,6 +42,7 @@ public class PassDTO {
 		pDTO.setTableName(p.getTableName());
 		pDTO.setClearTable(p.isClearTable());
 		pDTO.setSourceQuery(p.getSourceQuery());
+		pDTO.setEntityType(p.getEntityType());
 
 		for (PassProperty pp : p.getProperties()) {
 			pDTO.addProperty(PassPropertyDTO.toDTO(pp));
@@ -51,6 +53,14 @@ public class PassDTO {
 		}
 
 		return pDTO;
+	}
+
+	public String getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
 	}
 
 	public String getSourceQuery() {
@@ -135,6 +145,7 @@ public class PassDTO {
 		p.setTableName(getTableName());
 		p.setClearTable(isClearTable());
 		p.setSourceQuery(getSourceQuery());
+		p.setEntityType(getEntityType());
 
 		if (getSystem() != null) {
 			p.setSystem(getSystem().fromDTO());

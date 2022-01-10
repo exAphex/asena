@@ -8,6 +8,7 @@ import java.util.Set;
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.jobs.JobRunner;
 import com.asena.scimgateway.model.ConnectionProperty;
+import com.asena.scimgateway.model.EntryTypeMapping;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.model.jobs.Job;
 import com.asena.scimgateway.repository.JobRepository;
@@ -155,6 +156,13 @@ public class JobService {
 				for (ConnectionProperty cp : props) {
 					pass.addProperty(new PassProperty(cp.getKey(),
 							"$function.getRemoteSystemProperty(" + cp.getKey() + ")", cp.getDescription()));
+				}
+			}
+			Set<EntryTypeMapping> ets = connector.getEntryTypeMappings();
+			if (ets != null) {
+				for (EntryTypeMapping e : ets) {
+					pass.setEntityType(e.getName());
+					break;
 				}
 			}
 		}

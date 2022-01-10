@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passes (
 	"type" integer,
 	system_id character varying(255),
 	source_query character varying(255),
+  entity_type character varying(255),
 	PRIMARY KEY(id)
 );
 

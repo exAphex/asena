@@ -15,6 +15,29 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           function (oData) {
             var oMainModel = new JSONModel(oData);
             this.getView().setModel(oMainModel);
+
+            if (oData.system && oData.system.type) {
+              this.loadEntityTypeSuggestions(oData.system.type);
+            }
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.messageBoxGenerator("Status Code: " + oError.status + " \n Error Message: " + JSON.stringify(oError.responseJSON), false);
+          }.bind(this)
+        );
+    },
+
+    loadEntityTypeSuggestions: function (type) {
+      var sQuery = "/api/v1/connector/" + type;
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.loadJsonWithAjaxP(sQuery, mParameters)
+        .then(
+          function (oData) {
+            var oMainModel = new JSONModel(oData);
+            this.getView().setModel(oMainModel, "mdlEntityTypes");
           }.bind(this)
         )
         .catch(
