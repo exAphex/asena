@@ -43,7 +43,13 @@ public class JobRunner extends QuartzJobBean {
 
 		Job j = jobService.findById(jobId).orElseThrow(() -> new NotFoundException(0l));
 		try {
-			executeJob(j);
+			logger.info("Running job " + j.getName() + " (" + j.getId() + ")");
+			if (j.isEnabled()) {
+				executeJob(j);
+			} else {
+				logger.info("Job is disabled. Skipping...");
+			}
+			logger.info("Job with id " + j.getId() + "finished.");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -57,6 +63,7 @@ public class JobRunner extends QuartzJobBean {
 		List<Pass> lstPasses = new ArrayList<>(passes);
 		lstPasses.sort((o1, o2) -> (o1.getRank() > o2.getRank() ? 1 : -1));
 		for (Pass p : lstPasses) {
+			logger.info("Executing pass " + p.getName() + " (" + p.getId() + ")");
 			executePass(p);
 		}
 	}
@@ -68,7 +75,6 @@ public class JobRunner extends QuartzJobBean {
 
 		switch (p.getType()) {
 			case PROCESS:
-
 				processPassExecutor.execute(p);
 				break;
 			case WRITE:

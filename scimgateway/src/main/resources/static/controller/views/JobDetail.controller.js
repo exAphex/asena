@@ -264,5 +264,23 @@ sap.ui.define(["controller/core/BaseController", "sap/ui/model/json/JSONModel", 
           }.bind(this)
         );
     },
+
+    _onRunJob: function () {
+      var sQuery = "/api/v1/job/" + this.id + "/run";
+      var mParameters = {
+        bShowBusyIndicator: true,
+      };
+      this.loadJsonWithAjaxP(sQuery, mParameters)
+        .then(
+          function (oData) {
+            this.messageBoxGenerator("Job started!", true);
+          }.bind(this)
+        )
+        .catch(
+          function (oError) {
+            this.messageBoxGenerator("Status Code: " + oError.status + " \n Error Message: " + JSON.stringify(oError.responseJSON), false);
+          }.bind(this)
+        );
+    },
   });
 });
