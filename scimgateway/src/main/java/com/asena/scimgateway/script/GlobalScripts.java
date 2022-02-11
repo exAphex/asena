@@ -1,11 +1,16 @@
 package com.asena.scimgateway.script;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.model.ConnectionProperty;
 import com.asena.scimgateway.model.RemoteSystem;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
@@ -38,6 +43,7 @@ public class GlobalScripts extends ImporterTopLevel {
         hooks.add("getRemoteSystem");
         hooks.add("getSystemId");
         hooks.add("println");
+        hooks.add("readJSONFromString");
 
         String[] hookNames = new String[hooks.size()];
         hookNames = hooks.toArray(hookNames);
@@ -70,6 +76,11 @@ public class GlobalScripts extends ImporterTopLevel {
     public String println(Object s) {
         System.out.println(s);
         return null;
+    }
+
+    public HashMap<String, Object> readJSONFromString(String json)
+            throws JsonMappingException, JsonProcessingException {
+        return new ObjectMapper().readValue(json, HashMap.class);
     }
 
 }

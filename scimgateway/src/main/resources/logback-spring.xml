@@ -8,19 +8,15 @@
     <springProperty name="spring.datasource.password" source="spring.datasource.password"/>
     <springProperty name="logging.level.root" source="logging.level.root"/>
 
-    <appender name="DATABASE" class="ch.qos.logback.classic.db.DBAppender">
-        <dbNameResolver class="ch.qos.logback.classic.db.names.SimpleDBNameResolver">
-            <tableNamePrefix>asena.</tableNamePrefix>
-        </dbNameResolver>
-        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <driverClass>${spring.datasource.driverClassName}</driverClass>
-            <url>${spring.datasource.url}</url>
-            <user>${spring.datasource.username}</user>
-            <password>${spring.datasource.password}</password>
-        </connectionSource>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
     </appender>
 
     <root level="${logging.level.root}">
-        <appender-ref ref="DATABASE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
- </configuration>
+</configuration>

@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.asena.scimgateway.exception.NotFoundException;
 import com.asena.scimgateway.jobs.executor.ProcessPassExecutor;
+import com.asena.scimgateway.jobs.executor.ReaderPassExecutor;
 
 @DisallowConcurrentExecution
 @Component
@@ -32,6 +33,9 @@ public class JobRunner extends QuartzJobBean {
 
 	@Autowired
 	private ProcessPassExecutor processPassExecutor;
+
+	@Autowired
+	private ReaderPassExecutor readerPassExecutor;
 
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
@@ -58,7 +62,7 @@ public class JobRunner extends QuartzJobBean {
 		logger.info("Jobrunner finished!");
 	}
 
-	public void executeJob(Job j) {
+	public void executeJob(Job j) throws Exception {
 		Set<Pass> passes = j.getPasses();
 		List<Pass> lstPasses = new ArrayList<>(passes);
 		lstPasses.sort((o1, o2) -> (o1.getRank() > o2.getRank() ? 1 : -1));
@@ -68,7 +72,7 @@ public class JobRunner extends QuartzJobBean {
 		}
 	}
 
-	public void executePass(Pass p) {
+	public void executePass(Pass p) throws Exception {
 		if (p == null) {
 			return;
 		}
@@ -80,6 +84,7 @@ public class JobRunner extends QuartzJobBean {
 			case WRITE:
 				break;
 			case READ:
+				readerPassExecutor.execute(p);
 				break;
 		}
 	}

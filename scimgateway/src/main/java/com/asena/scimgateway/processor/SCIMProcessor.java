@@ -26,11 +26,14 @@ public class SCIMProcessor {
         setRemoteSystem(rs);
     }
 
-    public HashMap<String, Object> getEntities() throws Exception {
+    public List<HashMap<String, Object>> getEntitiesRaw() throws Exception {
         IConnector conn = getConnector();
         List<HashMap<String, Object>> data = transferGetEntitiesToConnector(conn);
-        data = prepareListDataFromRemoteSystem(data);
+        return prepareListDataFromRemoteSystem(data);
+    }
 
+    public HashMap<String, Object> getEntities() throws Exception {
+        List<HashMap<String, Object>> data = getEntitiesRaw();
         HashMap<String, Object> scimResult = SCIMResultProcessor.createSCIMResult(data);
         return scimResult;
     }
@@ -49,7 +52,7 @@ public class SCIMProcessor {
         List<Modification> modifications = ModificationProcessor.patch(obj);
         ModificationStep mStep = prepareDataFromRemoteSystem(modifications);
         Modification mId = getWriteNameId(conn, entityId);
- 
+
         mStep.upsertModification(mId);
         mStep.setId((String) mId.getValue());
 
@@ -74,7 +77,7 @@ public class SCIMProcessor {
     public HashMap<String, Object> updateEntity(String entityId, HashMap<String, Object> obj) throws Exception {
         IConnector conn = getConnector();
         HashMap<String, Object> data = prepareDataToRemoteSystem(obj);
-        Modification mId = getWriteNameId(conn, entityId); 
+        Modification mId = getWriteNameId(conn, entityId);
         ModificationStep mStep = ModificationProcessor.update(data);
 
         mStep.upsertModification(mId);
@@ -119,7 +122,8 @@ public class SCIMProcessor {
             if (a.getTransformation() != null) {
                 o = ScriptProcessor.processTransformation(a, o, remoteSystem);
             }
-            retModifications.addModification(new Modification(a.getDestination(), o, (m != null ? m.getType() : ModificationType.SIMPLE)));
+            retModifications.addModification(
+                    new Modification(a.getDestination(), o, (m != null ? m.getType() : ModificationType.SIMPLE)));
         }
 
         return retModifications;
@@ -147,7 +151,7 @@ public class SCIMProcessor {
             JSONUtil.create(jsonContext, a.getDestination(), attrObj);
         }
         HashMap<String, Object> tmpObj = jsonContext.read("$");
-        SCIMResultProcessor.addMetaDataList(tmpObj, entry, remoteSystem, (String)tmpObj.get("id"), entity);
+        SCIMResultProcessor.addMetaDataList(tmpObj, entry, remoteSystem, (String) tmpObj.get("id"), entity);
         return tmpObj;
     }
 
@@ -204,7 +208,8 @@ public class SCIMProcessor {
         return new Modification(nameId, newId);
     }
 
-    private HashMap<String, Object> postPrepareDataToRemoteSystem(IConnector conn, RemoteSystem rs, String id, HashMap<String, Object> data) {
+    private HashMap<String, Object> postPrepareDataToRemoteSystem(IConnector conn, RemoteSystem rs, String id,
+            HashMap<String, Object> data) {
         String nameId = conn.getNameId();
         String newId = processId(id, getWriteMappingNameId(conn));
         if (data.containsKey(nameId)) {
@@ -239,7 +244,8 @@ public class SCIMProcessor {
             }
         }
 
-        throw new InternalErrorException("No read mapping found for entity: " + entity + " on target system: " + remoteSystem.getName());
+        throw new InternalErrorException(
+                "No read mapping found for entity: " + entity + " on target system: " + remoteSystem.getName());
     }
 
     private Set<Attribute> getWriteMappings() {
@@ -253,7 +259,8 @@ public class SCIMProcessor {
             }
         }
 
-        throw new InternalErrorException("No write mapping found for entity: " + entity + " on target system: " + remoteSystem.getName());
+        throw new InternalErrorException(
+                "No write mapping found for entity: " + entity + " on target system: " + remoteSystem.getName());
     }
 
     private String processId(String o, Attribute a) {
@@ -287,27 +294,23 @@ public class SCIMProcessor {
         getWriteMappingNameId(conn);
     }
 
-    private String transferCreateToConnector(IConnector conn, HashMap<String, Object> data)
-            throws Exception {
-       
+    private String transferCreateToConnector(IConnector conn, HashMap<String, Object> data) throws Exception {
+
         conn.setupConnector(remoteSystem);
         return conn.createEntity(entity, data);
     }
 
-    private String transferUpdateToConnector(IConnector conn, ModificationStep ms)
-            throws Exception {
+    private String transferUpdateToConnector(IConnector conn, ModificationStep ms) throws Exception {
         conn.setupConnector(remoteSystem);
         return conn.updateEntity(entity, ms);
     }
 
-    private boolean transferDeleteToConnector(IConnector conn, HashMap<String, Object> data)
-            throws Exception {
+    private boolean transferDeleteToConnector(IConnector conn, HashMap<String, Object> data) throws Exception {
         conn.setupConnector(remoteSystem);
         return conn.deleteEntity(entity, data);
     }
 
-    private List<HashMap<String, Object>> transferGetEntitiesToConnector(IConnector conn)
-            throws Exception {
+    private List<HashMap<String, Object>> transferGetEntitiesToConnector(IConnector conn) throws Exception {
         conn.setupConnector(remoteSystem);
         return conn.getEntities(entity);
     }
@@ -317,7 +320,6 @@ public class SCIMProcessor {
         conn.setupConnector(remoteSystem);
         return conn.getEntity(entity, data);
     }
-
 
     public void setRemoteSystem(RemoteSystem remoteSystem) {
         this.remoteSystem = remoteSystem;

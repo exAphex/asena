@@ -31,10 +31,10 @@ public class RemoteSystem {
     @Transient
     private Set<Attribute> attributes;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EntryTypeMapping> entryTypeMappings; 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EntryTypeMapping> entryTypeMappings;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConnectionProperty> properties;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -47,7 +47,6 @@ public class RemoteSystem {
     public RemoteSystem() {
     }
 
-    
     public User getServiceUser() {
         return serviceUser;
     }
