@@ -21,10 +21,10 @@ import com.asena.scimgateway.model.RemoteSystem;
 import org.junit.jupiter.api.Test;
 
 public class ConnectorProcessorTest {
-    
+
     @Test
     void getAvailableConnectorsTest() {
-        Set<RemoteSystem> conns = ConnectorProcessor.getAvailableConnectors();
+        Set<RemoteSystem> conns = ConnectorProcessor.getAvailableConnectorTemplates();
         assertNotEquals(0, conns.size());
     }
 
@@ -42,7 +42,7 @@ public class ConnectorProcessorTest {
         IConnector conn = ConnectorProcessor.getConnectorByType("LDAP");
         assertNotNull(conn);
         assertTrue(conn instanceof LDAPConnector);
-        
+
         conn = ConnectorProcessor.getConnectorByType("NOOP");
         assertNotNull(conn);
         assertTrue(conn instanceof NoOpConnector);
