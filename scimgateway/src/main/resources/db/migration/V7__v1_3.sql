@@ -1,0 +1,337 @@
+CREATE TABLE ${flyway:defaultSchema}.packages
+(
+    id bigint NOT NULL,
+	"name" character varying(255) UNIQUE NOT NULL,
+    CONSTRAINT packages_pkey PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE ${flyway:defaultSchema}.packages_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE TABLE ${flyway:defaultSchema}.jobs
+(
+    id bigint NOT NULL,
+	"name" character varying(255) NOT NULL,
+    "description" character varying(8096),
+    "enabled" boolean,
+
+    CONSTRAINT jobs_pkey PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE ${flyway:defaultSchema}.jobs_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.packages_jobs (
+	package_id bigint NOT NULL,
+	jobs_id bigint NOT NULL,
+	PRIMARY KEY(jobs_id)
+);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.packages_jobs
+	ADD CONSTRAINT fkeuokt97um3t5h864f42494wpl
+	FOREIGN KEY (package_id)
+	REFERENCES ${flyway:defaultSchema}.packages (id);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.packages_jobs
+	ADD CONSTRAINT fk31fwtbqwcclei409b4x3wp2dy
+	FOREIGN KEY (jobs_id)
+	REFERENCES ${flyway:defaultSchema}.jobs (id);
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passes (
+	id bigint NOT NULL,
+	clear_table boolean NOT NULL,
+	description character varying(255),
+	name character varying(255),
+	rank bigint NOT NULL,
+	table_name character varying(255),
+	"type" integer,
+	system_id character varying(255),
+	source_query character varying(255),
+  entity_type character varying(255),
+	PRIMARY KEY(id)
+);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passes
+	ADD CONSTRAINT fk5cv2ucg3j3b2lxlnoqba8dafq
+	FOREIGN KEY (system_id)
+	REFERENCES remotesystems (id);
+
+CREATE SEQUENCE ${flyway:defaultSchema}.passes_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.jobs_passes (
+	job_id bigint NOT NULL,
+	passes_id bigint NOT NULL,
+	PRIMARY KEY(passes_id)
+);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.jobs_passes
+	ADD CONSTRAINT fkib3qj1wb1e925aly8wutrm7ti
+	FOREIGN KEY (job_id)
+	REFERENCES ${flyway:defaultSchema}.jobs (id);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.jobs_passes
+	ADD CONSTRAINT fkpo8drmhh38g5r8sud1kg4y2x
+	FOREIGN KEY (passes_id)
+	REFERENCES ${flyway:defaultSchema}.passes (id);
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passmappings (
+	id bigint NOT NULL,
+	destination character varying(255),
+	source character varying(255),
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passproperties (
+	id bigint NOT NULL,
+	description character varying(255) ,
+	"key" character varying(255)  NOT NULL,
+	"value" character varying(255),
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passes_mappings (
+	pass_id bigint NOT NULL,
+	mappings_id bigint NOT NULL,
+	PRIMARY KEY(mappings_id)
+);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passes_mappings
+	ADD CONSTRAINT fklx7itletmwjr0oxfckuq95k8a
+	FOREIGN KEY (mappings_id)
+	REFERENCES ${flyway:defaultSchema}.passmappings (id);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passes_mappings
+	ADD CONSTRAINT fkbyr7hqr5tk164dglc9rc2888h
+	FOREIGN KEY (pass_id)
+	REFERENCES ${flyway:defaultSchema}.passes (id);
+
+CREATE TABLE IF NOT EXISTS ${flyway:defaultSchema}.passes_properties (
+	pass_id bigint NOT NULL,
+	properties_id bigint NOT NULL,
+	PRIMARY KEY(properties_id)
+);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passes_properties
+	ADD CONSTRAINT fkeuga13gurw5p8ik4lvtodx8ib
+	FOREIGN KEY (pass_id)
+	REFERENCES ${flyway:defaultSchema}.passes (id);
+
+ALTER TABLE IF EXISTS ${flyway:defaultSchema}.passes_properties
+	ADD CONSTRAINT fk6w35ws54fl11tpheny43hfmy7
+	FOREIGN KEY (properties_id)
+	REFERENCES ${flyway:defaultSchema}.passproperties (id);
+
+CREATE SEQUENCE ${flyway:defaultSchema}.passmapping_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE ${flyway:defaultSchema}.passproperty_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_JOB_DETAILS
+(
+  SCHED_NAME        VARCHAR(120) NOT NULL,
+  JOB_NAME          VARCHAR(200) NOT NULL,
+  JOB_GROUP         VARCHAR(200) NOT NULL,
+  DESCRIPTION       VARCHAR(250) NULL,
+  JOB_CLASS_NAME    VARCHAR(250) NOT NULL,
+  IS_DURABLE        BOOL         NOT NULL,
+  IS_NONCONCURRENT  BOOL         NOT NULL,
+  IS_UPDATE_DATA    BOOL         NOT NULL,
+  REQUESTS_RECOVERY BOOL         NOT NULL,
+  JOB_DATA          BYTEA        NULL,
+  PRIMARY KEY (SCHED_NAME, JOB_NAME, JOB_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_TRIGGERS
+(
+  SCHED_NAME     VARCHAR(120) NOT NULL,
+  TRIGGER_NAME   VARCHAR(200) NOT NULL,
+  TRIGGER_GROUP  VARCHAR(200) NOT NULL,
+  JOB_NAME       VARCHAR(200) NOT NULL,
+  JOB_GROUP      VARCHAR(200) NOT NULL,
+  DESCRIPTION    VARCHAR(250) NULL,
+  NEXT_FIRE_TIME BIGINT       NULL,
+  PREV_FIRE_TIME BIGINT       NULL,
+  PRIORITY       INTEGER      NULL,
+  TRIGGER_STATE  VARCHAR(16)  NOT NULL,
+  TRIGGER_TYPE   VARCHAR(8)   NOT NULL,
+  START_TIME     BIGINT       NOT NULL,
+  END_TIME       BIGINT       NULL,
+  CALENDAR_NAME  VARCHAR(200) NULL,
+  MISFIRE_INSTR  SMALLINT     NULL,
+  JOB_DATA       BYTEA        NULL,
+  PRIMARY KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP),
+  FOREIGN KEY (SCHED_NAME, JOB_NAME, JOB_GROUP)
+  REFERENCES ${flyway:defaultSchema}.QRTZ_JOB_DETAILS (SCHED_NAME, JOB_NAME, JOB_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_SIMPLE_TRIGGERS
+(
+  SCHED_NAME      VARCHAR(120) NOT NULL,
+  TRIGGER_NAME    VARCHAR(200) NOT NULL,
+  TRIGGER_GROUP   VARCHAR(200) NOT NULL,
+  REPEAT_COUNT    BIGINT       NOT NULL,
+  REPEAT_INTERVAL BIGINT       NOT NULL,
+  TIMES_TRIGGERED BIGINT       NOT NULL,
+  PRIMARY KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP),
+  FOREIGN KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+  REFERENCES ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_CRON_TRIGGERS
+(
+  SCHED_NAME      VARCHAR(120) NOT NULL,
+  TRIGGER_NAME    VARCHAR(200) NOT NULL,
+  TRIGGER_GROUP   VARCHAR(200) NOT NULL,
+  CRON_EXPRESSION VARCHAR(120) NOT NULL,
+  TIME_ZONE_ID    VARCHAR(80),
+  PRIMARY KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP),
+  FOREIGN KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+  REFERENCES ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_SIMPROP_TRIGGERS
+(
+  SCHED_NAME    VARCHAR(120)   NOT NULL,
+  TRIGGER_NAME  VARCHAR(200)   NOT NULL,
+  TRIGGER_GROUP VARCHAR(200)   NOT NULL,
+  STR_PROP_1    VARCHAR(512)   NULL,
+  STR_PROP_2    VARCHAR(512)   NULL,
+  STR_PROP_3    VARCHAR(512)   NULL,
+  INT_PROP_1    INT            NULL,
+  INT_PROP_2    INT            NULL,
+  LONG_PROP_1   BIGINT         NULL,
+  LONG_PROP_2   BIGINT         NULL,
+  DEC_PROP_1    NUMERIC(13, 4) NULL,
+  DEC_PROP_2    NUMERIC(13, 4) NULL,
+  BOOL_PROP_1   BOOL           NULL,
+  BOOL_PROP_2   BOOL           NULL,
+  PRIMARY KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP),
+  FOREIGN KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+  REFERENCES ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_BLOB_TRIGGERS
+(
+  SCHED_NAME    VARCHAR(120) NOT NULL,
+  TRIGGER_NAME  VARCHAR(200) NOT NULL,
+  TRIGGER_GROUP VARCHAR(200) NOT NULL,
+  BLOB_DATA     BYTEA        NULL,
+  PRIMARY KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP),
+  FOREIGN KEY (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+  REFERENCES ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_CALENDARS
+(
+  SCHED_NAME    VARCHAR(120) NOT NULL,
+  CALENDAR_NAME VARCHAR(200) NOT NULL,
+  CALENDAR      BYTEA        NOT NULL,
+  PRIMARY KEY (SCHED_NAME, CALENDAR_NAME)
+);
+
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_PAUSED_TRIGGER_GRPS
+(
+  SCHED_NAME    VARCHAR(120) NOT NULL,
+  TRIGGER_GROUP VARCHAR(200) NOT NULL,
+  PRIMARY KEY (SCHED_NAME, TRIGGER_GROUP)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS
+(
+  SCHED_NAME        VARCHAR(120) NOT NULL,
+  ENTRY_ID          VARCHAR(95)  NOT NULL,
+  TRIGGER_NAME      VARCHAR(200) NOT NULL,
+  TRIGGER_GROUP     VARCHAR(200) NOT NULL,
+  INSTANCE_NAME     VARCHAR(200) NOT NULL,
+  FIRED_TIME        BIGINT       NOT NULL,
+  SCHED_TIME        BIGINT       NOT NULL,
+  PRIORITY          INTEGER      NOT NULL,
+  STATE             VARCHAR(16)  NOT NULL,
+  JOB_NAME          VARCHAR(200) NULL,
+  JOB_GROUP         VARCHAR(200) NULL,
+  IS_NONCONCURRENT  BOOL         NULL,
+  REQUESTS_RECOVERY BOOL         NULL,
+  PRIMARY KEY (SCHED_NAME, ENTRY_ID)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_SCHEDULER_STATE
+(
+  SCHED_NAME        VARCHAR(120) NOT NULL,
+  INSTANCE_NAME     VARCHAR(200) NOT NULL,
+  LAST_CHECKIN_TIME BIGINT       NOT NULL,
+  CHECKIN_INTERVAL  BIGINT       NOT NULL,
+  PRIMARY KEY (SCHED_NAME, INSTANCE_NAME)
+);
+
+CREATE TABLE ${flyway:defaultSchema}.QRTZ_LOCKS
+(
+  SCHED_NAME VARCHAR(120) NOT NULL,
+  LOCK_NAME  VARCHAR(40)  NOT NULL,
+  PRIMARY KEY (SCHED_NAME, LOCK_NAME)
+);
+
+CREATE INDEX IDX_QRTZ_J_REQ_RECOVERY
+  ON ${flyway:defaultSchema}.QRTZ_JOB_DETAILS (SCHED_NAME, REQUESTS_RECOVERY);
+CREATE INDEX IDX_QRTZ_J_GRP
+  ON ${flyway:defaultSchema}.QRTZ_JOB_DETAILS (SCHED_NAME, JOB_GROUP);
+
+CREATE INDEX IDX_QRTZ_T_J
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, JOB_NAME, JOB_GROUP);
+CREATE INDEX IDX_QRTZ_T_JG
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, JOB_GROUP);
+CREATE INDEX IDX_QRTZ_T_C
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, CALENDAR_NAME);
+CREATE INDEX IDX_QRTZ_T_G
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_GROUP);
+CREATE INDEX IDX_QRTZ_T_STATE
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_STATE);
+CREATE INDEX IDX_QRTZ_T_N_STATE
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP, TRIGGER_STATE);
+CREATE INDEX IDX_QRTZ_T_N_G_STATE
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_GROUP, TRIGGER_STATE);
+CREATE INDEX IDX_QRTZ_T_NEXT_FIRE_TIME
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, NEXT_FIRE_TIME);
+CREATE INDEX IDX_QRTZ_T_NFT_ST
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, TRIGGER_STATE, NEXT_FIRE_TIME);
+CREATE INDEX IDX_QRTZ_T_NFT_MISFIRE
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, MISFIRE_INSTR, NEXT_FIRE_TIME);
+CREATE INDEX IDX_QRTZ_T_NFT_ST_MISFIRE
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, MISFIRE_INSTR, NEXT_FIRE_TIME, TRIGGER_STATE);
+CREATE INDEX IDX_QRTZ_T_NFT_ST_MISFIRE_GRP
+  ON ${flyway:defaultSchema}.QRTZ_TRIGGERS (SCHED_NAME, MISFIRE_INSTR, NEXT_FIRE_TIME, TRIGGER_GROUP, TRIGGER_STATE);
+
+CREATE INDEX IDX_QRTZ_FT_TRIG_INST_NAME
+  ON ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS (SCHED_NAME, INSTANCE_NAME);
+CREATE INDEX IDX_QRTZ_FT_INST_JOB_REQ_RCVRY
+  ON ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS (SCHED_NAME, INSTANCE_NAME, REQUESTS_RECOVERY);
+CREATE INDEX IDX_QRTZ_FT_J_G
+  ON ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS (SCHED_NAME, JOB_NAME, JOB_GROUP);
+CREATE INDEX IDX_QRTZ_FT_JG
+  ON ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS (SCHED_NAME, JOB_GROUP);
+CREATE INDEX IDX_QRTZ_FT_T_G
+  ON ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP);
+CREATE INDEX IDX_QRTZ_FT_TG
+  ON ${flyway:defaultSchema}.QRTZ_FIRED_TRIGGERS (SCHED_NAME, TRIGGER_GROUP);

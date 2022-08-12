@@ -1,0 +1,143 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:t="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="com.asena.ui5.controller.views.job.WriterPass">
+	<m:Page title="{/name}" titleAlignment="Center" showHeader="true">
+		<m:content>
+			<ObjectPageLayout useIconTabBar="true" upperCaseAnchorBar="false">
+				<headerTitle>
+					<ObjectPageHeader objectTitle="{/name}" objectSubtitle="{/description}" />
+				</headerTitle>
+				<sections>
+					<ObjectPageSection titleUppercase="false" title="{i18n>WriterPass.titSource}">
+						<subSections>
+							<ObjectPageSubSection>
+								<blocks>
+									<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
+										<f:content>
+											<m:Label text="{i18n>WriterPass.lblSource}" />
+											<m:TextArea value="{/sourceQuery}" rows="12" />
+
+										</f:content>
+									</f:SimpleForm>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+					<ObjectPageSection titleUppercase="false" title="{i18n>WriterPass.titProperties}">
+						<subSections>
+							<ObjectPageSubSection>
+								<blocks>
+									<l:VerticalLayout class="sapUiContentPadding" width="100%">
+										<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
+											<f:content>
+												<m:Label text="{i18n>WriterPass.lblRepository}" />
+												<m:Input value="{/system/name}" editable="false" />
+												<m:Label text="{i18n>WriterPass.lblDestionationProperties}" />
+												<t:Table id="tblConnProperties" rows="{path: '/properties/',
+                            sorter : {
+                                path : 'key' 
+                             }
+                        }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="10" rowActionCount="2" ariaLabelledBy="title">
+													<t:rowActionTemplate>
+														<t:RowAction>
+															<t:items>
+																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onPassPropertyEdit" />
+																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onPassPropertyDelete" />
+															</t:items>
+														</t:RowAction>
+													</t:rowActionTemplate>
+													<t:toolbar>
+														<m:Toolbar>
+															<m:ToolbarSpacer />
+															<m:Button icon="sap-icon://add" press="_onAddProperty" />
+
+														</m:Toolbar>
+													</t:toolbar>
+													<t:columns>
+														<t:Column sortProperty="key" width="auto">
+															<m:Label text="{i18n>WriterPass.colName}" />
+															<t:template>
+																<m:Text text="{key}" wrapping="false" />
+															</t:template>
+														</t:Column>
+														<t:Column sortProperty="value" width="auto">
+															<m:Label text="{i18n>WriterPass.colValue}" />
+															<t:template>
+																<m:Text text="{value}" wrapping="false" />
+															</t:template>
+														</t:Column>
+														<t:Column sortProperty="description" width="auto">
+															<m:Label text="{i18n>WriterPass.colDescription}" />
+															<t:template>
+																<m:Text text="{description}" wrapping="false" />
+															</t:template>
+														</t:Column>
+													</t:columns>
+												</t:Table>
+											</f:content>
+										</f:SimpleForm>
+
+									</l:VerticalLayout>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+					<ObjectPageSection titleUppercase="false" title="{i18n>WriterPass.titDestination}">
+						<subSections>
+							<ObjectPageSubSection titleUppercase="false">
+								<blocks>
+									<l:VerticalLayout class="sapUiContentPadding" width="100%">
+										<f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" emptySpanL="0" emptySpanM="0" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout">
+											<f:content>
+												<m:Label text="{i18n>WriterPass.lblMappings}" />
+												<t:Table id="tblMappings" rows="{path: '/mappings/',
+                            sorter : {
+                                path : 'name' 
+                             }
+                        }" selectionBehavior="Row" selectionMode="Single" visibleRowCount="10" rowActionCount="2" ariaLabelledBy="title">
+													<t:rowActionTemplate>
+														<t:RowAction>
+															<t:items>
+																<t:RowActionItem visible="true" icon="sap-icon://edit" press="_onPassMappingEdit" />
+																<t:RowActionItem visible="true" icon="sap-icon://delete" press="_onPassMappingDelete" />
+															</t:items>
+														</t:RowAction>
+													</t:rowActionTemplate>
+													<t:toolbar>
+														<m:Toolbar>
+															<m:ToolbarSpacer />
+															<m:Button icon="sap-icon://add" press="_onAddPassMapping" />
+														</m:Toolbar>
+													</t:toolbar>
+													<t:columns>
+														<t:Column sortProperty="destination" width="auto">
+															<m:Label text="{i18n>WriterPass.colDestinationAttr}" />
+															<t:template>
+																<m:Text text="{destination}" wrapping="false" />
+															</t:template>
+														</t:Column>
+														<t:Column sortProperty="source" width="auto">
+															<m:Label text="{i18n>WriterPass.colSourceAttr}" />
+															<t:template>
+																<m:Text text="{source}" wrapping="false" />
+															</t:template>
+														</t:Column>
+													</t:columns>
+												</t:Table>
+											</f:content>
+										</f:SimpleForm>
+
+									</l:VerticalLayout>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+				</sections>
+			</ObjectPageLayout>
+		</m:content>
+		<m:footer>
+			<m:Toolbar>
+				<m:ToolbarSpacer />
+				<m:Button press="_onSavePass" text="{i18n>WriterPass.btnSave}" type="Emphasized" icon="sap-icon://save" />
+			</m:Toolbar>
+		</m:footer>
+	</m:Page>
+</mvc:View>

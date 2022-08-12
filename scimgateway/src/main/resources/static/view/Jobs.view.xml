@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:t="sap.ui.table" controllerName="com.asena.ui5.controller.views.Jobs">
+	<SplitContainer id="SplitContDemo" mode="StretchCompressMode" initialDetail="detail" initialMaster="master">
+		<detailPages>
+			<Page visible="false" id="detail" showHeader="false">
+				<content>
+					<t:Table id="tblJobs" rowSelectionChange="_onSelectChangeJobs" rows="{path: 'mdlJobs>/jobs/',sorter : {path : 'name'}}" selectionBehavior="Row" selectionMode="Single" visibleRowCount="20" visibleRowCountMode="Auto" rowActionCount="2" ariaLabelledBy="title">
+						<t:toolbar>
+							<Toolbar>
+								<ToolbarSpacer />
+								<Button tooltip="{i18n>Jobs.ttAddJob}" icon="sap-icon://add" press="_onAddJob" />
+								<Button tooltip="{i18n>Jobs.ttRefreshJobs}" icon="sap-icon://refresh" press="_onRefreshJobs" />
+							</Toolbar>
+						</t:toolbar>
+						<t:rowActionTemplate>
+							<t:RowAction>
+								<t:items>
+									<t:RowActionItem tooltip="{i18n>Jobs.ttEditJob}" visible="true" icon="sap-icon://edit" press="_onEditJob" />
+									<t:RowActionItem tooltip="{i18n>Jobs.ttDeleteJob}" visible="true" icon="sap-icon://delete" press="_onDeleteJob" />
+								</t:items>
+							</t:RowAction>
+						</t:rowActionTemplate>
+						<t:columns>
+							<t:Column sortProperty="name" width="12em">
+								<Label text="{i18n>Jobs.colName}" />
+								<t:template>
+									<Text text="{mdlJobs>name}" wrapping="false" />
+								</t:template>
+							</t:Column>
+							<t:Column sortProperty="description" width="auto">
+								<Label text="{i18n>Jobs.colDescription}" />
+								<t:template>
+									<Text text="{mdlJobs>description}" wrapping="false" />
+								</t:template>
+							</t:Column>
+							<t:Column sortProperty="enabled" width="7em">
+								<Label text="{i18n>Jobs.colStatus}" />
+								<t:template>
+									<ObjectStatus text="{path: 'mdlJobs>enabled',formatter: '.formatter.convertSystemStatus'}" inverted="true" state="{path: 'mdlJobs>enabled', formatter: '.formatter.convertSystemColor'}" />
+								</t:template>
+							</t:Column>
+						</t:columns>
+					</t:Table>
+				</content>
+			</Page>
+		</detailPages>
+		<masterPages>
+			<Page id="master" showHeader="false">
+				<content>
+					<List id="lstPackages" mode="SingleSelectMaster" selectionChange="_onSelectChangePackages" items="{path: '/',sorter : {path : 'name'}}">
+						<headerToolbar>
+							<OverflowToolbar>
+								<Title text="{i18n>Jobs.headerPackages}" />
+								<ToolbarSpacer />
+								<Button icon="sap-icon://add" tooltip="{i18n>Jobs.ttCreatePackage}" press="_onAddPackage" />
+								<Button icon="sap-icon://refresh" tooltip="{i18n>Jobs.ttRefreshPackage}" press="_onRefreshPackage" />
+
+								<Button id="btnDeletePackage" icon="sap-icon://delete" tooltip="{i18n>Jobs.ttDeletePackage}" press="_onDeletePackage" enabled="false" />
+							</OverflowToolbar>
+						</headerToolbar>
+						<StandardListItem title="{name}" icon="sap-icon://product" />
+					</List>
+				</content>
+			</Page>
+		</masterPages>
+	</SplitContainer>
+</mvc:View>

@@ -4,7 +4,7 @@
 		<m:content>
 			<layout:HorizontalLayout id="dispTiles" allowWrapping="true">
 				<m:GenericTile tooltip="{i18n>Applications.toolSystems}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.tileSystems}" press="_onSystemsPressed">
-					<m:TileContent >
+					<m:TileContent>
 						<m:NumericContent value="{
 							path: '/',
 							formatter: '.formatter.countSystems'
@@ -12,15 +12,23 @@
 					</m:TileContent>
 				</m:GenericTile>
 				<m:GenericTile tooltip="{i18n>Applications.toolScripts}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleScripts}" press="_onScriptsPressed">
-					<m:TileContent >
+					<m:TileContent>
 						<m:NumericContent value="{
 							path: 'mdlScripts>/',
 							formatter: '.formatter.countSystems'
 						}" icon="sap-icon://syntax" withMargin="false" />
 					</m:TileContent>
 				</m:GenericTile>
+				<m:GenericTile tooltip="{i18n>Applications.toolJobs}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleJobs}" press="_onJobsPressed">
+					<m:TileContent>
+						<m:NumericContent value="{
+							path: 'mdlJobs>/',
+							formatter: '.formatter.countJobs'
+						}" icon="sap-icon://workflow-tasks" withMargin="false" />
+					</m:TileContent>
+				</m:GenericTile>
 				<m:GenericTile tooltip="{i18n>Applications.toolLogs}" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="{i18n>Applications.titleLogs}" press="_onLogsPressed">
-					<m:TileContent >
+					<m:TileContent>
 						<m:NumericContent value="{mdlLogs>/count}" icon="sap-icon://order-status" withMargin="false" />
 					</m:TileContent>
 				</m:GenericTile>

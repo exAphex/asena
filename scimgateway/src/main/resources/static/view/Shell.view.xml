@@ -1,16 +1,8 @@
-<?xml version = "1.0" encoding = "UTF-8"?>
-<mvc:View 
-	xmlns:mvc="sap.ui.core.mvc" 
-    xmlns="sap.m"
-    xmlns:f="sap.f"
-    xmlns:tnt="sap.tnt"
-    controllerName = "com.asena.ui5.controller.core.Shell">
+<?xml version="1.0" encoding="UTF-8"?>
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:tnt="sap.tnt" controllerName="com.asena.ui5.controller.core.Shell">
     <tnt:ToolPage id="tpMain">
         <tnt:header>
-            <f:ShellBar showMenuButton="true" title="Asena SCIM Gateway" secondTitle="{mdlVersion>/version}"
-                showNavButton="{mainModel>/showNavButton}"
-                navButtonPressed="onBackPressed"
-                menuButtonPressed="onMenuPressed">
+            <f:ShellBar showMenuButton="true" title="Asena SCIM Gateway" secondTitle="{mdlVersion>/version}" showNavButton="{mainModel>/showNavButton}" navButtonPressed="onBackPressed" menuButtonPressed="onMenuPressed">
                 <f:menu>
                     <Menu>
                         <MenuItem text="Flight booking" icon="sap-icon://flight" />
@@ -18,26 +10,26 @@
                     </Menu>
                 </f:menu>
                 <f:profile>
-                    <f:Avatar initials="UI"/>
+                    <f:Avatar initials="UI" />
                 </f:profile>
             </f:ShellBar>
         </tnt:header>
         <tnt:sideContent>
-            <tnt:SideNavigation
-				expanded="true">
+            <tnt:SideNavigation expanded="true">
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="{i18n>Shell.nvlHome}" icon="sap-icon://home" select="_onSelectHome" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlSystems}" icon="sap-icon://it-system" select="_onSelectSystems" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlScripts}" icon="sap-icon://syntax" select="_onSelectScripts" />
+                    <tnt:NavigationListItem text="{i18n>Shell.nvlWorkflows}" icon="sap-icon://workflow-tasks">
+                        <tnt:NavigationListItem text="{i18n>Shell.nvlJobs}" select="_onSelectJobs" />
+                    </tnt:NavigationListItem>
                     <tnt:NavigationListItem text="{i18n>Shell.nvlLogs}" icon="sap-icon://order-status" select="_onSelectLogs" />
                     <tnt:NavigationListItem text="{i18n>Shell.nvlSettings}" icon="sap-icon://action-settings" select="_onSelectSettings" />
-                </tnt:NavigationList> 
-            </tnt:SideNavigation>    
+                </tnt:NavigationList>
+            </tnt:SideNavigation>
         </tnt:sideContent>
         <tnt:mainContents>
-            <App id="pwApp">
-
-            </App>
+            <App id="pwApp"></App>
         </tnt:mainContents>
 
     </tnt:ToolPage>

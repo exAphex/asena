@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:t="sap.ui.table">
+    <Dialog draggable="true" resizable="true" title="{i18n>AddPass.title}">
+        <content>
+            <f:SimpleForm class="editableForm sapUiCozy" columnsL="2" columnsM="1" editable="true" layout="ResponsiveGridLayout">
+                <f:content>
+                    <Label text="{i18n>AddPass.lblType}" />
+                    <Select forceSelection="true" change="_onAddPassTypeChange" selectedKey="{mdlAddPass>/selectedType}" items="{mdlTypes>/}">
+                        <core:Item key="{mdlTypes>type}" text="{mdlTypes>name}" />
+                    </Select>
+                    <Label text="{i18n>AddPass.lblPassName}" />
+                    <Input value="{mdlAddPass>/name}" />
+                    <Label text="{i18n>AddPass.lblDescription}" />
+                    <Input value="{mdlAddPass>/description}" />
+                    <Label visible="{mdlAddPass>/systemVisible}" text="{i18n>AddPass.lblSystem}" />
+                    <Select visible="{mdlAddPass>/systemVisible}" selectedKey="{mdlAddPass>/selectedSystem}" forceSelection="true" items="{mdlSystems>/}">
+                        <core:Item key="{mdlSystems>id}" text="{mdlSystems>name}" />
+                    </Select>
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="{i18n>btnSave}" type="Emphasized" press="_onSaveAddPass" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="_onCloseDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

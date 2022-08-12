@@ -26,16 +26,17 @@ public class EntryTypeMapping {
 
     private String name;
 
-    public EntryTypeMapping() {}
-    
+    public EntryTypeMapping() {
+    }
+
     public EntryTypeMapping(String name) {
         setName(name);
     }
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attribute> writeMappings;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attribute> readMappings;
 
     @Override
@@ -82,7 +83,7 @@ public class EntryTypeMapping {
             this.writeMappings = new HashSet<>();
         }
 
-        if ((a != null) && (!isWriteMappingDuplicate(a))){
+        if ((a != null) && (!isWriteMappingDuplicate(a))) {
             writeMappings.add(a);
         }
         return this;
@@ -93,7 +94,7 @@ public class EntryTypeMapping {
             this.readMappings = new HashSet<>();
         }
 
-        if ((a != null) && (!isReadMappingDuplicate(a))){
+        if ((a != null) && (!isReadMappingDuplicate(a))) {
             readMappings.add(a);
         }
         return this;
