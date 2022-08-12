@@ -16,13 +16,15 @@ import com.asena.scimgateway.utils.ConnectorUtil;
 public class IPSConnector implements IConnector {
 
     private String nameId = "dn";
+    private String oauthURL = "";
+    private String endpointURL = "";
 
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
         RemoteSystem retSystem = new RemoteSystem();
-        retSystem.addProperty(new ConnectionProperty("endpoint", "https://ipsproxyabcd.hana.ondemand.com/api/test",
+        retSystem.addProperty(new ConnectionProperty("endpoint", "https://ipsproxysapiam-abcde123.eu2.hana.ondemand.com/ipsproxy/api/v1/scim/d27a6691-40c7-4bd2-b644-d544fc7ba18f",
                 "Endpoint of IPS", false, ConnectionPropertyType.STRING));
-        retSystem.addProperty(new ConnectionProperty("oauthtokenurl", "sdsdsd", "OAuth Token URL", false,
+        retSystem.addProperty(new ConnectionProperty("oauthtokenurl", "https://oauthasservices-abcde123.eu2.hana.ondemand.com/oauth2/api/v1/token", "OAuth Token URL", false,
                 ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("oauthclientid", "clientid", "OAuth Client ID", false,
                 ConnectionPropertyType.STRING));
@@ -55,9 +57,11 @@ public class IPSConnector implements IConnector {
         Set<ConnectionProperty> conns = rs.getProperties();
         for (ConnectionProperty cp : conns) {
             switch (cp.getKey()) {
-                case "host":
+                case "oauthtokenurl":
+                    this.oauthURL = cp.getValue();
                     break;
-                case "port":
+                case "endpoint":
+                    this.endpointURL = cp.getValue();
                     break;
                 case "user":
                     break;
