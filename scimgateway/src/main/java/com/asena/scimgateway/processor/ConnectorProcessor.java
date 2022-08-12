@@ -2,6 +2,7 @@ package com.asena.scimgateway.processor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.asena.scimgateway.connector.AzureConnector;
 import com.asena.scimgateway.connector.IConnector;
@@ -14,6 +15,9 @@ import com.asena.scimgateway.model.RemoteSystem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
 
 public class ConnectorProcessor {
     private static Logger logger = LoggerFactory.getLogger(ConnectorProcessor.class);
@@ -23,16 +27,25 @@ public class ConnectorProcessor {
 
     public static Set<RemoteSystem> getAvailableConnectors() {
         Set<RemoteSystem> retSystems = new HashSet<>();
-        LDAPConnector ldap = new LDAPConnector();
-        SACConnector sac = new SACConnector();
-        AzureConnector az = new AzureConnector();
-        OneIdentityConnector oc = new OneIdentityConnector();
+        final ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(
+                false);
+        provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(".*")));
 
-        retSystems.add(ldap.getRemoteSystemTemplate());
-        retSystems.add(sac.getRemoteSystemTemplate());
-        retSystems.add(az.getRemoteSystemTemplate());
-        retSystems.add(oc.getRemoteSystemTemplate());
+        final Set<BeanDefinition> classes = provider.findCandidateComponents("com.asena.scimgateway.connector");
 
+        for (BeanDefinition bean : classes) {
+            IConnector clazz;
+            Class<?> tempClass;
+            try {
+                tempClass = Class.forName(bean.getBeanClassName());
+                if (IConnector.class.isAssignableFrom(tempClass)) {
+                    clazz = (IConnector) tempClass.newInstance();
+                    retSystems.add(clazz.getRemoteSystemTemplate());
+                }
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.debug("Unexpected class", e);
+            }
+        }
         return retSystems;
     }
 
@@ -44,7 +57,6 @@ public class ConnectorProcessor {
                 return rs;
             }
         }
-
         return null;
     }
 
