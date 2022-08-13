@@ -28,7 +28,7 @@ public class Package {
 	@NotBlank(message = "System name is mandatory")
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Job> jobs = new HashSet<>();
 
 	public long getId() {

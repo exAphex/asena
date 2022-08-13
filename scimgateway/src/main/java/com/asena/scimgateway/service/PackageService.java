@@ -1,5 +1,6 @@
 package com.asena.scimgateway.service;
 
+import com.asena.scimgateway.repository.JobRepository;
 import com.asena.scimgateway.repository.PackageRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class PackageService {
 		}).orElseThrow(() -> new NotFoundException(id));
 	}
 
+	public void delete(Package p) {
+		if (p != null) {
+			deleteById(p.getId());
+		}
+	}
+
 	public Package addJob(Job j, long id) {
 		Job job = new Job();
 		job.setName(j.getName());
@@ -48,5 +55,12 @@ public class PackageService {
 		Package p = findById(id).orElseThrow(() -> new NotFoundException(id));
 		p.addJob(job);
 		return packageRepository.save(p);
+	}
+
+	public void deleteAll() {
+		List<Package> packages = packageRepository.findAll();
+		for (Package p : packages) {
+			delete(p);
+		}
 	}
 }
