@@ -1,6 +1,5 @@
 package com.asena.scimgateway.service;
 
-import com.asena.scimgateway.repository.JobRepository;
 import com.asena.scimgateway.repository.PackageRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
