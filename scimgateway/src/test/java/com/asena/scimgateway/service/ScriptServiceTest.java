@@ -1,6 +1,7 @@
 package com.asena.scimgateway.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class ScriptServiceTest {
 
     @BeforeEach
     void prepareDB() {
+        attributeService.deleteAll();
         scriptService.deleteAll();
     }
 
@@ -42,12 +44,23 @@ public class ScriptServiceTest {
     }
 
     @Test
+    void findTest() {
+        Script s = new Script();
+        s.setName("test");
+        s.setContent("testcontent");
+
+        s = scriptService.create(s);
+        s = scriptService.findByName("test");
+        assertNotNull(s);
+    }
+
+    @Test
     void updateTest() {
         Script s = new Script();
         s.setName("test");
         s.setContent("testcontent");
         s = scriptService.create(s);
-        
+
         s.setContent("testcontent1");
         s.setName("test1");
         s = scriptService.update(s, s.getId());
