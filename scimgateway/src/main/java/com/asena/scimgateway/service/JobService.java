@@ -211,4 +211,10 @@ public class JobService {
 		return j;
 	}
 
+	public void deleteAll() {
+		List<Job> jobs = jobRepository.findAll();
+		for (Job j : jobs) {
+			delete(j);
+		}
+	}
 }

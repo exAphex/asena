@@ -36,16 +36,16 @@ public class RemoteSystemController {
 
     @PreAuthorize("isAdmin()")
     @GetMapping("/templates")
-	public Set<RemoteSystemDTO> getRemoteSystemTemplates() {
+    public Set<RemoteSystemDTO> getRemoteSystemTemplates() {
         Set<RemoteSystemDTO> retDTO = new HashSet<>();
-        Set<RemoteSystem> systems = ConnectorProcessor.getAvailableConnectors();
+        Set<RemoteSystem> systems = ConnectorProcessor.getAvailableConnectorTemplates();
 
         for (RemoteSystem rs : systems) {
             retDTO.add(RemoteSystemDTO.toDTO(rs));
         }
 
-		return retDTO; 
-    } 
+        return retDTO;
+    }
 
     @PreAuthorize("isAdmin()")
     @GetMapping("{id}/template")
@@ -84,7 +84,7 @@ public class RemoteSystemController {
     @PostMapping("/{id}/entrytypemapping")
     public RemoteSystemDTO addEntryTypeMapping(@RequestBody EntryTypeMappingDTO emDTO, @PathVariable String id) {
         return RemoteSystemDTO.toDTO(remoteSystemService.addEntryTypeMapping(emDTO.fromDTO(), id));
-    } 
+    }
 
     @PreAuthorize("isAdmin()")
     @PostMapping("/{id}/connection")

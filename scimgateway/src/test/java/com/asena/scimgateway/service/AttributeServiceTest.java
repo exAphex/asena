@@ -1,6 +1,8 @@
 package com.asena.scimgateway.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -62,7 +64,66 @@ public class AttributeServiceTest {
         assertEquals(AttributeType.BOOLEAN, a.getType());
         assertEquals("Testname", a.getTransformation().getName());
     }
-    
+
+    @Test
+    void createNullTest() {
+        Attribute a = attributeService.create(null);
+        assertNull(a);
+    }
+
+    @Test
+    void createNonTransformationTest() {
+        Attribute a = new Attribute();
+        a.setDescription("Testdesc");
+        a.setDestination("Testdest");
+        a.setEncrypted(false);
+        a.setSource("Testsrc");
+        a.setType(AttributeType.BOOLEAN);
+        a.setTransformation(null);
+        a = attributeService.create(a);
+        assertNotNull(a);
+    }
+
+    @Test
+    void createNewTransformationTest() {
+        Script s = new Script();
+        s.setName("testscript");
+
+        Attribute a = new Attribute();
+        a.setDescription("Testdesc");
+        a.setDestination("Testdest");
+        a.setEncrypted(false);
+        a.setSource("Testsrc");
+        a.setType(AttributeType.BOOLEAN);
+        a.setTransformation(s);
+        a = attributeService.create(a);
+
+        assertNotNull(a);
+        assertNull(a.getTransformation());
+    }
+
+    @Test
+    void createExistingTransformationTest() {
+        Script s = new Script();
+        s.setName("testscript");
+        scriptService.create(s);
+
+        Script sNew = new Script();
+        sNew.setName("testscript");
+
+        Attribute a = new Attribute();
+        a.setDescription("Testdesc");
+        a.setDestination("Testdest");
+        a.setEncrypted(false);
+        a.setSource("Testsrc");
+        a.setType(AttributeType.BOOLEAN);
+        a.setTransformation(sNew);
+        a = attributeService.create(a);
+
+        assertNotNull(a);
+        assertNotNull(a.getTransformation());
+    }
+
     @Test
     void findByIdTest() {
         Attribute a = new Attribute();
@@ -132,9 +193,8 @@ public class AttributeServiceTest {
         a.setTransformation(s);
         a = attributeService.create(a);
 
-        em = entryTypeMappingService.create(em); 
+        em = entryTypeMappingService.create(em);
         em.addWriteMapping(a);
-        
 
         RemoteSystem rs = new RemoteSystem();
         rs.setType("LDAP");
@@ -149,7 +209,7 @@ public class AttributeServiceTest {
         });
 
         attributeService.deleteAll();
-        
+
         List<Attribute> attrs = attributeService.list();
         assertEquals(0, attrs.size());
     }
