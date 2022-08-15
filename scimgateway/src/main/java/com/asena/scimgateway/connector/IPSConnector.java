@@ -15,38 +15,33 @@ import com.asena.scimgateway.utils.ConnectorUtil;
 
 public class IPSConnector implements IConnector {
 
-    private String nameId = "dn";
+    private String nameId = "id";
     private String oauthURL = "";
     private String endpointURL = "";
 
     @Override
     public RemoteSystem getRemoteSystemTemplate() {
         RemoteSystem retSystem = new RemoteSystem();
-        retSystem.addProperty(new ConnectionProperty("endpoint", "https://ipsproxysapiam-abcde123.eu2.hana.ondemand.com/ipsproxy/api/v1/scim/d27a6691-40c7-4bd2-b644-d544fc7ba18f",
+        retSystem.addProperty(new ConnectionProperty("endpoint",
+                "https://ipsproxysapiam-abcde123.eu2.hana.ondemand.com/ipsproxy/api/v1/scim/d27a6691-40c7-4bd2-b644-d544fc7ba18f",
                 "Endpoint of IPS", false, ConnectionPropertyType.STRING));
-        retSystem.addProperty(new ConnectionProperty("oauthtokenurl", "https://oauthasservices-abcde123.eu2.hana.ondemand.com/oauth2/api/v1/token", "OAuth Token URL", false,
+        retSystem.addProperty(new ConnectionProperty("oauthtokenurl",
+                "https://oauthasservices-abcde123.eu2.hana.ondemand.com/oauth2/api/v1/token", "OAuth Token URL", false,
                 ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("oauthclientid", "clientid", "OAuth Client ID", false,
                 ConnectionPropertyType.STRING));
         retSystem.addProperty(new ConnectionProperty("oauthclientsecred", "client secret", "OAuth Client Secret", false,
                 ConnectionPropertyType.STRING));
-        retSystem.setType("IPS");
+        retSystem.setType("SAP Identity Provisioning Service");
 
-        retSystem.addAttribute(new Attribute("cn", "cn", "common name"));
-        retSystem.addAttribute(new Attribute("dn", "dn", "distinguished name"));
-        retSystem.addAttribute(new Attribute("sn", "sn", "second name"));
-        retSystem.addAttribute(new Attribute("objectClass", "objectClass", "object class"));
+        retSystem.addAttribute(new Attribute("$.id", "$.id", "identifier"));
+        retSystem.addAttribute(new Attribute("$.userName", "$.userName", "user name"));
 
         EntryTypeMapping emUser = new EntryTypeMapping("Users");
-        emUser.addWriteMapping(new Attribute("$.userName", "cn", ""));
-        emUser.addWriteMapping(new Attribute("$.userName", "uid", ""));
-        emUser.addWriteMapping(new Attribute("$.name.familyName", "sn", ""));
-        emUser.addWriteMapping(new Attribute("$.userName", "homeDirectory", ""));
-        emUser.addWriteMapping(new Attribute("", "gidNumber", ""));
-        emUser.addWriteMapping(new Attribute("", "objectClass", ""));
+        emUser.addWriteMapping(new Attribute("$.userName", "$.userName", ""));
 
-        emUser.addReadMapping(new Attribute("cn", "$.userName", ""));
-        emUser.addReadMapping(new Attribute("sn", "$.name.familyName", ""));
+        emUser.addReadMapping(new Attribute("$.id", "$.id", ""));
+        emUser.addReadMapping(new Attribute("$.userName", "$.userName", ""));
         retSystem.addEntryTypeMapping(emUser);
 
         return retSystem;
