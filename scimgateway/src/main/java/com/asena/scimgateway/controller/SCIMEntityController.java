@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.asena.scimgateway.model.RemoteSystem;
 import com.asena.scimgateway.processor.SCIMProcessor;
 import com.asena.scimgateway.service.RemoteSystemService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.asena.scimgateway.exception.InternalErrorException;
 import com.asena.scimgateway.exception.NotFoundException;
 
@@ -36,17 +38,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class SCIMEntityController {
 
     Logger logger = LoggerFactory.getLogger(SCIMEntityController.class);
-    
+
     @Autowired
     private RemoteSystemService remoteSystemService;
 
     @PreAuthorize("isTechnical() and isServiceUser(#systemid) and isRemoteSystemActive(#systemid)")
     @GetMapping("/{entity}")
-    public @ResponseBody HashMap<String, Object> scimEntityList(@PathVariable String systemid, @PathVariable String entity, @RequestParam Map<String, String> params) {
+    public @ResponseBody HashMap<String, Object> scimEntityList(@PathVariable String systemid,
+            @PathVariable String entity, @RequestParam Map<String, String> params)
+            throws JsonMappingException, JsonProcessingException {
         RemoteSystem rs = remoteSystemService.findById(systemid).orElseThrow(() -> new NotFoundException(systemid));
         HashMap<String, Object> retEntities = new HashMap<>();
         try {
-            retEntities = new SCIMProcessor(rs, entity).getEntities();
+            retEntities = new SCIMProcessor(rs, entity).getEntities(params);
         } catch (Exception e) {
             handleControllerError(e, params);
         }

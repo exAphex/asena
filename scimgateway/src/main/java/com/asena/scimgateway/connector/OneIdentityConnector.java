@@ -3,6 +3,7 @@ package com.asena.scimgateway.connector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.utils.oneidentity.OneIdentityInterceptor;
@@ -142,7 +143,7 @@ public class OneIdentityConnector implements IConnector {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+	public List<HashMap<String, Object>> getEntities(String entity, Map<String, String> params) throws Exception {
 		OneIdentityInterceptor oi = new OneIdentityInterceptor(this.host + this.authEndPoint, this.authString,
 				this.userName, this.password);
 		BasicAuthInterceptor bi = new BasicAuthInterceptor(this.userName, this.password);

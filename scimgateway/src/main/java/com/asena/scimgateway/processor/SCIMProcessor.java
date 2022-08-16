@@ -3,6 +3,7 @@ package com.asena.scimgateway.processor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.connector.IConnector;
@@ -26,14 +27,14 @@ public class SCIMProcessor {
         setRemoteSystem(rs);
     }
 
-    public List<HashMap<String, Object>> getEntitiesRaw() throws Exception {
+    public List<HashMap<String, Object>> getEntitiesRaw(Map<String, String> params) throws Exception {
         IConnector conn = getConnector();
-        List<HashMap<String, Object>> data = transferGetEntitiesToConnector(conn);
+        List<HashMap<String, Object>> data = transferGetEntitiesToConnector(conn, params);
         return prepareListDataFromRemoteSystem(data);
     }
 
-    public HashMap<String, Object> getEntities() throws Exception {
-        List<HashMap<String, Object>> data = getEntitiesRaw();
+    public HashMap<String, Object> getEntities(Map<String, String> params) throws Exception {
+        List<HashMap<String, Object>> data = getEntitiesRaw(params);
         HashMap<String, Object> scimResult = SCIMResultProcessor.createSCIMResult(data);
         return scimResult;
     }
@@ -310,9 +311,9 @@ public class SCIMProcessor {
         return conn.deleteEntity(entity, data);
     }
 
-    private List<HashMap<String, Object>> transferGetEntitiesToConnector(IConnector conn) throws Exception {
+    private List<HashMap<String, Object>> transferGetEntitiesToConnector(IConnector conn, Map<String, String> params) throws Exception {
         conn.setupConnector(remoteSystem);
-        return conn.getEntities(entity);
+        return conn.getEntities(entity, params);
     }
 
     private HashMap<String, Object> transferGetUserToConnector(IConnector conn, HashMap<String, Object> data)

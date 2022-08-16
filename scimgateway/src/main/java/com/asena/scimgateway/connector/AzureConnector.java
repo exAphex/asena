@@ -3,6 +3,7 @@ package com.asena.scimgateway.connector;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
@@ -170,7 +171,7 @@ public class AzureConnector implements IConnector {
     }
 
     @Override
-    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+    public List<HashMap<String, Object>> getEntities(String entity, Map<String, String> params) throws Exception {
         switch (entity) {
             case "Users":
                 return getEntitiesFromAzure(entity);

@@ -24,7 +24,7 @@ public class ReaderPassExecutor extends BaseExecutor {
 			throw new InternalErrorException("Remote system is not enabled.");
 		}
 
-		List<HashMap<String, Object>> result = new SCIMProcessor(rs, p.getEntityType()).getEntitiesRaw();
+		List<HashMap<String, Object>> result = new SCIMProcessor(rs, p.getEntityType()).getEntitiesRaw(null);
 		List<Map<String, Object>> processedData = processDataHashMap(p, result);
 		writeData(processedData, p);
 

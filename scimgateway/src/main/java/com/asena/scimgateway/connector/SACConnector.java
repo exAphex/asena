@@ -3,6 +3,7 @@ package com.asena.scimgateway.connector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
@@ -192,7 +193,7 @@ public class SACConnector implements IConnector {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+    public List<HashMap<String, Object>> getEntities(String entity, Map<String, String> params) throws Exception {
         OAuthInterceptor oi = new OAuthInterceptor(this.oauthUser, this.oauthPassword, this.oauthURL);
 
         HTTPClient hc = new HTTPClient();

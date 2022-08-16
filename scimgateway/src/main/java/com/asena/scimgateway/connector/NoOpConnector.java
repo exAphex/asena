@@ -3,6 +3,7 @@ package com.asena.scimgateway.connector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.asena.scimgateway.model.Attribute;
 import com.asena.scimgateway.model.ConnectionProperty;
@@ -45,7 +46,7 @@ public class NoOpConnector implements IConnector {
     }
 
     @Override
-    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+    public List<HashMap<String, Object>> getEntities(String entity, Map<String, String> params) throws Exception {
         List<HashMap<String, Object>> ret = new ArrayList<>();
         HashMap<String, Object> retObj = new HashMap<>();
         retObj.put("noop", "test");

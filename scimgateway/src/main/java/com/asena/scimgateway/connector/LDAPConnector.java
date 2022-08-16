@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.asena.scimgateway.exception.InternalErrorException;
@@ -258,7 +259,7 @@ public class LDAPConnector implements IConnector {
     }
 
     @Override
-    public List<HashMap<String, Object>> getEntities(String entity) throws Exception {
+    public List<HashMap<String, Object>> getEntities(String entity, Map<String, String> params) throws Exception {
         LdapConnection connection = null;
         List<HashMap<String,Object>> retList = new ArrayList<>();
         EntryCursor cursor = null;
